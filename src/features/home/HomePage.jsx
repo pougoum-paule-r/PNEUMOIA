@@ -7,6 +7,7 @@ import TeamSection from './components/TeamSection';
 import WhyChooseUs from './components/WhyChooseUs';
 import Testimonials from './components/Testimonials';
 import CtaSection from './components/CtaSection';
+import Footer from '../../components/layout/Footer';
 
 /**
  * Page d'accueil complète avec toutes les sections
@@ -16,13 +17,19 @@ const HomePage = () => {
   return (
     <>
       <Hero />
-      <FeaturesGrid />
+       <div className="relative z-20 md:-mt-20 lg:-mt-35 pointer-events-none">
+          {/* Les cartes redeviennent cliquables */}
+          <div className="pointer-events-auto">
+            <FeaturesGrid />
+          </div>
+        </div>
       <StatsSection />
       <AboutSection />
       <TeamSection />
       <WhyChooseUs />
       <Testimonials />
       <CtaSection />
+      <Footer />
     </>
   );
 };

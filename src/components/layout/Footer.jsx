@@ -1,6 +1,6 @@
 import React from 'react';
 import { Mail, Phone, MapPin, Activity } from 'lucide-react';
-import logo from '../assets/images/logo.png';
+import logo from '../../assets/images/logo.png';
 
 /**
  * Footer avec les liens de navigation et les informations de contact

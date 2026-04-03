@@ -1,24 +1,33 @@
 // src/components/layout/Navbar.jsx
 import { useState } from 'react';
 import { Menu, X } from 'lucide-react';
+import { Link, useLocation } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import LoginModal from '../components/modals/LoginModal';
-import RegisterModal from '../components/modals/RegisterModal';
-// Import de ton logo local
-import logo from '../assets/images/logo.png';
+import LoginModal from '../../components/modals/LoginModal';
+import RegisterModal from '../../components/modals/RegisterModal';
+import logo from '../../assets/images/logo.png';
 
 export default function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isLoginOpen, setIsLoginOpen] = useState(false);
   const [isRegisterOpen, setIsRegisterOpen] = useState(false);
-  const [activeNav, setActiveNav] = useState('accueil');
+  const location = useLocation();
 
   const navItems = [
-    { id: 'accueil', label: 'Accueil' },
-    { id: 'apropos', label: 'À propos' },
-    { id: 'fonctionnalites', label: 'Fonctionnalités' },
-    { id: 'cas-cliniques', label: 'Cas cliniques' },
+    { id: 'accueil', label: 'Accueil', path: '' },
+    { id: 'apropos', label: 'À propos', path: '/apropos' },
+    { id: 'fonctionnalites', label: 'Fonctionnalités', path: '/fonctionnalites' },
+    { id: 'cas-cliniques', label: 'Cas cliniques', path: '/cas-cliniques' },
   ];
+
+  // Déterminer l'élément actif basé sur l'URL
+  const getActiveNav = () => {
+    const currentPath = location.pathname;
+    const activeItem = navItems.find(item => item.path === currentPath);
+    return activeItem ? activeItem.id : 'accueil';
+  };
+
+  const activeNav = getActiveNav();
 
   return (
     <>
@@ -30,29 +39,28 @@ export default function Navbar() {
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
-            {/* Logo avec image locale */}
-
-            <motion.div 
+            {/* Logo - lien vers accueil */}
+            <Link to="/" className="shrink-0">
+              <motion.div 
                 initial={{ scale: 0.9, opacity: 0 }}
                 animate={{ scale: 1, opacity: 1 }}
                 transition={{ duration: 0.6, delay: 0.4 }}
                 className="relative z-10 overflow-hidden"
               >
-
                 <img 
-                src={logo} 
-                alt="PneumoDiag" 
-                className="w-18 h-18 overflow-hidden object-contain"
-              />
+                  src={logo} 
+                  alt="PneumoDiag" 
+                  className="w-18 h-18 object-contain"
+                />
               </motion.div>
-           
+            </Link>
 
             {/* Desktop Navigation */}
             <div className="hidden md:flex items-center gap-8">
               {navItems.map((item) => (
-                <button
+                <Link
                   key={item.id}
-                  onClick={() => setActiveNav(item.id)}
+                  to={item.path}
                   className={`relative px-2 py-2 text-sm font-medium transition-colors ${
                     activeNav === item.id
                       ? 'text-blue-600'
@@ -67,7 +75,7 @@ export default function Navbar() {
                       transition={{ duration: 0.3 }}
                     />
                   )}
-                </button>
+                </Link>
               ))}
             </div>
 
@@ -123,15 +131,13 @@ export default function Navbar() {
                   </button>
                 </div>
 
-                {/* Contenu du menu */}
+                {/* Contenu du menu - Liens de navigation */}
                 <div className="flex-1 px-4 py-6 space-y-4">
                   {navItems.map((item) => (
-                    <button
+                    <Link
                       key={item.id}
-                      onClick={() => {
-                        setActiveNav(item.id);
-                        setIsMenuOpen(false);
-                      }}
+                      to={item.path}
+                      onClick={() => setIsMenuOpen(false)}
                       className={`block w-full text-left py-3 px-4 rounded-lg transition-colors ${
                         activeNav === item.id
                           ? 'text-blue-600 bg-blue-50'
@@ -139,7 +145,7 @@ export default function Navbar() {
                       }`}
                     >
                       {item.label}
-                    </button>
+                    </Link>
                   ))}
                 </div>
 

@@ -1,23 +1,16 @@
-import React from 'react';
-import NavBar from '../components/NavBar';
-import Footer from '../components/Footer';
+// src/layouts/MainLayout.jsx
+import { Outlet } from 'react-router-dom';
+import Navbar from '../components/layout/Navbar';
+// import Footer from '../components/layout/Footer';
 
-/**
- * Layout principal qui enveloppe toutes les pages
- * Contient la barre de navigation et le footer communs
- * @param {Object} props
- * @param {React.ReactNode} props.children - Contenu de la page
- */
-const MainLayout = ({ children }) => {
+export default function MainLayout() {
   return (
-    <div className="min-h-screen flex flex-col">
-      <NavBar />
-      <main className="flex-grow">
-        {children}
+    <div className="min-h-screen bg-white">
+      <Navbar />
+      <main>
+        <Outlet />
       </main>
-      <Footer />
+      {/* <Footer /> */}
     </div>
   );
-};
-
-export default MainLayout;
+}
