@@ -1,4 +1,3 @@
-// src/features/home/components/CtaSection.jsx
 import { useState } from 'react';
 import { ArrowRight, Play, X } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';

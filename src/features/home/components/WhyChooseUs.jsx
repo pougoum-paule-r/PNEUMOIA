@@ -1,4 +1,3 @@
-// src/features/home/components/WhyChooseUsSection.jsx
 import { motion } from 'framer-motion';
 import { CheckCircle2, ArrowRight } from 'lucide-react';
 import doctorImage from '../../../assets/images/AccueilWhy.png';

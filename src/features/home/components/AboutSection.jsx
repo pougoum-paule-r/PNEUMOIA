@@ -1,4 +1,3 @@
-// src/features/home/components/WhyChooseUs.jsx
 import { useState } from 'react';
 import { ChevronRight } from 'lucide-react';
 import { motion } from 'framer-motion';

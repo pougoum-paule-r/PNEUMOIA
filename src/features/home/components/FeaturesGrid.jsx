@@ -1,4 +1,3 @@
-// src/components/sections/StateSection.jsx
 import { motion, useInView } from 'framer-motion';
 import { useRef } from 'react';
 import { Zap, Brain, Clock, FolderKanban } from 'lucide-react';

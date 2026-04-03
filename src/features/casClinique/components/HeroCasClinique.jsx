@@ -1,4 +1,3 @@
-// src/features/casClinique/components/HeroCasClinique.jsx
 import { motion } from 'framer-motion';
 import { ArrowRight, Stethoscope } from 'lucide-react';
 import { useState } from 'react';
@@ -32,7 +31,7 @@ export default function HeroCasClinique() {
                 className="inline-flex items-center gap-2 bg-blue-100 text-blue-700 px-3 py-1 rounded-full text-sm mb-6"
               >
                 <Stethoscope className="w-4 h-4" />
-                <span>Bibliothèque clinique</span>
+                <span>Cas clinique</span>
               </motion.div>
 
               {/* Titre principal */}

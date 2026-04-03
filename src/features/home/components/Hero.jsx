@@ -1,5 +1,3 @@
-// src/components/sections/Hero.jsx
-// Composant Hero pour la page d'accueil avec animation et modal vidéo
 
 import { useState } from 'react';
 import { motion } from 'framer-motion'; // Animations fluides

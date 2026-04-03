@@ -1,4 +1,3 @@
-// src/features/about/components/HeroAbout.jsx
 import { motion } from 'framer-motion';
 
 export default function HeroAbout() {

@@ -1,4 +1,3 @@
-// src/components/sections/StatsSection.jsx
 import { motion, useInView } from 'framer-motion';
 import { useRef } from 'react';
 import { Users, Stethoscope, Brain, Star } from 'lucide-react';

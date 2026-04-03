@@ -1,4 +1,3 @@
-// src/features/about/components/DetectionSpectrum.jsx
 import { motion } from 'framer-motion';
 import { Activity, Bug, AlertTriangle, Droplets, Wind, Heart, Cloud, CircleDot, Circle, BarChart3 } from 'lucide-react';
 

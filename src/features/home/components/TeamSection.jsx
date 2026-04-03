@@ -1,4 +1,3 @@
-// src/features/home/components/TeamSection.jsx
 import { motion } from 'framer-motion';
 import doctor1 from '../../../assets/images/doctor1.jpeg';
 import doctor2 from '../../../assets/images/doctor2.jpeg';

@@ -1,4 +1,3 @@
-// src/features/about/components/FAQSection.jsx
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ChevronDown } from 'lucide-react';

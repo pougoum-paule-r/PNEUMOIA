@@ -1,4 +1,4 @@
-// src/features/casClinique/components/LibrarySection.jsx
+// SYSTEME DE FILTRE  CAS-CLINIQUE PATHOLOGIE ET BARRE DE RECHERCHE
 import { motion } from 'framer-motion';
 import { Search, Filter } from 'lucide-react';
 

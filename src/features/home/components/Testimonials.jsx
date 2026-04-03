@@ -1,4 +1,3 @@
-// src/features/home/components/TestimonialsSection.jsx
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { MapPin, Calendar, ChevronLeft, ChevronRight } from 'lucide-react';

@@ -1,4 +1,3 @@
-// src/features/about/components/StatsCards.jsx
 import { motion } from 'framer-motion';
 import { Zap, Target, AlertTriangle } from 'lucide-react';
 

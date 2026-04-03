@@ -2,7 +2,7 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import HomePage from './features/home/HomePage';
 import AboutPage from './features/about/AboutPage';
-import CasCliniquePage from './features/casClinique/CasCliniquePage';
+import CasCliniquePage from './features/casClinique/CascliniquePage';
 import MainLayout from './layouts/MainLayout';
 
 function App() {

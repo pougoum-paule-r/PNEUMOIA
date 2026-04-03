@@ -1,4 +1,3 @@
-// src/features/about/components/TeamCarousel.jsx
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
@@ -70,7 +69,7 @@ export default function TeamCarousel() {
                 <div key={member.id} className="bg-white rounded-2xl p-6 shadow-lg hover:shadow-xl transition-all flex flex-col h-full">
                   {/* Abréviation + Nom + Rôle alignés à gauche */}
                   <div className="flex items-center gap-4 mb-4">
-                    <div className="w-14 h-14 rounded-full bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center flex-shrink-0">
+                    <div className="w-14 h-14 rounded-full bg-linear-to-br from-blue-500 to-indigo-600 flex items-center justify-center flex-shrink-0">
                       <span className="text-lg font-bold text-white">
                         {getInitials(member.name)}
                       </span>
