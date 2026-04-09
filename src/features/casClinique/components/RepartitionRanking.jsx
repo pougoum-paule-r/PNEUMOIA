@@ -22,7 +22,7 @@ export default function RankingRepartition() {
   const total = repartition.reduce((acc, item) => acc + item.count, 0);
 
   return (
-    <section className="py-20 px-4 bg-gray-50">
+    <section id="ranking-records" className="py-20 px-4 bg-gray-50">
       <div className="max-w-7xl mx-auto">
         <div className="grid lg:grid-cols-2 gap-12">
           

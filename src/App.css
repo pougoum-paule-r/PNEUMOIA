@@ -182,3 +182,21 @@
     border-right-color: var(--border);
   }
 }
+/* Cacher la scrollbar mais garder le défilement */
+.scrollbar-none {
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
+}
+
+.scrollbar-none::-webkit-scrollbar {
+  display: none;  /* Chrome, Safari and Opera */
+}
+
+/* Classes pour les marges dynamiques */
+/* .lg\:ml-\[100px\] {
+  margin-left: 100px;
+}
+
+.lg\:ml-\[340px\] {
+  margin-left: 340px;
+} */

@@ -21,7 +21,7 @@ export default function StorySection() {
             viewport={{ once: true }}
             className="relative"
           >
-            <div className="rounded-2xl overflow-hidden shadow-2xl">
+            <div className="rounded-2xl shadow-2xl">
               <img 
                 src={doctorStory}
                 alt="Docteur consultant un patient"

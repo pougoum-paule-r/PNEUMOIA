@@ -1,4 +1,3 @@
-// src/features/casClinique/components/CasesGrid.jsx
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ChevronLeft, ChevronRight, User, MapPin, Activity, Award, Stethoscope } from 'lucide-react';
@@ -65,26 +64,8 @@ export default function CasesGrid({ filter = "Toute", searchTerm = "", onCaseCli
   }
 
   return (
-    <section className="py-16 px-4 bg-gradient-to-b from-gray-50 to-white">
+    <section className="py-16 px-4 bg-linear-to-b from-gray-50 to-white">
       <div className="max-w-7xl mx-auto">
-        {/* En-tête avec boutons de navigation */}
-        <div className="flex justify-end items-center gap-2 mb-6">
-          <button 
-            onClick={prevPage} 
-            disabled={currentPage === 0} 
-            className="p-2 bg-white rounded-full shadow-md border border-gray-200 disabled:opacity-50 hover:bg-gray-50 transition-all"
-          >
-            <ChevronLeft className="w-5 h-5 text-gray-600" />
-          </button>
-          <button 
-            onClick={nextPage} 
-            disabled={currentPage === totalPages - 1} 
-            className="p-2 bg-white rounded-full shadow-md border border-gray-200 disabled:opacity-50 hover:bg-gray-50 transition-all"
-          >
-            <ChevronRight className="w-5 h-5 text-gray-600" />
-          </button>
-        </div>
-
         {/* CARROUSEL */}
         <div className="relative">
           <AnimatePresence mode="wait">
@@ -94,7 +75,7 @@ export default function CasesGrid({ filter = "Toute", searchTerm = "", onCaseCli
               animate={{ opacity: 1, x: 0 }}
               exit={{ opacity: 0, x: -100 }}
               transition={{ duration: 0.3 }}
-              className="grid grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6"
+              className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
             >
               {currentCases.map((c, idx) => (
                 <motion.div
@@ -106,65 +87,63 @@ export default function CasesGrid({ filter = "Toute", searchTerm = "", onCaseCli
                   onClick={() => onCaseClick?.(c)}
                   className="group bg-white rounded-xl shadow-md hover:shadow-xl transition-all duration-300 cursor-pointer overflow-hidden border border-gray-100"
                 >
-                  <div className="h-1 bg-gradient-to-r from-blue-500 to-indigo-600"></div>
+                  <div className="h-1 bg-linear-to-r from-blue-500 to-indigo-600"></div>
                   
-                  <div className="p-3 md:p-5">
-                    <div className="flex justify-between items-start mb-2 md:mb-4">
-                      <span className="px-2 py-0.5 md:px-3 md:py-1 bg-blue-50 text-blue-700 text-[10px] md:text-xs font-semibold rounded-full">
+                  <div className="p-5">
+                    <div className="flex justify-between items-start mb-4">
+                      <span className="px-3 py-1 bg-blue-50 text-blue-700 text-xs font-semibold rounded-full">
                         {c.badge}
                       </span>
-                      <div className="w-8 h-8 md:w-10 md:h-10 rounded-full bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center shadow-md">
-                        <Stethoscope className="w-4 h-4 md:w-5 md:h-5 text-white" />
+                      <div className="w-10 h-10 rounded-full bg-linear-to-br from-blue-500 to-indigo-600 flex items-center justify-center shadow-md">
+                        <Stethoscope className="w-5 h-5 text-white" />
                       </div>
                     </div>
                     
-                    <h3 className="font-bold text-xs md:text-lg text-gray-800 mb-1 md:mb-2 leading-tight line-clamp-2">
+                    <h3 className="font-bold text-lg text-gray-800 mb-2 leading-tight line-clamp-2">
                       {c.title}
                     </h3>
                     
-                    <p className="text-gray-500 text-[10px] md:text-xs leading-relaxed mb-2 md:mb-4 line-clamp-2">
+                    <p className="text-gray-500 text-xs leading-relaxed mb-4 line-clamp-2">
                       {c.symptoms}
                     </p>
                     
-                    <div className="space-y-1 md:space-y-1.5 mb-2 md:mb-4">
-                      <div className="flex items-center gap-1 md:gap-2 text-[10px] md:text-xs text-gray-600">
-                        <div className="w-4 h-4 md:w-6 md:h-6 rounded-full bg-blue-50 flex items-center justify-center">
-                          <User className="w-2 h-2 md:w-3 md:h-3 text-blue-600" />
+                    <div className="space-y-1.5 mb-4">
+                      <div className="flex items-center gap-2 text-xs text-gray-600">
+                        <div className="w-6 h-6 rounded-full bg-blue-50 flex items-center justify-center">
+                          <User className="w-3 h-3 text-blue-600" />
                         </div>
-                        <span className="text-[10px] md:text-xs">{c.patient.gender} • {c.patient.age}</span>
+                        <span>{c.patient.gender} • {c.patient.age}</span>
                       </div>
-                      <div className="flex items-center gap-1 md:gap-2 text-[10px] md:text-xs text-gray-600">
-                        <div className="w-4 h-4 md:w-6 md:h-6 rounded-full bg-blue-50 flex items-center justify-center">
-                          <Activity className="w-2 h-2 md:w-3 md:h-3 text-blue-600" />
+                      <div className="flex items-center gap-2 text-xs text-gray-600">
+                        <div className="w-6 h-6 rounded-full bg-blue-50 flex items-center justify-center">
+                          <Activity className="w-3 h-3 text-blue-600" />
                         </div>
-                        <span className="text-[10px] md:text-xs">{c.patient.condition}</span>
+                        <span>{c.patient.condition}</span>
                       </div>
-                      <div className="flex items-center gap-1 md:gap-2 text-[10px] md:text-xs text-gray-600">
-                        <div className="w-4 h-4 md:w-6 md:h-6 rounded-full bg-blue-50 flex items-center justify-center">
-                          <MapPin className="w-2 h-2 md:w-3 md:h-3 text-blue-600" />
+                      <div className="flex items-center gap-2 text-xs text-gray-600">
+                        <div className="w-6 h-6 rounded-full bg-blue-50 flex items-center justify-center">
+                          <MapPin className="w-3 h-3 text-blue-600" />
                         </div>
-                        <span className="text-[10px] md:text-xs">{c.patient.location}</span>
+                        <span>{c.patient.location}</span>
                       </div>
                     </div>
                     
-                    <div className="border-t border-gray-100 my-2 md:my-4"></div>
+                    <div className="border-t border-gray-100 my-4"></div>
                     
                     <div className="flex justify-between items-center">
                       <div>
-                        <p className="text-[10px] md:text-xs text-gray-400">Médecin</p>
+                        <p className="text-xs text-gray-400">Médecin</p>
                         <div className="flex items-center gap-1 mt-1">
-                          <Award className="w-2.5 h-2.5 md:w-3 md:h-3 text-blue-500" />
-                          <p className="font-medium text-[10px] md:text-sm text-gray-700 truncate max-w-[60px] md:max-w-none">
-                            {c.doctor}
-                          </p>
+                          <Award className="w-3 h-3 text-blue-500" />
+                          <p className="font-medium text-sm text-gray-700">{c.doctor}</p>
                         </div>
                       </div>
                       <div className="text-center">
-                        <p className="text-[10px] md:text-xs text-gray-400 mb-1">Confiance IA</p>
-                        <div className="relative w-8 h-8 md:w-12 md:h-12 mx-auto">
-                          <svg className="w-8 h-8 md:w-12 md:h-12 transform -rotate-90">
-                            <circle cx="16" cy="16" r="12" stroke="#e5e7eb" strokeWidth="2.5" fill="none" />
-                            <circle cx="16" cy="16" r="12" stroke="url(#gradient)" strokeWidth="2.5" fill="none" strokeDasharray={75.4} strokeDashoffset={75.4 * (1 - c.confidence / 100)} />
+                        <p className="text-xs text-gray-400 mb-1">Confiance IA</p>
+                        <div className="relative w-12 h-12 mx-auto">
+                          <svg className="w-12 h-12 transform -rotate-90">
+                            <circle cx="24" cy="24" r="20" stroke="#e5e7eb" strokeWidth="3" fill="none" />
+                            <circle cx="24" cy="24" r="20" stroke="url(#gradient)" strokeWidth="3" fill="none" strokeDasharray={125.6} strokeDashoffset={125.6 * (1 - c.confidence / 100)} />
                             <defs>
                               <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="0%">
                                 <stop offset="0%" stopColor="#3b82f6" />
@@ -173,7 +152,7 @@ export default function CasesGrid({ filter = "Toute", searchTerm = "", onCaseCli
                             </defs>
                           </svg>
                           <div className="absolute inset-0 flex items-center justify-center">
-                            <span className="text-[9px] md:text-sm font-bold text-blue-600">{c.confidence}%</span>
+                            <span className="text-sm font-bold text-blue-600">{c.confidence}%</span>
                           </div>
                         </div>
                       </div>
@@ -183,37 +162,34 @@ export default function CasesGrid({ filter = "Toute", searchTerm = "", onCaseCli
               ))}
             </motion.div>
           </AnimatePresence>
+
+          {/* FLÈCHES */}
+          {totalPages > 1 && (
+            <>
+              <button onClick={prevPage} disabled={currentPage === 0} className="absolute -top-13 right-25 p-2 bg-white rounded-full shadow-lg border border-gray-200 disabled:opacity-50 hover:bg-gray-50">
+                <ChevronLeft className="w-5 h-5 text-gray-600" />
+              </button>
+              <button onClick={nextPage} disabled={currentPage === totalPages - 1} className="absolute -top-13 right-12 p-2 bg-white rounded-full shadow-lg border border-gray-200 disabled:opacity-50 hover:bg-gray-50">
+                <ChevronRight className="w-5 h-5 text-gray-600" />
+              </button>
+            </>
+          )}
         </div>
 
         {/* PAGINATION 1 ... 6 */}
         {totalPages > 1 && (
-          <div className="flex justify-center items-center gap-1 md:gap-2 mt-6 md:mt-8">
-            <button 
-              onClick={() => setCurrentPage(0)} 
-              className={`w-6 h-6 md:w-8 md:h-8 rounded-lg text-[10px] md:text-sm font-medium ${currentPage === 0 ? 'bg-blue-600 text-white' : 'bg-white border border-gray-200 hover:bg-gray-50'}`}
-            >
-              1
-            </button>
-            {currentPage > 2 && <span className="text-gray-400 text-[10px] md:text-sm">...</span>}
+          <div className="flex justify-center items-center gap-2 mt-8">
+            <button onClick={() => setCurrentPage(0)} className={`w-8 h-8 rounded-lg text-sm font-medium ${currentPage === 0 ? 'bg-blue-600 text-white' : 'bg-white border border-gray-200 hover:bg-gray-50'}`}>1</button>
+            {currentPage > 2 && <span className="text-gray-400">...</span>}
             {currentPage > 1 && currentPage < totalPages - 1 && (
-              <button 
-                onClick={() => setCurrentPage(currentPage)} 
-                className="w-6 h-6 md:w-8 md:h-8 rounded-lg text-[10px] md:text-sm font-medium bg-blue-600 text-white"
-              >
-                {currentPage + 1}
-              </button>
+              <button onClick={() => setCurrentPage(currentPage)} className="w-8 h-8 rounded-lg text-sm font-medium bg-blue-600 text-white">{currentPage + 1}</button>
             )}
-            {currentPage < totalPages - 3 && <span className="text-gray-400 text-[10px] md:text-sm">...</span>}
-            <button 
-              onClick={() => setCurrentPage(totalPages - 1)} 
-              className={`w-6 h-6 md:w-8 md:h-8 rounded-lg text-[10px] md:text-sm font-medium ${currentPage === totalPages - 1 ? 'bg-blue-600 text-white' : 'bg-white border border-gray-200 hover:bg-gray-50'}`}
-            >
-              {totalPages}
-            </button>
+            {currentPage < totalPages - 3 && <span className="text-gray-400">...</span>}
+            <button onClick={() => setCurrentPage(totalPages - 1)} className={`w-8 h-8 rounded-lg text-sm font-medium ${currentPage === totalPages - 1 ? 'bg-blue-600 text-white' : 'bg-white border border-gray-200 hover:bg-gray-50'}`}>{totalPages}</button>
           </div>
         )}
 
-        <div className="text-center mt-4 text-[10px] md:text-xs text-gray-400">
+        <div className="text-center mt-4 text-xs text-gray-400">
           {filteredCases.length} cas • Page {currentPage + 1} / {totalPages}
         </div>
       </div>
