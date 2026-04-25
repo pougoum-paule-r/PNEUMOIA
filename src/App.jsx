@@ -17,10 +17,16 @@ import Notification from './features/medecin/pages/Notifications';
 import Profil from './features/medecin/pages/Profil';
 import Historique from './features/medecin/pages/Historique';
 
+
+//SECTION ADMINISTRATEUR
+import AdminLogin from './features/administrateur/authAdm/adminLogin';
+
+
 function App() {
   return (
     <BrowserRouter>  {/* Un seul Router ici */}
       <Routes>
+
         <Route path="/" element={<MainLayout />}>
           <Route index element={<HomePage />} />
           <Route path="/apropos" element={<AboutPage />} />
@@ -43,11 +49,15 @@ function App() {
           <Route path="parametres" element={<div>Paramètres</div>} />
           <Route path="historique" element={<Historique/>} />
         </Route>
+
+
+
+        {/* ROUTE ADMINISTRATEUR (AJOUTÉ UNIQUEMENT) */}
+        <Route path="/administrateur/login" element={<AdminLogin />} />
+
       </Routes>
-       
     </BrowserRouter>
   );
-  
 }
 
 export default App;
