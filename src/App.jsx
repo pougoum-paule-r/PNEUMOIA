@@ -20,6 +20,7 @@ import Historique from './features/medecin/pages/Historique';
 
 //SECTION ADMINISTRATEUR
 import AdminLogin from './features/administrateur/authAdm/adminLogin';
+import AdminDashboard from './features/administrateur/pages/AdminDashBoard';
 
 
 function App() {
@@ -54,6 +55,7 @@ function App() {
 
         {/* ROUTE ADMINISTRATEUR (AJOUTÉ UNIQUEMENT) */}
         <Route path="/administrateur/login" element={<AdminLogin />} />
+        <Route path="/administrateur/dashboard" element={<AdminDashboard />} />
 
       </Routes>
     </BrowserRouter>

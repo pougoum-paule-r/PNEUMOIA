@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import logo from '../../../assets/images/logo.png';
+import AdminDashboardPage from "../pages/AdminDashBoard";
 
 // ── Phrases adaptées au rôle administrateur ──
 const PHRASES = [
@@ -39,26 +40,6 @@ function SlidingTagline() {
   );
 }
 
-// ── Lung SVG Logo ──
-function LungLogo({ size = 44 }) {
-  return (
-    <svg width={size} height={size} viewBox="0 0 48 48" fill="none">
-      <path
-        d="M24 10 C24 10 20 10 17 13 C13 17 12 22 12 27 C12 34 15 40 20 42 C21.5 42.5 23 42 24 41"
-        stroke="#0d9488" strokeWidth="2.2" fill="none" strokeLinecap="round"
-      />
-      <path
-        d="M24 10 C24 10 28 10 31 13 C35 17 36 22 36 27 C36 34 33 40 28 42 C26.5 42.5 25 42 24 41"
-        stroke="#0d9488" strokeWidth="2.2" fill="none" strokeLinecap="round"
-      />
-      <line x1="24" y1="6" x2="24" y2="16" stroke="#0d9488" strokeWidth="2" strokeLinecap="round" />
-      <path d="M24 16 C22 18 20 20 18 21" stroke="#14b8a6" strokeWidth="1.6" fill="none" strokeLinecap="round" />
-      <path d="M24 16 C26 18 28 20 30 21" stroke="#14b8a6" strokeWidth="1.6" fill="none" strokeLinecap="round" />
-      <circle cx="24" cy="8" r="2.5" fill="#14b8a6" />
-    </svg>
-  );
-}
-
 function EyeOpen() {
   return (
     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
@@ -67,6 +48,7 @@ function EyeOpen() {
     </svg>
   );
 }
+
 function EyeOff() {
   return (
     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
@@ -86,6 +68,121 @@ function FeatureBadge({ icon, label }) {
   );
 }
 
+
+// Dashboard Admin
+
+function AdminDashboard({ onLogout }) {
+  const stats = [
+    { label: "Médecins actifs", value: "48", icon: "👨‍⚕️", trend: "+3 ce mois" },
+    { label: "Patients enregistrés", value: "1 284", icon: "🫁", trend: "+127 ce mois" },
+    { label: "Analyses effectuées", value: "3 921", icon: "📊", trend: "+412 ce mois" },
+    { label: "Alertes en attente", value: "7", icon: "⚠️", trend: "À traiter" },
+  ];
+
+  const recentUsers = [
+    { name: "Dr. Kamdem Sylvie", role: "Pneumologue", status: "Actif", date: "24 avr. 2026" },
+    { name: "Dr. Ngo Biyong Paul", role: "Radiologue", status: "Actif", date: "22 avr. 2026" },
+    { name: "Dr. Essomba Carole", role: "Généraliste", status: "En attente", date: "20 avr. 2026" },
+    { name: "Dr. Mbarga Jean", role: "Pneumologue", status: "Actif", date: "18 avr. 2026" },
+  ];
+
+  return (
+    <div className="min-h-screen bg-gray-50 font-sans">
+      {/* Topbar */}
+      <header className="bg-white border-b border-gray-100 shadow-sm px-6 py-4 flex items-center justify-between">
+        <div className="flex items-center gap-3">
+          <div className="w-8 h-8 rounded-lg bg-teal-600 flex items-center justify-center">
+            <svg width="16" height="16" viewBox="0 0 48 48" fill="none">
+              <path d="M24 10 C20 10 17 13 13 17 C12 22 12 27 12 34 C15 40 20 42 24 41" stroke="white" strokeWidth="2.5" fill="none" strokeLinecap="round"/>
+              <path d="M24 10 C28 10 31 13 35 17 C36 22 36 27 36 34 C33 40 28 42 24 41" stroke="white" strokeWidth="2.5" fill="none" strokeLinecap="round"/>
+              <line x1="24" y1="6" x2="24" y2="16" stroke="white" strokeWidth="2.2" strokeLinecap="round"/>
+              <circle cx="24" cy="8" r="2.5" fill="#5eead4"/>
+            </svg>
+          </div>
+          <div>
+            <span className="font-bold text-gray-900 text-sm">Pneumo<span className="text-teal-600">IA</span></span>
+            <span className="ml-2 text-[10px] text-gray-400 uppercase tracking-widest">Admin</span>
+          </div>
+        </div>
+        <div className="flex items-center gap-4">
+          <div className="hidden sm:flex items-center gap-2 bg-teal-50 border border-teal-100 rounded-full px-3 py-1.5">
+            <div className="w-2 h-2 rounded-full bg-teal-500 animate-pulse" />
+            <span className="text-xs text-teal-700 font-medium">Connecté</span>
+          </div>
+          <button
+            onClick={onLogout}
+            className="flex items-center gap-2 text-sm text-gray-500 hover:text-red-500 transition-colors px-3 py-1.5 rounded-lg hover:bg-red-50"
+          >
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4M16 17l5-5-5-5M21 12H9"/>
+            </svg>
+            <span className="hidden sm:inline">Déconnexion</span>
+          </button>
+        </div>
+      </header>
+
+      <main className="max-w-6xl mx-auto px-4 sm:px-6 py-8">
+        <div className="mb-8">
+          <h1 className="text-2xl font-bold text-gray-900">Tableau de bord</h1>
+          <p className="text-gray-400 text-sm mt-1">Vue d'ensemble de la plateforme PneumoIA</p>
+        </div>
+
+        {/* Stats */}
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+          {stats.map((s) => (
+            <div key={s.label} className="bg-white rounded-2xl border border-gray-100 shadow-sm p-5 flex flex-col gap-3">
+              <div className="flex items-center justify-between">
+                <span className="text-2xl">{s.icon}</span>
+                <span className="text-xs text-teal-600 bg-teal-50 border border-teal-100 rounded-full px-2 py-0.5 font-medium">{s.trend}</span>
+              </div>
+              <div>
+                <p className="text-2xl font-bold text-gray-900">{s.value}</p>
+                <p className="text-xs text-gray-400 mt-0.5">{s.label}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        {/* Utilisateurs récents */}
+        <div className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
+          <div className="px-6 py-4 border-b border-gray-50 flex items-center justify-between">
+            <h2 className="font-semibold text-gray-900 text-sm">Utilisateurs récents</h2>
+            <button className="text-xs text-teal-600 hover:text-teal-700 font-medium">Voir tout →</button>
+          </div>
+          <div className="divide-y divide-gray-50">
+            {recentUsers.map((u) => (
+              <div key={u.name} className="px-6 py-4 flex items-center justify-between hover:bg-gray-50/50 transition-colors">
+                <div className="flex items-center gap-3">
+                  <div className="w-8 h-8 rounded-full bg-teal-100 flex items-center justify-center text-teal-700 font-semibold text-xs">
+                    {u.name.split(" ").pop()[0]}
+                  </div>
+                  <div>
+                    <p className="text-sm font-medium text-gray-900">{u.name}</p>
+                    <p className="text-xs text-gray-400">{u.role}</p>
+                  </div>
+                </div>
+                <div className="flex items-center gap-4 text-right">
+                  <span className={`text-xs font-medium px-2.5 py-1 rounded-full ${
+                    u.status === "Actif"
+                      ? "bg-green-50 text-green-600 border border-green-100"
+                      : "bg-amber-50 text-amber-600 border border-amber-100"
+                  }`}>
+                    {u.status}
+                  </span>
+                  <span className="text-xs text-gray-400 hidden sm:block">{u.date}</span>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </main>
+    </div>
+  );
+}
+
+// ══════════════════════════════════════════
+// Login Admin
+// ══════════════════════════════════════════
 export default function AdminLogin() {
   const [form, setForm] = useState({ email: "", password: "" });
   const [loading, setLoading] = useState(false);
@@ -93,6 +190,7 @@ export default function AdminLogin() {
   const [showPwd, setShowPwd] = useState(false);
   const [emailFocus, setEmailFocus] = useState(false);
   const [pwdFocus, setPwdFocus] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -104,24 +202,26 @@ export default function AdminLogin() {
     setError("");
 
     try {
-      // 👉 Appel FastAPI — admin unique stocké en base
+      // ── Mode frontend-only : redirection directe ──
+      // Décommentez le bloc fetch ci-dessous quand le backend sera prêt :
+      /*
       const response = await fetch("http://localhost:8000/api/auth/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email: form.email, password: form.password }),
       });
-
       if (!response.ok) {
         const data = await response.json();
         throw new Error(data.detail || "Identifiants incorrects");
       }
-
       const data = await response.json();
       localStorage.setItem("token", data.access_token);
       localStorage.setItem("token_type", data.token_type ?? "bearer");
+      */
 
-      // navigate("/dashboard"); ← décommenter avec React Router
-      console.log("Connecté :", data);
+      // Simulation délai réseau puis redirection
+      await new Promise((res) => setTimeout(res, 900));
+      setIsLoggedIn(true);
 
     } catch (err) {
       setError(err.message || "Erreur de connexion. Vérifiez vos identifiants.");
@@ -130,21 +230,26 @@ export default function AdminLogin() {
     }
   };
 
+  //  Redirection vers le dashboard
+  if (isLoggedIn) {
+    return (
+      <AdminDashboardPage />
+    );
+  }
+
   return (
     <div className="min-h-screen flex flex-col lg:flex-row font-sans">
 
       {/* ══ Panneau gauche ══ */}
       <div className="relative lg:w-[42%] xl:w-[38%] bg-gradient-to-br from-teal-500 via-teal-600 to-teal-800 flex flex-col items-center justify-center px-8 py-14 lg:py-0 overflow-hidden">
-
         <div className="absolute -top-24 -left-24 w-80 h-80 rounded-full bg-white/5 pointer-events-none" />
         <div className="absolute -bottom-20 -right-20 w-72 h-72 rounded-full bg-white/5 pointer-events-none" />
         <div className="absolute top-1/3 right-6 w-28 h-28 rounded-full bg-teal-400/15 pointer-events-none" />
 
         <div className="relative z-10 flex flex-col items-center text-center max-w-xs gap-6">
-
-          {/* Logo dans un rond blanc */}
+         {/* Logo dans un rond blanc */}
           <div className="w-50 h-50 rounded-full bg-white shadow-xl flex items-center justify-center">
-            <img src={logo} alt="PneumoIA" className="w-40 h- object-contain" />
+            <img src={logo} alt="PneumoIA" className="w-40 h-40 object-contain" />
           </div>
 
           <div>
@@ -154,20 +259,18 @@ export default function AdminLogin() {
             <p className="text-white/40 text-xs tracking-widest uppercase mt-1">Espace Administrateur</p>
           </div>
 
-          {/* Tagline coulissante — phrases admin */}
-          <div className="min-h-[64px] flex items-center justify-center px-2 backdrop-blur-sm rounded-lg shadow-inne">
+          <div className="min-h-[64px] flex items-center justify-center px-2">
             <SlidingTagline />
           </div>
 
-          {/* Badges admin */}
           <div className="hidden sm:flex flex-col gap-2.5 w-full">
             <FeatureBadge
               label="Gestion des utilisateurs et accès"
               icon={
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-                  <path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2" />
-                  <circle cx="9" cy="7" r="4" />
-                  <path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75" />
+                  <path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/>
+                  <circle cx="9" cy="7" r="4"/>
+                  <path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/>
                 </svg>
               }
             />
@@ -175,9 +278,9 @@ export default function AdminLogin() {
               label="Supervision et rapports d'activité"
               icon={
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-                  <line x1="18" y1="20" x2="18" y2="10" />
-                  <line x1="12" y1="20" x2="12" y2="4" />
-                  <line x1="6" y1="20" x2="6" y2="14" />
+                  <line x1="18" y1="20" x2="18" y2="10"/>
+                  <line x1="12" y1="20" x2="12" y2="4"/>
+                  <line x1="6" y1="20" x2="6" y2="14"/>
                 </svg>
               }
             />
@@ -185,7 +288,7 @@ export default function AdminLogin() {
               label="Sécurité et contrôle des données"
               icon={
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-                  <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+                  <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
                 </svg>
               }
             />
@@ -196,7 +299,6 @@ export default function AdminLogin() {
       {/* ══ Panneau droit ══ */}
       <div className="flex-1 bg-gray-50 flex items-center justify-center px-4 py-12 sm:px-8">
         <div className="w-full max-w-sm">
-
           <div className="bg-white rounded-2xl border border-gray-100 shadow-sm px-7 py-8">
 
             <div className="mb-7 text-center">
@@ -207,16 +309,15 @@ export default function AdminLogin() {
             {error && (
               <div className="mb-5 flex items-center gap-2.5 bg-red-50 border border-red-100 text-red-600 text-sm rounded-xl px-4 py-3">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="flex-shrink-0">
-                  <circle cx="12" cy="12" r="10" />
-                  <line x1="12" y1="8" x2="12" y2="12" />
-                  <line x1="12" y1="16" x2="12.01" y2="16" />
+                  <circle cx="12" cy="12" r="10"/>
+                  <line x1="12" y1="8" x2="12" y2="12"/>
+                  <line x1="12" y1="16" x2="12.01" y2="16"/>
                 </svg>
                 {error}
               </div>
             )}
 
             <form onSubmit={handleSubmit} className="space-y-5">
-
               <div>
                 <label className="block text-[11px] font-semibold uppercase tracking-widest text-gray-400 mb-2">
                   Identifiant email
@@ -225,8 +326,8 @@ export default function AdminLogin() {
                   emailFocus ? "border-teal-500 ring-2 ring-teal-500/10" : "border-gray-200"
                 }`}>
                   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" className="flex-shrink-0">
-                    <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" />
-                    <polyline points="22,6 12,13 2,6" />
+                    <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+                    <polyline points="22,6 12,13 2,6"/>
                   </svg>
                   <input
                     type="email"
@@ -251,9 +352,9 @@ export default function AdminLogin() {
                   pwdFocus ? "border-teal-500 ring-2 ring-teal-500/10" : "border-gray-200"
                 }`}>
                   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" className="flex-shrink-0">
-                    <rect x="3" y="11" width="18" height="11" rx="2" />
-                    <path d="M7 11V7a5 5 0 0110 0v4" />
-                    <circle cx="12" cy="16" r="1" fill="#9ca3af" />
+                    <rect x="3" y="11" width="18" height="11" rx="2"/>
+                    <path d="M7 11V7a5 5 0 0110 0v4"/>
+                    <circle cx="12" cy="16" r="1" fill="#9ca3af"/>
                   </svg>
                   <input
                     type={showPwd ? "text" : "password"}
@@ -281,7 +382,7 @@ export default function AdminLogin() {
                 {loading ? (
                   <>
                     <svg className="animate-spin" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                      <path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83" strokeLinecap="round" />
+                      <path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83" strokeLinecap="round"/>
                     </svg>
                     Connexion en cours...
                   </>
@@ -289,7 +390,7 @@ export default function AdminLogin() {
                   <>
                     Se connecter
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                      <path d="M5 12h14M12 5l7 7-7 7" />
+                      <path d="M5 12h14M12 5l7 7-7 7"/>
                     </svg>
                   </>
                 )}
@@ -298,7 +399,7 @@ export default function AdminLogin() {
 
             <div className="mt-5 bg-teal-50 border border-teal-100 rounded-xl px-4 py-3">
               <p className="text-xs text-teal-700 leading-relaxed">
-                <span className="font-semibold">Démo :</span> les champs sont pré-remplis. Cliquez simplement sur{" "}
+                <span className="font-semibold">Démo :</span> remplissez les champs et cliquez sur{" "}
                 <span className="font-semibold italic">Se connecter</span> pour accéder au tableau de bord.
               </p>
             </div>
