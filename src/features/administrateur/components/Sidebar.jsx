@@ -1,7 +1,27 @@
 import React from "react";
 import logo from "../../../assets/images/logo.png";
+import { Link } from "react-router-dom";
 
 const navSections = [
+
+  {
+    title: "", 
+    items: [
+      {
+        label: "Tableau de bord",
+        icon: (
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+            <rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/>
+            <rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/>
+          </svg>
+        ),
+        badge: null,
+        key: "dashboard",
+        path: "/administrateur/dashboard",
+      },
+    ],
+  },
+
   {
     title: "INSCRIPTIONS",
     items: [
@@ -16,6 +36,7 @@ const navSections = [
         badge: 4,
         badgeColor: "bg-orange-500",
         key: "nouvelles",
+        path: "/administrateur/inscriptions/nouvelles",
       },
       {
         label: "Validées ce mois",
@@ -27,6 +48,7 @@ const navSections = [
         badge: 12,
         badgeColor: "bg-teal-500",
         key: "validees",
+        path: "/administrateur/inscriptions/validees",
       },
       {
         label: "Refusées",
@@ -38,6 +60,7 @@ const navSections = [
         badge: 3,
         badgeColor: "bg-red-500",
         key: "refusees",
+        path: "/administrateur/inscriptions/refusees",
       },
     ],
   },
@@ -55,6 +78,7 @@ const navSections = [
         badge: 38,
         badgeColor: "bg-teal-500",
         key: "actifs",
+        path: "/administrateur/medecins/actifs",
       },
       {
         label: "Suspendus",
@@ -66,12 +90,14 @@ const navSections = [
         badge: 2,
         badgeColor: "bg-yellow-500",
         key: "suspendus",
+        path: "/administrateur/medecins/suspendus",
       },
     ],
   },
   {
     title: "SYSTÈME",
     items: [
+     
       {
         label: "Monitoring IA",
         icon: (
@@ -81,6 +107,7 @@ const navSections = [
         ),
         badge: null,
         key: "monitoring",
+        path: "/administrateur/monitoring-ia",
       },
       {
         label: "Journal d'audit",
@@ -93,6 +120,7 @@ const navSections = [
         ),
         badge: null,
         key: "audit",
+        path: "/administrateur/journal-audit",
       },
       {
         label: "Paramètres plateforme",
@@ -104,6 +132,7 @@ const navSections = [
         ),
         badge: null,
         key: "parametres",
+        path: "/administrateur/parametres",
       },
     ],
   },
@@ -145,7 +174,7 @@ export default function Sidebar({ activeKey, setActiveKey, darkMode, isMobileOpe
               <ul className="space-y-0.5">
                 {section.items.map((item) => (
                   <li key={item.key}>
-                    <button
+                    <Link to={item.path}
                       onClick={() => { setActiveKey(item.key); setMobileOpen(false); }}
                       className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm transition-all duration-150 ${
                         activeKey === item.key
@@ -162,7 +191,7 @@ export default function Sidebar({ activeKey, setActiveKey, darkMode, isMobileOpe
                           {item.badge}
                         </span>
                       )}
-                    </button>
+                    </Link>
                   </li>
                 ))}
               </ul>

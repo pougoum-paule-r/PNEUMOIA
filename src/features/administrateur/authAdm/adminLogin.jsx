@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
+import { useNavigate } from 'react-router-dom';
 import logo from '../../../assets/images/logo.png';
-import AdminDashboardPage from "../pages/AdminDashBoard";
 
 // ── Phrases adaptées au rôle administrateur ──
 const PHRASES = [
@@ -69,117 +69,6 @@ function FeatureBadge({ icon, label }) {
 }
 
 
-// Dashboard Admin
-
-function AdminDashboard({ onLogout }) {
-  const stats = [
-    { label: "Médecins actifs", value: "48", icon: "👨‍⚕️", trend: "+3 ce mois" },
-    { label: "Patients enregistrés", value: "1 284", icon: "🫁", trend: "+127 ce mois" },
-    { label: "Analyses effectuées", value: "3 921", icon: "📊", trend: "+412 ce mois" },
-    { label: "Alertes en attente", value: "7", icon: "⚠️", trend: "À traiter" },
-  ];
-
-  const recentUsers = [
-    { name: "Dr. Kamdem Sylvie", role: "Pneumologue", status: "Actif", date: "24 avr. 2026" },
-    { name: "Dr. Ngo Biyong Paul", role: "Radiologue", status: "Actif", date: "22 avr. 2026" },
-    { name: "Dr. Essomba Carole", role: "Généraliste", status: "En attente", date: "20 avr. 2026" },
-    { name: "Dr. Mbarga Jean", role: "Pneumologue", status: "Actif", date: "18 avr. 2026" },
-  ];
-
-  return (
-    <div className="min-h-screen bg-gray-50 font-sans">
-      {/* Topbar */}
-      <header className="bg-white border-b border-gray-100 shadow-sm px-6 py-4 flex items-center justify-between">
-        <div className="flex items-center gap-3">
-          <div className="w-8 h-8 rounded-lg bg-teal-600 flex items-center justify-center">
-            <svg width="16" height="16" viewBox="0 0 48 48" fill="none">
-              <path d="M24 10 C20 10 17 13 13 17 C12 22 12 27 12 34 C15 40 20 42 24 41" stroke="white" strokeWidth="2.5" fill="none" strokeLinecap="round"/>
-              <path d="M24 10 C28 10 31 13 35 17 C36 22 36 27 36 34 C33 40 28 42 24 41" stroke="white" strokeWidth="2.5" fill="none" strokeLinecap="round"/>
-              <line x1="24" y1="6" x2="24" y2="16" stroke="white" strokeWidth="2.2" strokeLinecap="round"/>
-              <circle cx="24" cy="8" r="2.5" fill="#5eead4"/>
-            </svg>
-          </div>
-          <div>
-            <span className="font-bold text-gray-900 text-sm">Pneumo<span className="text-teal-600">IA</span></span>
-            <span className="ml-2 text-[10px] text-gray-400 uppercase tracking-widest">Admin</span>
-          </div>
-        </div>
-        <div className="flex items-center gap-4">
-          <div className="hidden sm:flex items-center gap-2 bg-teal-50 border border-teal-100 rounded-full px-3 py-1.5">
-            <div className="w-2 h-2 rounded-full bg-teal-500 animate-pulse" />
-            <span className="text-xs text-teal-700 font-medium">Connecté</span>
-          </div>
-          <button
-            onClick={onLogout}
-            className="flex items-center gap-2 text-sm text-gray-500 hover:text-red-500 transition-colors px-3 py-1.5 rounded-lg hover:bg-red-50"
-          >
-            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4M16 17l5-5-5-5M21 12H9"/>
-            </svg>
-            <span className="hidden sm:inline">Déconnexion</span>
-          </button>
-        </div>
-      </header>
-
-      <main className="max-w-6xl mx-auto px-4 sm:px-6 py-8">
-        <div className="mb-8">
-          <h1 className="text-2xl font-bold text-gray-900">Tableau de bord</h1>
-          <p className="text-gray-400 text-sm mt-1">Vue d'ensemble de la plateforme PneumoIA</p>
-        </div>
-
-        {/* Stats */}
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
-          {stats.map((s) => (
-            <div key={s.label} className="bg-white rounded-2xl border border-gray-100 shadow-sm p-5 flex flex-col gap-3">
-              <div className="flex items-center justify-between">
-                <span className="text-2xl">{s.icon}</span>
-                <span className="text-xs text-teal-600 bg-teal-50 border border-teal-100 rounded-full px-2 py-0.5 font-medium">{s.trend}</span>
-              </div>
-              <div>
-                <p className="text-2xl font-bold text-gray-900">{s.value}</p>
-                <p className="text-xs text-gray-400 mt-0.5">{s.label}</p>
-              </div>
-            </div>
-          ))}
-        </div>
-
-        {/* Utilisateurs récents */}
-        <div className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
-          <div className="px-6 py-4 border-b border-gray-50 flex items-center justify-between">
-            <h2 className="font-semibold text-gray-900 text-sm">Utilisateurs récents</h2>
-            <button className="text-xs text-teal-600 hover:text-teal-700 font-medium">Voir tout →</button>
-          </div>
-          <div className="divide-y divide-gray-50">
-            {recentUsers.map((u) => (
-              <div key={u.name} className="px-6 py-4 flex items-center justify-between hover:bg-gray-50/50 transition-colors">
-                <div className="flex items-center gap-3">
-                  <div className="w-8 h-8 rounded-full bg-teal-100 flex items-center justify-center text-teal-700 font-semibold text-xs">
-                    {u.name.split(" ").pop()[0]}
-                  </div>
-                  <div>
-                    <p className="text-sm font-medium text-gray-900">{u.name}</p>
-                    <p className="text-xs text-gray-400">{u.role}</p>
-                  </div>
-                </div>
-                <div className="flex items-center gap-4 text-right">
-                  <span className={`text-xs font-medium px-2.5 py-1 rounded-full ${
-                    u.status === "Actif"
-                      ? "bg-green-50 text-green-600 border border-green-100"
-                      : "bg-amber-50 text-amber-600 border border-amber-100"
-                  }`}>
-                    {u.status}
-                  </span>
-                  <span className="text-xs text-gray-400 hidden sm:block">{u.date}</span>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </main>
-    </div>
-  );
-}
-
 // ══════════════════════════════════════════
 // Login Admin
 // ══════════════════════════════════════════
@@ -190,7 +79,7 @@ export default function AdminLogin() {
   const [showPwd, setShowPwd] = useState(false);
   const [emailFocus, setEmailFocus] = useState(false);
   const [pwdFocus, setPwdFocus] = useState(false);
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const navigate = useNavigate();
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -221,7 +110,7 @@ export default function AdminLogin() {
 
       // Simulation délai réseau puis redirection
       await new Promise((res) => setTimeout(res, 900));
-      setIsLoggedIn(true);
+      navigate('/administrateur/dashboard');
 
     } catch (err) {
       setError(err.message || "Erreur de connexion. Vérifiez vos identifiants.");
@@ -229,13 +118,6 @@ export default function AdminLogin() {
       setLoading(false);
     }
   };
-
-  //  Redirection vers le dashboard
-  if (isLoggedIn) {
-    return (
-      <AdminDashboardPage />
-    );
-  }
 
   return (
     <div className="min-h-screen flex flex-col lg:flex-row font-sans">
