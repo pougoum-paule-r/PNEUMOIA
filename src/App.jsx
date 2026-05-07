@@ -23,6 +23,8 @@ import Historique from './features/medecin/pages/Historique';
 import AdminLogin from './features/administrateur/authAdm/adminLogin';
 import AdminDashboard from './features/administrateur/pages/AdminDashBoard';
 import JournalAudit from './features/administrateur/pages/JournalAudit';
+import ParametresPlateforme from './features/administrateur/pages/ParametrePLateforme';
+import MedecinsSuspendus from './features/administrateur/pages/Suspendus';
 
 
 
@@ -70,14 +72,14 @@ function App() {
         <Route path="/administrateur/inscriptions/refusees" element={<div>Refusées</div>} />
 
         <Route path="/administrateur/medecins/actifs" element={<div>Médecins actifs</div>} />
-        <Route path="/administrateur/medecins/suspendus" element={<div>Médecins suspendus</div>} />
+        <Route path="/administrateur/medecins/suspendus" element={<MedecinsSuspendus />} />
 
         <Route path="/admin/monitoring-ia" element={<Navigate replace to="/administrateur/monitoring-ia" />} />
         <Route path="/administrateur/monitoring-ia" element={<MonitoringIA />} />
         <Route path="/admin/journal-audit" element={<Navigate replace to="/administrateur/journal-audit" />} />
         <Route path="/admin/parametres" element={<Navigate replace to="/administrateur/parametres" />} />
         <Route path="/administrateur/journal-audit" element={<JournalAudit />} />
-        <Route path="/administrateur/parametres" element={<div>Paramètres</div>} />
+        <Route path="/administrateur/parametres" element={<ParametresPlateforme />} />
         <Route
           path="*"
           element={
