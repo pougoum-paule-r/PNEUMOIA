@@ -54,19 +54,27 @@ const normalizeMonitoringData = (payload) => {
 
 const MonitoringIA = () => {
   const reportRef = useRef(null);
+  const apiBaseUrl = import.meta.env.VITE_API_BASE_URL;
   const [darkMode, setDarkMode] = useState(false);
   const [activeKey, setActiveKey] = useState('monitoring');
   const [isMobileOpen, setMobileOpen] = useState(false);
 
   const [data, setData] = useState(fallbackData);
   const [loading, setLoading] = useState(true);
+  const [exportingPdf, setExportingPdf] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
+      if (!apiBaseUrl) {
+        setData(fallbackData);
+        setLoading(false);
+        return;
+      }
+
       try {
         setLoading(true);
 
-        const response = await fetch('/api/admin/monitoring-ia', {
+        const response = await fetch(`${apiBaseUrl.replace(/\/$/, '')}/api/admin/monitoring-ia`, {
           headers: {
             'Content-Type': 'application/json',
           },
@@ -89,25 +97,46 @@ const MonitoringIA = () => {
 
   const downloadPDF = async () => {
     const element = reportRef.current;
-    if (!element) return;
+    if (!element || exportingPdf) return;
 
     try {
+      setExportingPdf(true);
       const canvas = await html2canvas(element, {
-        scale: 2,
+        scale: 1,
         useCORS: true,
+        logging: false,
+        scrollX: 0,
+        scrollY: -window.scrollY,
+        windowWidth: element.scrollWidth,
+        windowHeight: element.scrollHeight,
         backgroundColor: darkMode ? '#111827' : '#f9fafb',
       });
 
       const imgData = canvas.toDataURL('image/png');
       const pdf = new jsPDF('p', 'mm', 'a4');
       const pdfWidth = pdf.internal.pageSize.getWidth();
-      const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
+      const pdfPageHeight = pdf.internal.pageSize.getHeight();
+      const imgHeight = (canvas.height * pdfWidth) / canvas.width;
 
-      pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
+      let heightLeft = imgHeight;
+      let position = 0;
+
+      pdf.addImage(imgData, 'PNG', 0, position, pdfWidth, imgHeight);
+      heightLeft -= pdfPageHeight;
+
+      while (heightLeft > 0) {
+        position = heightLeft - imgHeight;
+        pdf.addPage();
+        pdf.addImage(imgData, 'PNG', 0, position, pdfWidth, imgHeight);
+        heightLeft -= pdfPageHeight;
+      }
+
       pdf.save(`Monitoring_IA_${new Date().toISOString().slice(0, 10)}.pdf`);
     } catch (err) {
       console.error(err);
-      alert('Erreur lors de la generation du PDF');
+      alert("Erreur lors de la generation du PDF. Reessayez ou reduisez le zoom du navigateur.");
+    } finally {
+      setExportingPdf(false);
     }
   };
 
@@ -166,12 +195,14 @@ const MonitoringIA = () => {
             </div>
 
             <button
+              type="button"
               onClick={downloadPDF}
+              disabled={exportingPdf}
               className={`flex items-center gap-2 px-5 py-2.5 rounded-xl border text-sm font-medium transition-all active:scale-95 ${
-                darkMode ? 'bg-gray-800 border-gray-700 hover:bg-gray-700 text-white' : 'bg-white border-gray-300 hover:bg-gray-50'
+                darkMode ? 'bg-gray-800 border-gray-700 hover:bg-gray-700 text-white disabled:opacity-60' : 'bg-white border-gray-300 hover:bg-gray-50 disabled:opacity-60'
               }`}
             >
-              Rapport PDF
+              {exportingPdf ? 'Export en cours...' : 'Rapport PDF'}
             </button>
           </div>
 
