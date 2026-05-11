@@ -25,8 +25,10 @@ import AdminDashboard from './features/administrateur/pages/AdminDashBoard';
 import JournalAudit from './features/administrateur/pages/JournalAudit';
 import ParametresPlateforme from './features/administrateur/pages/ParametrePLateforme';
 import MedecinsSuspendus from './features/administrateur/pages/Suspendus';
+import MedecinsActifs from './features/administrateur/pages/MedecinsActifs';
 import Refusees from './features/administrateur/pages/Refusees';
 import ValideesCemois from './features/administrateur/pages/ValideesCemois';
+import NouvellesDemandes from './features/administrateur/pages/nouvellesDemandes';
 
 
 
@@ -69,11 +71,11 @@ function App() {
         <Route path="/administrateur/dashboard" element={<AdminDashboard />} />
 
         <Route path="/admin/inscriptions/nouvelles" element={<Navigate replace to="/administrateur/inscriptions/nouvelles" />} />
-        <Route path="/administrateur/inscriptions/nouvelles" element={<div>Nouvelles demandes</div>} />
+        <Route path="/administrateur/inscriptions/nouvelles" element={<NouvellesDemandes />} />
         <Route path="/administrateur/inscriptions/validees" element={<ValideesCemois />} />
         <Route path="/administrateur/inscriptions/refusees" element={<Refusees />} />
 
-        <Route path="/administrateur/medecins/actifs" element={<div>Médecins actifs</div>} />
+        <Route path="/administrateur/medecins/actifs" element={<MedecinsActifs />} />
         <Route path="/administrateur/medecins/suspendus" element={<MedecinsSuspendus />} />
 
         <Route path="/admin/monitoring-ia" element={<Navigate replace to="/administrateur/monitoring-ia" />} />
@@ -102,5 +104,7 @@ function App() {
 }
 
 export default App;
+
+
 
 

@@ -110,6 +110,10 @@ export default function AdminLogin() {
 
       // Simulation délai réseau puis redirection
       await new Promise((res) => setTimeout(res, 900));
+      localStorage.setItem("token", "demo-admin-token");
+      localStorage.setItem("token_type", "bearer");
+      localStorage.setItem("admin_name", "Super Admin");
+      localStorage.setItem("admin_email", form.email || "admin@pneumoia.cm");
       navigate('/administrateur/dashboard');
 
     } catch (err) {

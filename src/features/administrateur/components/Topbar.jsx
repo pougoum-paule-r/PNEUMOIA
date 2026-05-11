@@ -1,7 +1,20 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import useAdminNotificationCount from "../hooks/useAdminNotificationCount";
 
-export default function Topbar({ darkMode, setDarkMode, setMobileOpen }) {
+export default function Topbar({ darkMode, setDarkMode, setMobileOpen, notificationCount }) {
+
+ // Etat de la barre de recherche
   const [searchVal, setSearchVal] = useState("");
+
+  // Etat du popup profil
+  const [profileOpen, setProfileOpen] = useState(false);
+
+  // Navigation React Router
+  const navigate = useNavigate();
+  const { count: storedNotificationCount } = useAdminNotificationCount();
+  const resolvedNotificationCount =
+    typeof notificationCount === "number" ? notificationCount : storedNotificationCount;
 
   return (
     <header className={`
@@ -94,7 +107,9 @@ export default function Topbar({ darkMode, setDarkMode, setMobileOpen }) {
         </button>
 
         {/* Notifications */}
-        <button className={`relative p-2 rounded-xl border transition-all ${
+        <button 
+         onClick={() => navigate("/administrateur/inscriptions/nouvelles")}
+        className={`relative p-2 rounded-xl border transition-all ${
           darkMode
             ? "bg-gray-800 border-gray-700 text-gray-400 hover:bg-gray-700"
             : "bg-gray-50 border-gray-200 text-gray-500 hover:bg-gray-100"
@@ -103,14 +118,54 @@ export default function Topbar({ darkMode, setDarkMode, setMobileOpen }) {
             <path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/>
             <path d="M13.73 21a2 2 0 01-3.46 0"/>
           </svg>
-          <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-red-500 rounded-full" />
+
+          {resolvedNotificationCount > 0 && (
+        <span className="absolute -top-1 -right-1 bg-red-500 text-white text-[10px] px-1.5 rounded-full">
+          {resolvedNotificationCount}
+        </span>
+      )}
         </button>
 
-        {/* Avatar */}
-        <div className="w-8 h-8 rounded-full bg-teal-600 flex items-center justify-center text-white text-xs font-bold flex-shrink-0">
-          SA
+        {/* Avatar & popup */}
+
+        <div className="relative">
+
+          {/* Bouton avatar */}
+          <button
+            onClick={() => setProfileOpen(!profileOpen)}
+            className="w-8 h-8 rounded-full bg-teal-600 flex items-center justify-center text-white text-xs font-bold flex-shrink-0" >
+            SA
+          </button>
+
+          {/* Popup */}
+          {profileOpen && (
+            <div className={`absolute right-0 mt-2 w-56 rounded-xl shadow-lg border p-4 z-50
+               ${ darkMode? "bg-gray-800 border-gray-700" : "bg-white border-gray-200" } `} >
+
+              {/* Email */}
+              <p
+                className={`text-sm mb-4 ${ darkMode ? "text-gray-300" : "text-gray-700" }`}>
+                superadmin@gmail.com
+              </p>
+
+              {/* Bouton déconnexion */}
+              <button className="w-full flex items-center justify-center gap-2 bg-red-500 hover:bg-red-600 text-white py-2 rounded-lg text-sm transition"
+                onClick={() => {
+                  console.log("Déconnexion");
+                }}
+              >
+
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" /><polyline points="16 17 21 12 16 7" /><line x1="21" y1="12" x2="9" y2="12" /></svg>
+                Déconnexion
+              </button>
+
+            </div>
+          )}
+
         </div>
       </div>
     </header>
   );
 }
+
+

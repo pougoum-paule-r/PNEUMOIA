@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import logo from "../../../assets/images/logo.png";
 import { Link } from "react-router-dom";
 
@@ -139,6 +139,35 @@ const navSections = [
 ];
 
 export default function Sidebar({ activeKey, setActiveKey, darkMode, isMobileOpen, setMobileOpen }) {
+  const [isAdminOnline, setIsAdminOnline] = useState(false);
+  const [adminName, setAdminName] = useState("Super Admin");
+  const [adminEmail, setAdminEmail] = useState("admin@pneumoia.cm");
+
+  useEffect(() => {
+    const syncAdminSession = () => {
+      const token = localStorage.getItem("token");
+      setIsAdminOnline(Boolean(token));
+      setAdminName(localStorage.getItem("admin_name") || "Super Admin");
+      setAdminEmail(localStorage.getItem("admin_email") || "admin@pneumoia.cm");
+    };
+
+    syncAdminSession();
+    window.addEventListener("storage", syncAdminSession);
+    window.addEventListener("focus", syncAdminSession);
+
+    return () => {
+      window.removeEventListener("storage", syncAdminSession);
+      window.removeEventListener("focus", syncAdminSession);
+    };
+  }, []);
+
+  const adminInitials = useMemo(() => {
+    const parts = adminName.trim().split(/\s+/).filter(Boolean);
+    if (!parts.length) return "SA";
+    if (parts.length === 1) return parts[0].slice(0, 2).toUpperCase();
+    return (parts[0][0] + parts[1][0]).toUpperCase();
+  }, [adminName]);
+
   return (
     <>
       {/* Overlay mobile */}
@@ -203,13 +232,16 @@ export default function Sidebar({ activeKey, setActiveKey, darkMode, isMobileOpe
         <div className="shrink-0 px-4 py-4 border-t border-white/10">
           <div className="flex items-center gap-3">
             <div className="w-8 h-8 rounded-full bg-teal-600 flex items-center justify-center text-white text-xs font-bold flex-shrink-0">
-              SA
+              {adminInitials}
             </div>
             <div className="flex-1 min-w-0">
-              <p className="text-white text-xs font-semibold truncate leading-tight">Super Admin</p>
-              <p className="text-white/45 text-[10px] truncate mt-0.5">admin@pneumoia.cm</p>
+              <p className="text-white text-xs font-semibold truncate leading-tight">{adminName}</p>
+              <p className="text-white/45 text-[10px] truncate mt-0.5">{adminEmail}</p>
+              <p className={`text-[10px] mt-0.5 ${isAdminOnline ? "text-teal-300" : "text-white/45"}`}>
+                {isAdminOnline ? "Actif" : "Hors ligne"}
+              </p>
             </div>
-            <div className="w-2 h-2 rounded-full bg-teal-400 flex-shrink-0" />
+            <div className={`w-2 h-2 rounded-full flex-shrink-0 ${isAdminOnline ? "bg-teal-400" : "bg-white/35"}`} />
           </div>
         </div>
       </aside>

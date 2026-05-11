@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import DossierModal from "./DossierModal";
 import RefusModal from "./RefusModal";
+import { useNavigate } from "react-router-dom";
 
 const inscriptions = [
   {
@@ -55,6 +56,7 @@ const inscriptions = [
 const avatarColors = ["bg-teal-600", "bg-blue-600", "bg-purple-600", "bg-orange-600"];
 
 export default function InscriptionsUrgentes({ darkMode }) {
+  const navigate = useNavigate();
   const [items, setItems] = useState(inscriptions);
   const [selectedDossier, setSelectedDossier] = useState(null);
   const [refusDoc, setRefusDoc] = useState(null);
@@ -87,7 +89,9 @@ export default function InscriptionsUrgentes({ darkMode }) {
             <h2 className={`font-semibold text-sm ${darkMode ? "text-white" : "text-gray-900"}`}>Inscriptions urgentes</h2>
             <p className={`text-xs mt-0.5 ${darkMode ? "text-gray-500" : "text-gray-400"}`}>En attente de décision</p>
           </div>
-          <button className="text-xs font-semibold bg-teal-600 hover:bg-teal-700 text-white px-3 py-1.5 rounded-lg transition-colors flex items-center gap-1.5">
+          <button 
+          onClick={() => navigate("/administrateur/inscriptions/nouvelles")}
+          className="text-xs font-semibold bg-teal-600 hover:bg-teal-700 text-white px-3 py-1.5 rounded-lg transition-colors flex items-center gap-1.5">
             Tout traiter
             <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
               <path d="M5 12h14M12 5l7 7-7 7"/>
