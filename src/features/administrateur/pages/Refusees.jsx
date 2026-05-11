@@ -1,7 +1,7 @@
-﻿import { useMemo, useState } from "react";
-import Sidebar from "../components/Sidebar";
+import { useMemo, useState } from "react";
+import useAdminTheme from "../hooks/useAdminTheme";
 import Topbar from "../components/Topbar";
-
+import Sidebar from "../components/Sidebar";
 const MOCK_REFUSEES = [
   {
     id: 1,
@@ -45,7 +45,7 @@ function Avatar({ initiales, darkMode }) {
   return (
     <div
       className={`w-9 h-9 rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0 ${
-        darkMode ? "bg-gray-700 text-gray-300" : "bg-gray-100 text-gray-600"
+        darkMode ?"bg-gray-700 text-gray-300" : "bg-gray-100 text-gray-600"
       }`}
     >
       {initiales}
@@ -57,7 +57,7 @@ function MotifBadge({ motif, darkMode }) {
   return (
     <span
       className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium whitespace-nowrap ${
-        darkMode ? "bg-red-900/30 text-red-400" : "bg-red-50 text-red-500"
+        darkMode ?"bg-red-900/30 text-red-400" : "bg-red-50 text-red-500"
       }`}
     >
       {motif}
@@ -105,21 +105,21 @@ function exportRefuseesCSV(rows) {
   URL.revokeObjectURL(url);
 }
 
-export default function Refusees({ darkMode: initialDarkMode }) {
-  const [darkMode, setDarkMode] = useState(Boolean(initialDarkMode));
+export default function Refusees() {
+  const { darkMode, setDarkMode } = useAdminTheme();
   const [activeKey, setActiveKey] = useState("refusees");
   const [isMobileOpen, setMobileOpen] = useState(false);
   const rows = useMemo(() => MOCK_REFUSEES, []);
 
-  const pageCls = darkMode ? "bg-gray-950 text-white" : "bg-gray-50 text-gray-900";
-  const cardCls = darkMode ? "bg-gray-900 border-gray-800" : "bg-white border-gray-200";
-  const thCls = darkMode ? "bg-gray-800/80 text-gray-400" : "bg-gray-50 text-gray-500";
-  const mutedCls = darkMode ? "text-gray-400" : "text-gray-500";
-  const rowHover = darkMode ? "hover:bg-gray-800/60" : "hover:bg-gray-50";
-  const divider = darkMode ? "divide-gray-800" : "divide-gray-100";
+  const pageCls = darkMode ?"bg-gray-950 text-white" : "bg-gray-50 text-gray-900";
+  const cardCls = darkMode ?"bg-gray-900 border-gray-800" : "bg-white border-gray-200";
+  const thCls = darkMode ?"bg-gray-800/80 text-gray-400" : "bg-gray-50 text-gray-500";
+  const mutedCls = darkMode ?"text-gray-400" : "text-gray-500";
+  const rowHover = darkMode ?"hover:bg-gray-800/60" : "hover:bg-gray-50";
+  const divider = darkMode ?"divide-gray-800" : "divide-gray-100";
 
   return (
-    <div className={`min-h-screen flex font-sans transition-colors duration-300 ${pageCls}`}>
+    <div className={`min-h-screen flex admin-theme transition-colors duration-300 ${pageCls}`}>
       <Sidebar
         activeKey={activeKey}
         setActiveKey={setActiveKey}
@@ -145,7 +145,7 @@ export default function Refusees({ darkMode: initialDarkMode }) {
               onClick={() => exportRefuseesCSV(rows)}
               className={`inline-flex items-center gap-2 px-4 py-2 rounded-xl border text-sm font-semibold transition-colors ${
                 darkMode
-                  ? "border-gray-700 text-gray-200 hover:bg-gray-800"
+                  ?"border-gray-700 text-gray-200 hover:bg-gray-800"
                   : "border-gray-300 text-gray-700 hover:bg-gray-100"
               }`}
             >
@@ -162,7 +162,7 @@ export default function Refusees({ darkMode: initialDarkMode }) {
             <div className="overflow-x-auto">
               <table className="w-full text-sm min-w-[980px]">
                 <thead>
-                  <tr className={`text-xs border-b ${thCls} ${darkMode ? "border-gray-700" : "border-gray-200"}`}>
+                  <tr className={`text-xs border-b ${thCls} ${darkMode ?"border-gray-700" : "border-gray-200"}`}>
                     <th className="px-4 py-3 text-left font-semibold">Medecin</th>
                     <th className="px-4 py-3 text-left font-semibold">CNOM</th>
                     <th className="px-4 py-3 text-left font-semibold">Etablissement</th>
@@ -205,3 +205,6 @@ export default function Refusees({ darkMode: initialDarkMode }) {
     </div>
   );
 }
+
+
+

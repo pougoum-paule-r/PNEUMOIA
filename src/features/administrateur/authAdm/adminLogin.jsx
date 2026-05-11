@@ -2,13 +2,13 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from 'react-router-dom';
 import logo from '../../../assets/images/logo.png';
 
-// ── Phrases adaptées au rôle administrateur ──
+// â”€â”€ Phrases adaptÃ©es au rÃ´le administrateur â”€â”€
 const PHRASES = [
-  "Bienvenue sur votre plateforme de gestion médicale intelligente",
-  "Gérez les comptes médecins et le personnel soignant",
-  "Supervisez l'activité globale de la plateforme",
-  "Contrôlez les accès et la sécurité des données",
-  "Pilotez les statistiques et les rapports d'activité",
+  "Bienvenue sur votre plateforme de gestion mÃ©dicale intelligente",
+  "GÃ©rez les comptes mÃ©decins et le personnel soignant",
+  "Supervisez l'activitÃ© globale de la plateforme",
+  "ContrÃ´lez les accÃ¨s et la sÃ©curitÃ© des donnÃ©es",
+  "Pilotez les statistiques et les rapports d'activitÃ©",
 ];
 
 function SlidingTagline() {
@@ -30,8 +30,8 @@ function SlidingTagline() {
     <p
       style={{
         transition: "opacity 0.5s ease, transform 0.5s ease",
-        opacity: visible ? 1 : 0,
-        transform: visible ? "translateY(0)" : "translateY(12px)",
+        opacity: visible ?1 : 0,
+        transform: visible ?"translateY(0)" : "translateY(12px)",
       }}
       className="text-white/90 text-base font-medium leading-relaxed text-center min-h-[56px]"
     >
@@ -69,9 +69,9 @@ function FeatureBadge({ icon, label }) {
 }
 
 
-// ══════════════════════════════════════════
+// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
 // Login Admin
-// ══════════════════════════════════════════
+// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
 export default function AdminLogin() {
   const [form, setForm] = useState({ email: "", password: "" });
   const [loading, setLoading] = useState(false);
@@ -91,8 +91,8 @@ export default function AdminLogin() {
     setError("");
 
     try {
-      // ── Mode frontend-only : redirection directe ──
-      // Décommentez le bloc fetch ci-dessous quand le backend sera prêt :
+      // â”€â”€ Mode frontend-only : redirection directe â”€â”€
+      // DÃ©commentez le bloc fetch ci-dessous quand le backend sera prÃªt :
       /*
       const response = await fetch("http://localhost:8000/api/auth/login", {
         method: "POST",
@@ -105,10 +105,10 @@ export default function AdminLogin() {
       }
       const data = await response.json();
       localStorage.setItem("token", data.access_token);
-      localStorage.setItem("token_type", data.token_type ?? "bearer");
+      localStorage.setItem("token_type", data.token_type ?"bearer");
       */
 
-      // Simulation délai réseau puis redirection
+      // Simulation dÃ©lai rÃ©seau puis redirection
       await new Promise((res) => setTimeout(res, 900));
       localStorage.setItem("token", "demo-admin-token");
       localStorage.setItem("token_type", "bearer");
@@ -117,7 +117,7 @@ export default function AdminLogin() {
       navigate('/administrateur/dashboard');
 
     } catch (err) {
-      setError(err.message || "Erreur de connexion. Vérifiez vos identifiants.");
+      setError(err.message || "Erreur de connexion. VÃ©rifiez vos identifiants.");
     } finally {
       setLoading(false);
     }
@@ -126,7 +126,7 @@ export default function AdminLogin() {
   return (
     <div className="min-h-screen flex flex-col lg:flex-row font-sans">
 
-      {/* ══ Panneau gauche ══ */}
+      {/* â•â• Panneau gauche â•â• */}
       <div className="relative lg:w-[42%] xl:w-[38%] bg-gradient-to-br from-teal-500 via-teal-600 to-teal-800 flex flex-col items-center justify-center px-8 py-14 lg:py-0 overflow-hidden">
         <div className="absolute -top-24 -left-24 w-80 h-80 rounded-full bg-white/5 pointer-events-none" />
         <div className="absolute -bottom-20 -right-20 w-72 h-72 rounded-full bg-white/5 pointer-events-none" />
@@ -151,7 +151,7 @@ export default function AdminLogin() {
 
           <div className="hidden sm:flex flex-col gap-2.5 w-full">
             <FeatureBadge
-              label="Gestion des utilisateurs et accès"
+              label="Gestion des utilisateurs et accÃ¨s"
               icon={
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
                   <path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/>
@@ -161,7 +161,7 @@ export default function AdminLogin() {
               }
             />
             <FeatureBadge
-              label="Supervision et rapports d'activité"
+              label="Supervision et rapports d'activitÃ©"
               icon={
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
                   <line x1="18" y1="20" x2="18" y2="10"/>
@@ -171,7 +171,7 @@ export default function AdminLogin() {
               }
             />
             <FeatureBadge
-              label="Sécurité et contrôle des données"
+              label="SÃ©curitÃ© et contrÃ´le des donnÃ©es"
               icon={
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
                   <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
@@ -182,7 +182,7 @@ export default function AdminLogin() {
         </div>
       </div>
 
-      {/* ══ Panneau droit ══ */}
+      {/* â•â• Panneau droit â•â• */}
       <div className="flex-1 bg-gray-50 flex items-center justify-center px-4 py-12 sm:px-8">
         <div className="w-full max-w-sm">
           <div className="bg-white rounded-2xl border border-gray-100 shadow-sm px-7 py-8">
@@ -209,7 +209,7 @@ export default function AdminLogin() {
                   Identifiant email
                 </label>
                 <div className={`flex items-center gap-2.5 border rounded-xl px-3.5 py-3 transition-all duration-150 bg-white ${
-                  emailFocus ? "border-teal-500 ring-2 ring-teal-500/10" : "border-gray-200"
+                  emailFocus ?"border-teal-500 ring-2 ring-teal-500/10" : "border-gray-200"
                 }`}>
                   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" className="flex-shrink-0">
                     <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
@@ -235,7 +235,7 @@ export default function AdminLogin() {
                   Mot de passe
                 </label>
                 <div className={`flex items-center gap-2.5 border rounded-xl px-3.5 py-3 transition-all duration-150 bg-white ${
-                  pwdFocus ? "border-teal-500 ring-2 ring-teal-500/10" : "border-gray-200"
+                  pwdFocus ?"border-teal-500 ring-2 ring-teal-500/10" : "border-gray-200"
                 }`}>
                   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" className="flex-shrink-0">
                     <rect x="3" y="11" width="18" height="11" rx="2"/>
@@ -243,7 +243,7 @@ export default function AdminLogin() {
                     <circle cx="12" cy="16" r="1" fill="#9ca3af"/>
                   </svg>
                   <input
-                    type={showPwd ? "text" : "password"}
+                    type={showPwd ?"text" : "password"}
                     name="password"
                     value={form.password}
                     onChange={handleChange}
@@ -255,7 +255,7 @@ export default function AdminLogin() {
                     placeholder="Votre mot de passe"
                   />
                   <button type="button" onClick={() => setShowPwd(!showPwd)} className="text-gray-300 hover:text-gray-500 transition-colors flex-shrink-0">
-                    {showPwd ? <EyeOff /> : <EyeOpen />}
+                    {showPwd ?<EyeOff /> : <EyeOpen />}
                   </button>
                 </div>
               </div>
@@ -265,7 +265,7 @@ export default function AdminLogin() {
                 disabled={loading}
                 className="w-full bg-teal-600 hover:bg-teal-700 active:scale-[0.99] disabled:opacity-70 disabled:cursor-not-allowed text-white font-semibold text-sm rounded-xl py-3.5 flex items-center justify-center gap-2 transition-all duration-150 shadow-sm shadow-teal-200"
               >
-                {loading ? (
+                {loading ?(
                   <>
                     <svg className="animate-spin" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                       <path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83" strokeLinecap="round"/>
@@ -285,14 +285,14 @@ export default function AdminLogin() {
 
             <div className="mt-5 bg-teal-50 border border-teal-100 rounded-xl px-4 py-3">
               <p className="text-xs text-teal-700 leading-relaxed">
-                <span className="font-semibold">Démo :</span> remplissez les champs et cliquez sur{" "}
-                <span className="font-semibold italic">Se connecter</span> pour accéder au tableau de bord.
+                <span className="font-semibold">DÃ©mo :</span> remplissez les champs et cliquez sur{" "}
+                <span className="font-semibold italic">Se connecter</span> pour accÃ©der au tableau de bord.
               </p>
             </div>
           </div>
 
           <p className="text-center text-xs text-gray-400 mt-6">
-            © {new Date().getFullYear()} PneumoIA · Tous droits réservés
+            Â© {new Date().getFullYear()} PneumoIA Â· Tous droits rÃ©servÃ©s
           </p>
         </div>
       </div>

@@ -8,7 +8,7 @@ export default function AlerteBanner({ darkMode }) {
   return (
     <div className={`flex items-center justify-between gap-3 px-4 py-3 rounded-xl border text-sm mb-4 ${
       darkMode
-        ? "bg-orange-900/20 border-orange-700/40 text-orange-300"
+        ?"bg-orange-900/20 border-orange-700/40 text-orange-300"
         : "bg-orange-50 border-orange-200 text-orange-700"
     }`}>
       <div className="flex items-center gap-2.5">
@@ -17,9 +17,9 @@ export default function AlerteBanner({ darkMode }) {
           <line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/>
         </svg>
         <span>
-          <strong>4 demandes d'inscription</strong> en attente de validation —{" "}
+          <strong>4 demandes d'inscription</strong> en attente de validation â€”{" "}
           <button className="underline underline-offset-2 hover:no-underline font-semibold">
-            Traiter maintenant →
+            Traiter maintenant â†’
           </button>
         </span>
       </div>

@@ -1,14 +1,13 @@
 import React, { useState, useEffect, useRef } from 'react';
+import useAdminTheme from "../hooks/useAdminTheme";
 import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
-
-// Sous-composants
-import Sidebar from '../components/Sidebar';
 import Topbar from '../components/Topbar';
 import PathologyBars from '../components/PathologyBars';
 import SystemIndicators from '../components/IndicateurSysteme';
 import Top5Doctors from '../components/BestDoctor';
-
+// Sous-composants
+import Sidebar from '../components/Sidebar';
 const fallbackData = {
   pathologies: [
     { name: 'Asthme severe', cases: 247, percent: 88 },
@@ -43,21 +42,21 @@ const normalizeMonitoringData = (payload) => {
   if (!payload || typeof payload !== 'object') return fallbackData;
 
   return {
-    pathologies: Array.isArray(payload.pathologies) ? payload.pathologies : fallbackData.pathologies,
+    pathologies: Array.isArray(payload.pathologies) ?payload.pathologies : fallbackData.pathologies,
     globalStats:
       payload.globalStats && typeof payload.globalStats === 'object'
-        ? { ...fallbackData.globalStats, ...payload.globalStats }
+        ?{ ...fallbackData.globalStats, ...payload.globalStats }
         : fallbackData.globalStats,
-    topDoctors: Array.isArray(payload.topDoctors) ? payload.topDoctors : fallbackData.topDoctors,
+    topDoctors: Array.isArray(payload.topDoctors) ?payload.topDoctors : fallbackData.topDoctors,
   };
 };
 
 const MonitoringIA = () => {
   const reportRef = useRef(null);
   const apiBaseUrl = import.meta.env.VITE_API_BASE_URL;
-  const [darkMode, setDarkMode] = useState(false);
   const [activeKey, setActiveKey] = useState('monitoring');
   const [isMobileOpen, setMobileOpen] = useState(false);
+  const { darkMode, setDarkMode } = useAdminTheme();
 
   const [data, setData] = useState(fallbackData);
   const [loading, setLoading] = useState(true);
@@ -109,7 +108,7 @@ const MonitoringIA = () => {
         scrollY: -window.scrollY,
         windowWidth: element.scrollWidth,
         windowHeight: element.scrollHeight,
-        backgroundColor: darkMode ? '#111827' : '#f9fafb',
+        backgroundColor: darkMode ?'#111827' : '#f9fafb',
       });
 
       const imgData = canvas.toDataURL('image/png');
@@ -142,8 +141,8 @@ const MonitoringIA = () => {
 
   if (loading) {
     return (
-      <div className={`min-h-screen flex font-sans transition-colors duration-300 ${
-        darkMode ? 'bg-gray-950 text-white' : 'bg-gray-50 text-gray-900'
+      <div className={`min-h-screen flex admin-theme transition-colors duration-300 ${
+        darkMode ?'bg-gray-950 text-white' : 'bg-gray-50 text-gray-900'
       }`}>
         <Sidebar
           activeKey={activeKey}
@@ -167,8 +166,8 @@ const MonitoringIA = () => {
   }
 
   return (
-    <div className={`min-h-screen flex font-sans transition-colors duration-300 ${
-      darkMode ? 'bg-gray-950 text-white' : 'bg-gray-50 text-gray-900'
+    <div className={`min-h-screen flex admin-theme transition-colors duration-300 ${
+      darkMode ?'bg-gray-950 text-white' : 'bg-gray-50 text-gray-900'
     }`}>
       <Sidebar
         activeKey={activeKey}
@@ -186,10 +185,10 @@ const MonitoringIA = () => {
         <main ref={reportRef} className="flex-1 px-4 sm:px-6 py-4 space-y-6 pb-6">
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
             <div>
-              <h1 className={`text-3xl font-bold ${darkMode ? 'text-white' : 'text-gray-900'}`}>
+              <h1 className={`text-3xl font-bold ${darkMode ?'text-white' : 'text-gray-900'}`}>
                 Monitoring IA
               </h1>
-              <p className={`mt-1 ${darkMode ? 'text-gray-400' : 'text-gray-500'}`}>
+              <p className={`mt-1 ${darkMode ?'text-gray-400' : 'text-gray-500'}`}>
                 Modele v2.4.1 - deploye le 15/03/2026
               </p>
             </div>
@@ -199,23 +198,23 @@ const MonitoringIA = () => {
               onClick={downloadPDF}
               disabled={exportingPdf}
               className={`flex items-center gap-2 px-5 py-2.5 rounded-xl border text-sm font-medium transition-all active:scale-95 ${
-                darkMode ? 'bg-gray-800 border-gray-700 hover:bg-gray-700 text-white disabled:opacity-60' : 'bg-white border-gray-300 hover:bg-gray-50 disabled:opacity-60'
+                darkMode ?'bg-gray-800 border-gray-700 hover:bg-gray-700 text-white disabled:opacity-60' : 'bg-white border-gray-300 hover:bg-gray-50 disabled:opacity-60'
               }`}
             >
-              {exportingPdf ? 'Export en cours...' : 'Rapport PDF'}
+              {exportingPdf ?'Export en cours...' : 'Rapport PDF'}
             </button>
           </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
             <div
               className={`lg:col-span-8 rounded-2xl p-6 border ${
-                darkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-100'
+                darkMode ?'bg-gray-800 border-gray-700' : 'bg-white border-gray-100'
               }`}
             >
-              <h2 className={`text-xl font-semibold mb-1 ${darkMode ? 'text-white' : 'text-gray-900'}`}>
+              <h2 className={`text-xl font-semibold mb-1 ${darkMode ?'text-white' : 'text-gray-900'}`}>
                 Concordance par pathologie
               </h2>
-              <p className={`mb-6 text-sm ${darkMode ? 'text-gray-400' : 'text-gray-500'}`}>
+              <p className={`mb-6 text-sm ${darkMode ?'text-gray-400' : 'text-gray-500'}`}>
                 10 pathologies - toutes consultations
               </p>
 
@@ -234,3 +233,6 @@ const MonitoringIA = () => {
 };
 
 export default MonitoringIA;
+
+
+

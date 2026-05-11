@@ -75,6 +75,11 @@
     background-color: var(--bg);
     color: var(--t1);
   }
+
+  .admin-theme,
+  .admin-theme * {
+    font-family: "Times New Roman", Times, serif !important;
+  }
 }
 
 @layer components {

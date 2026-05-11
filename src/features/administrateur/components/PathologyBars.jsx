@@ -7,7 +7,7 @@ export default function PathologyBars({
       {pathologies.map((patho, i) => (
         <div key={i} className="space-y-2">
           <div className="flex justify-between items-baseline">
-            <span className={`font-medium ${darkMode ? "text-gray-200" : "text-gray-800"}`}>
+            <span className={`font-medium ${darkMode ?"text-gray-200" : "text-gray-800"}`}>
               {patho.name}
             </span>
             <div>

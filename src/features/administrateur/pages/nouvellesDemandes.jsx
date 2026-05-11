@@ -1,10 +1,10 @@
 import React, { useEffect, useMemo, useState } from "react";
-import Sidebar from "../components/Sidebar";
-import Topbar from "../components/Topbar";
-import DossierModal from "../components/DossierModal";
-import RefusModal from "../components/RefusModal";
+import useAdminTheme from "../hooks/useAdminTheme";
 import useAdminNotificationCount from "../hooks/useAdminNotificationCount";
-
+import RefusModal from "../components/RefusModal";
+import DossierModal from "../components/DossierModal";
+import Topbar from "../components/Topbar";
+import Sidebar from "../components/Sidebar";
 const MOCK_DEMANDES = [
   {
     id: 1,
@@ -97,16 +97,16 @@ function DocumentsTags({ documents }) {
       {documents.map((d, index) => {
         const ok = d.status === "verified";
         const pending = d.status === "pending";
-        const statusLabel = ok ? "OK" : pending ? "WAIT" : "MISS";
+        const statusLabel = ok ?"OK" : pending ?"WAIT" : "MISS";
 
         return (
           <span
             key={`${d.label}-${index}`}
             className={`inline-flex items-center gap-1 px-3 py-1 rounded-lg text-sm font-medium ${
               ok
-                ? "bg-emerald-50 text-emerald-700"
+                ?"bg-emerald-50 text-emerald-700"
                 : pending
-                ? "bg-amber-50 text-amber-700"
+                ?"bg-amber-50 text-amber-700"
                 : "bg-red-50 text-red-600"
             }`}
           >
@@ -119,7 +119,7 @@ function DocumentsTags({ documents }) {
 }
 
 export default function NouvellesDemandes() {
-  const [darkMode, setDarkMode] = useState(false);
+  const { darkMode, setDarkMode } = useAdminTheme();
   const [activeKey, setActiveKey] = useState("nouvelles");
   const [isMobileOpen, setMobileOpen] = useState(false);
   const [demandes, setDemandes] = useState(MOCK_DEMANDES);
@@ -134,7 +134,7 @@ export default function NouvellesDemandes() {
   }, [pending.length, setGlobalNotificationCount]);
 
   const handleAction = (id, action) => {
-    setDemandes((prev) => prev.map((item) => (item.id === id ? { ...item, status: action } : item)));
+    setDemandes((prev) => prev.map((item) => (item.id === id ?{ ...item, status: action } : item)));
   };
 
   const handleExportCSV = () => {
@@ -152,7 +152,7 @@ export default function NouvellesDemandes() {
   };
 
   return (
-    <div className={`min-h-screen flex font-sans transition-colors duration-300 ${darkMode ? "bg-gray-950 text-white" : "bg-gray-50 text-gray-900"}`}>
+    <div className={`min-h-screen flex admin-theme transition-colors duration-300 ${darkMode ?"bg-gray-950 text-white" : "bg-gray-50 text-gray-900"}`}>
       <Sidebar activeKey={activeKey} setActiveKey={setActiveKey} darkMode={darkMode} isMobileOpen={isMobileOpen} setMobileOpen={setMobileOpen} />
 
       <div className="flex-1 flex flex-col min-w-0 overflow-x-hidden">
@@ -162,7 +162,7 @@ export default function NouvellesDemandes() {
           <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4 mb-5">
             <div>
               <h1 className="text-3xl font-bold tracking-tight">Nouvelles demandes</h1>
-              <p className={`text-sm mt-1 ${darkMode ? "text-gray-400" : "text-gray-500"}`}>
+              <p className={`text-sm mt-1 ${darkMode ?"text-gray-400" : "text-gray-500"}`}>
                 Validation manuelle obligatoire. Chaque dossier est verifie avant activation du compte.
               </p>
             </div>
@@ -171,7 +171,7 @@ export default function NouvellesDemandes() {
               onClick={handleExportCSV}
               className={`inline-flex items-center gap-2 px-4 py-2 rounded-xl border text-sm font-medium transition-all ${
                 darkMode
-                  ? "border-gray-700 text-gray-300 hover:bg-teal-600 hover:border-teal-600 hover:text-white"
+                  ?"border-gray-700 text-gray-300 hover:bg-teal-600 hover:border-teal-600 hover:text-white"
                   : "border-gray-300 text-gray-700 hover:bg-teal-600 hover:border-teal-600 hover:text-white"
               }`}
             >
@@ -180,15 +180,15 @@ export default function NouvellesDemandes() {
             </button>
           </div>
 
-          <div className={`mb-4 rounded-xl border px-4 py-3 text-sm ${darkMode ? "bg-teal-900/20 border-teal-700/40 text-teal-200" : "bg-teal-50 border-teal-200 text-teal-700"}`}>
+          <div className={`mb-4 rounded-xl border px-4 py-3 text-sm ${darkMode ?"bg-teal-900/20 border-teal-700/40 text-teal-200" : "bg-teal-50 border-teal-200 text-teal-700"}`}>
             Verifier : <span className="font-semibold">N degre CNOM</span>, <span className="font-semibold">diplome de specialite</span>, <span className="font-semibold">attestation d'exercice en cours de validite</span>.
             Le medecin recoit un e-mail automatique a chaque decision.
           </div>
 
           <div className="space-y-4">
-            {pending.length === 0 ? (
-              <div className={`rounded-2xl border p-12 text-center ${darkMode ? "border-gray-700 bg-gray-900" : "border-gray-200 bg-white"}`}>
-                <p className={`text-sm ${darkMode ? "text-gray-400" : "text-gray-500"}`}>Toutes les demandes ont ete traitees.</p>
+            {pending.length === 0 ?(
+              <div className={`rounded-2xl border p-12 text-center ${darkMode ?"border-gray-700 bg-gray-900" : "border-gray-200 bg-white"}`}>
+                <p className={`text-sm ${darkMode ?"text-gray-400" : "text-gray-500"}`}>Toutes les demandes ont ete traitees.</p>
               </div>
             ) : (
               pending.map((doc) => {
@@ -199,11 +199,11 @@ export default function NouvellesDemandes() {
                     key={doc.id}
                     className={`rounded-2xl border p-4 sm:p-5 ${
                       hasMissing
-                        ? darkMode
-                          ? "border-amber-700/60 bg-amber-950/10"
+                        ?darkMode
+                          ?"border-amber-700/60 bg-amber-950/10"
                           : "border-amber-300 bg-white"
                         : darkMode
-                        ? "border-teal-800/60 bg-teal-950/10"
+                        ?"border-teal-800/60 bg-teal-950/10"
                         : "border-teal-200 bg-white"
                     }`}
                   >
@@ -212,32 +212,32 @@ export default function NouvellesDemandes() {
                         <div className="w-11 h-11 rounded-full bg-teal-600 text-white font-bold flex items-center justify-center">{doc.initials}</div>
                         <div>
                           <h3 className="text-2xl font-semibold">{doc.name}</h3>
-                          <p className={`text-base ${darkMode ? "text-gray-300" : "text-gray-600"}`}>{doc.specialite} - {doc.hopital}</p>
-                          <p className={`text-sm ${darkMode ? "text-gray-400" : "text-gray-500"}`}>CNOM : {doc.cnom} - {doc.email} - {doc.telephone}</p>
+                          <p className={`text-base ${darkMode ?"text-gray-300" : "text-gray-600"}`}>{doc.specialite} - {doc.hopital}</p>
+                          <p className={`text-sm ${darkMode ?"text-gray-400" : "text-gray-500"}`}>CNOM : {doc.cnom} - {doc.email} - {doc.telephone}</p>
                         </div>
                       </div>
 
                       <div className="text-right">
-                        <p className={`text-sm ${darkMode ? "text-gray-400" : "text-gray-500"}`}>{doc.time}</p>
-                        <span className={`mt-2 inline-flex px-3 py-1 rounded-lg text-sm font-medium ${hasMissing ? "bg-amber-100 text-amber-700" : "bg-emerald-100 text-emerald-700"}`}>
-                          {hasMissing ? "Document manquant" : "Dossier complet"}
+                        <p className={`text-sm ${darkMode ?"text-gray-400" : "text-gray-500"}`}>{doc.time}</p>
+                        <span className={`mt-2 inline-flex px-3 py-1 rounded-lg text-sm font-medium ${hasMissing ?"bg-amber-100 text-amber-700" : "bg-emerald-100 text-emerald-700"}`}>
+                          {hasMissing ?"Document manquant" : "Dossier complet"}
                         </span>
                       </div>
                     </div>
 
                     {hasMissing && (
-                      <div className={`mt-4 rounded-xl border px-4 py-3 text-base ${darkMode ? "bg-amber-900/20 border-amber-700/50 text-amber-300" : "bg-amber-50 border-amber-200 text-amber-700"}`}>
+                      <div className={`mt-4 rounded-xl border px-4 py-3 text-base ${darkMode ?"bg-amber-900/20 border-amber-700/50 text-amber-300" : "bg-amber-50 border-amber-200 text-amber-700"}`}>
                         Document manquant : la validation ne peut pas etre effectuee.
                       </div>
                     )}
 
-                    <div className={`mt-4 rounded-xl border p-4 ${darkMode ? "bg-gray-900 border-gray-700" : "bg-gray-50 border-gray-200"}`}>
-                      <p className={`text-base ${darkMode ? "text-gray-300" : "text-gray-600"}`}>Documents soumis - cliquez pour visualiser</p>
+                    <div className={`mt-4 rounded-xl border p-4 ${darkMode ?"bg-gray-900 border-gray-700" : "bg-gray-50 border-gray-200"}`}>
+                      <p className={`text-base ${darkMode ?"text-gray-300" : "text-gray-600"}`}>Documents soumis - cliquez pour visualiser</p>
                       <DocumentsTags documents={doc.documents} />
                     </div>
 
                     <div className="mt-4 flex flex-wrap gap-2">
-                      {!hasMissing ? (
+                      {!hasMissing ?(
                         <button onClick={() => handleAction(doc.id, "validated")} className="inline-flex items-center gap-1.5 text-base font-semibold text-teal-700 border border-teal-300 bg-teal-50 hover:bg-teal-100 px-4 py-2 rounded-xl transition-colors">
                           Valider l'inscription
                         </button>
@@ -250,7 +250,7 @@ export default function NouvellesDemandes() {
                       <button
                         onClick={() => setSelectedDossier(doc)}
                         className={`inline-flex items-center gap-1.5 text-base font-semibold border px-4 py-2 rounded-xl transition-colors ${
-                          darkMode ? "border-gray-700 text-gray-200 hover:bg-gray-800" : "border-gray-300 text-gray-700 hover:bg-gray-100"
+                          darkMode ?"border-gray-700 text-gray-200 hover:bg-gray-800" : "border-gray-300 text-gray-700 hover:bg-gray-100"
                         }`}
                       >
                         Voir dossier complet
@@ -295,4 +295,7 @@ export default function NouvellesDemandes() {
     </div>
   );
 }
+
+
+
 

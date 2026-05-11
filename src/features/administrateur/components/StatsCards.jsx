@@ -2,7 +2,7 @@ import React from "react";
 
 const stats = [
   {
-    label: "Médecins actifs",
+    label: "MÃ©decins actifs",
     value: "38",
     trend: "+3 ce mois",
     trendUp: true,
@@ -74,11 +74,11 @@ export default function StatsCards({ darkMode }) {
             rounded-2xl border p-5 flex flex-col gap-4
             transition-all duration-200 hover:shadow-md cursor-pointer
             ${s.urgent
-              ? darkMode
-                ? "bg-orange-900/20 border-orange-700/40"
+              ?darkMode
+                ?"bg-orange-900/20 border-orange-700/40"
                 : "bg-orange-50 border-orange-200"
               : darkMode
-                ? "bg-gray-800 border-gray-700"
+                ?"bg-gray-800 border-gray-700"
                 : "bg-white border-gray-100"
             }
           `}
@@ -97,27 +97,27 @@ export default function StatsCards({ darkMode }) {
           <div>
             <p className={`text-3xl font-bold tracking-tight ${
               s.urgent
-                ? "text-orange-500"
-                : darkMode ? "text-white" : "text-gray-900"
+                ?"text-orange-500"
+                : darkMode ?"text-white" : "text-gray-900"
             }`}>
               {s.value}
             </p>
-            <p className={`text-xs mt-0.5 ${darkMode ? "text-gray-400" : "text-gray-500"}`}>
+            <p className={`text-xs mt-0.5 ${darkMode ?"text-gray-400" : "text-gray-500"}`}>
               {s.label}
             </p>
           </div>
 
           <div className={`flex items-center gap-1.5 text-xs font-medium ${
             s.trendAlert
-              ? "text-orange-500"
+              ?"text-orange-500"
               : s.trendUp
-                ? "text-teal-600 dark:text-teal-400"
+                ?"text-teal-600 dark:text-teal-400"
                 : "text-red-500"
           }`}>
             {!s.trendAlert && (
               <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
                 {s.trendUp
-                  ? <polyline points="18 15 12 9 6 15"/>
+                  ?<polyline points="18 15 12 9 6 15"/>
                   : <polyline points="6 9 12 15 18 9"/>
                 }
               </svg>
