@@ -37,7 +37,7 @@ export default function MedecinLayout() {
   // Calculer la marge gauche
   const getMarginLeft = () => {
     if (!isDesktop) return '0px';
-    return isCollapsed ? '100px' : '340px';
+    return isCollapsed ? '100px' : '260px';
   };
 
   return (

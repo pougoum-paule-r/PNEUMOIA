@@ -1,255 +1,467 @@
 // src/features/medecin/pages/Dashboard.jsx
 import { motion } from 'framer-motion';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { 
   Users, AlertTriangle, Stethoscope, Award,
   MessageCircle, Bell, ChevronRight, Eye,
   FileText, Calendar, Clock, TrendingUp,
   Activity, CheckCircle, Clock as ClockIcon,
-  Star, TrendingDown, MoreHorizontal
+  Star, TrendingDown, MoreHorizontal, PlusCircle,
+  RefreshCw, Info, ArrowUpRight, UserPlus,
+  Zap, Shield, Sparkles, Crown, HeartHandshake,
+  Target, Rocket, Send, Phone, Mail, MapPin, 
+  Briefcase, GraduationCap, Building2, 
+  Globe, BookOpen, Trophy,
+  Heart, Brain, Microscope, ClipboardList, Pill,
+  Calendar as CalendarIcon  
 } from 'lucide-react';
+import { useState, useEffect } from 'react';
+import {
+  AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer
+} from 'recharts';
 
 export default function Dashboard() {
-  // Stats cards avec style CORE.OS
-  const statsCards = [
-    { 
-      title: "Patients totaux", 
-      value: "247", 
-      icon: Users, 
-      increase: "+12%", 
-      trend: "up",
-      color: "blue",
-      subtitle: "vs mois dernier"
-    },
-    { 
-      title: "Cas urgent", 
-      value: "18", 
-      icon: AlertTriangle, 
-      increase: "+5%", 
-      trend: "up",
-      color: "orange",
-      subtitle: "vs mois dernier"
-    },
-    { 
-      title: "Consultations", 
-      value: "1 247", 
-      icon: Stethoscope, 
-      increase: "+8%", 
-      trend: "up",
-      color: "emerald",
-      subtitle: "vs mois dernier"
-    },
-    { 
-      title: "Communauté", 
-      value: "128", 
-      icon: Award, 
-      increase: "+15%", 
-      trend: "up",
-      color: "purple",
-      subtitle: "membres actifs"
+  const navigate = useNavigate();
+  const [period, setPeriod] = useState('weekly');
+  const [statsLoading, setStatsLoading] = useState(false);
+  const [dashboardData, setDashboardData] = useState({
+    stats: [],
+    chartData: [],
+    recentConsultations: [],
+    recentMessages: [],
+    recentPatients: [],
+    notifications: [],
+    diagnostics: [],
+    ranking: { position: 2, total: 20, score: 94.2, cases: 124 }
+  });
+
+  // Données mockées
+  const mockMessages = [
+    { id: 1, sender: "Dr. Merlin", message: "Pouvez-vous m'envoyer le résultat de Tamo ?", time: "14:30", unread: true, avatar: "DM" },
+    { id: 2, sender: "Dr Kamto Jordan", message: "Merci pour le partage du cas #124", time: "11:20", unread: false, avatar: "KJ" },
+    { id: 3, sender: "Dr. Nkoa", message: "Questions sur la prise en charge BPCO", time: "Hier", unread: true, avatar: "DN" },
+    { id: 4, sender: "Dr. Fouda", message: "Cas clinique intéressant à partager", time: "25/03", unread: false, avatar: "DF" }
+  ];
+
+  const mockNotifications = [
+    { id: 1, text: "Suivi dépassé — KAMGA Jean depuis 9 jours", time: "Il y a 2h", type: "warning", icon: ClockIcon },
+    { id: 2, text: "Dr. Martin demande accès au dossier de TAMO Bernard", time: "Il y a 3h", type: "info", icon: Users },
+    { id: 3, text: "Votre cas #124 a reçu 3 nouveaux commentaires", time: "Hier", type: "success", icon: MessageCircle }
+  ];
+
+  const calculateStats = () => {
+    const today = new Date();
+    const patients = JSON.parse(localStorage.getItem('medecin_patients') || '[]');
+    const consultations = JSON.parse(localStorage.getItem('medecin_consultations') || '[]');
+    
+    const patientsThisMonth = patients.filter(p => {
+      const lastVisit = new Date(p.lastVisit);
+      return lastVisit.getMonth() === today.getMonth();
+    }).length;
+    
+    const patientsLastMonth = patients.filter(p => {
+      const lastVisit = new Date(p.lastVisit);
+      return lastVisit.getMonth() === today.getMonth() - 1;
+    }).length;
+    
+    const patientGrowth = patientsLastMonth ? ((patientsThisMonth - patientsLastMonth) / patientsLastMonth * 100).toFixed(1) : 12;
+    
+    const consultationsThisMonth = consultations.filter(c => {
+      const date = new Date(c.date);
+      return date.getMonth() === today.getMonth();
+    }).length;
+    
+    const consultationsLastMonth = consultations.filter(c => {
+      const date = new Date(c.date);
+      return date.getMonth() === today.getMonth() - 1;
+    }).length;
+    
+    const consultationGrowth = consultationsLastMonth ? ((consultationsThisMonth - consultationsLastMonth) / consultationsLastMonth * 100).toFixed(1) : 8;
+    
+    const urgentCases = patients.filter(p => p.status === 'critique').length;
+    
+    return {
+      stats: [
+        { 
+          title: "Patients totaux", 
+          value: patients.length || 247, 
+          icon: Users, 
+          increase: `+${patientGrowth}%`, 
+          trend: "up",
+          gradient: "from-blue-500 to-blue-600",
+          subtitle: `${patientsThisMonth} nouveaux ce mois-ci`,
+          link: "/medecin/patients"
+        },
+        { 
+          title: "Cas urgents", 
+          value: urgentCases || 18, 
+          icon: AlertTriangle, 
+          increase: "+5%", 
+          trend: "up",
+          gradient: "from-orange-500 to-orange-600",
+          subtitle: `${urgentCases} patients nécessitent une attention immédiate`,
+          link: "/medecin/patients?status=critique"
+        },
+        { 
+          title: "Consultations", 
+          value: consultations.length || 1247, 
+          icon: Stethoscope, 
+          increase: `+${consultationGrowth}%`, 
+          trend: "up",
+          gradient: "from-emerald-500 to-emerald-600",
+          subtitle: `${consultationsThisMonth} consultations ce mois-ci`,
+          link: "/medecin/historique-consultations"
+        },
+        { 
+          title: "Communauté", 
+          value: "128", 
+          icon: Award, 
+          increase: "+15%", 
+          trend: "up",
+          gradient: "from-blue-500 to-blue-600",
+          subtitle: "124 cas partagés, 5 nouveaux membres",
+          link: "/medecin/cas-cliniques"
+        }
+      ]
+    };
+  };
+
+  const generateChartData = (period) => {
+    if (period === 'weekly') {
+      return [
+        { day: "Lun", consultations: 12, patients: 8 },
+        { day: "Mar", consultations: 18, patients: 14 },
+        { day: "Mer", consultations: 14, patients: 11 },
+        { day: "Jeu", consultations: 22, patients: 18 },
+        { day: "Ven", consultations: 26, patients: 22 },
+        { day: "Sam", consultations: 20, patients: 16 },
+        { day: "Dim", consultations: 16, patients: 13 }
+      ];
+    } else if (period === 'monthly') {
+      return [
+        { day: "Sem 1", consultations: 45, patients: 38 },
+        { day: "Sem 2", consultations: 52, patients: 44 },
+        { day: "Sem 3", consultations: 48, patients: 41 },
+        { day: "Sem 4", consultations: 62, patients: 55 }
+      ];
+    } else {
+      return [
+        { day: "Jan", consultations: 180, patients: 145 },
+        { day: "Fév", consultations: 195, patients: 160 },
+        { day: "Mar", consultations: 210, patients: 178 },
+        { day: "Avr", consultations: 225, patients: 190 },
+        { day: "Mai", consultations: 240, patients: 205 },
+        { day: "Juin", consultations: 235, patients: 200 }
+      ];
     }
-  ];
+  };
 
-  // Graphique amélioré
-  const chartData = [
-    { day: "Lun", value: 12, consultations: 8 },
-    { day: "Mar", value: 18, consultations: 14 },
-    { day: "Mer", value: 14, consultations: 11 },
-    { day: "Jeu", value: 22, consultations: 18 },
-    { day: "Ven", value: 26, consultations: 22 },
-    { day: "Sam", value: 20, consultations: 16 },
-    { day: "Dim", value: 16, consultations: 13 }
-  ];
+  useEffect(() => {
+    loadDashboardData();
+  }, [period]);
 
-  // Consultations récentes améliorées
-  const recentConsultations = [
-    { name: "Tamo Bernard", pathology: "Pneumonie bactérienne", percentage: 85, date: "Aujourd'hui", time: "14:30", status: "completed", avatar: "TB" },
-    { name: "Fouda Marie", pathology: "BPCO stade 3", percentage: 72, date: "Aujourd'hui", time: "11:20", status: "in-progress", avatar: "FM" },
-    { name: "Nguema Paul", pathology: "Asthme sévère", percentage: 91, date: "Hier", time: "09:15", status: "completed", avatar: "NP" },
-    { name: "Mboma Éric", pathology: "Bronchite aiguë", percentage: 68, date: "Hier", time: "16:45", status: "pending", avatar: "MÉ" },
-    { name: "Kamga Jean", pathology: "Tuberculose", percentage: 79, date: "25/03/2026", time: "10:00", status: "completed", avatar: "KJ" }
-  ];
+  const loadDashboardData = () => {
+    setStatsLoading(true);
+    setTimeout(() => {
+      const { stats } = calculateStats();
+      const chartData = generateChartData(period);
+      
+      const consultations = JSON.parse(localStorage.getItem('medecin_consultations') || '[]');
+      const patients = JSON.parse(localStorage.getItem('medecin_patients') || '[]');
+      
+      const formattedConsultations = consultations.slice(0, 5).map((c, idx) => ({
+        id: c.id || idx,
+        name: typeof c.patient === 'string' ? c.patient : c.patient?.name || 'Patient',
+        pathology: c.pathology,
+        percentage: Math.floor(Math.random() * 40) + 60,
+        date: new Date(c.date).toLocaleDateString('fr-FR'),
+        time: c.time,
+        status: c.status,
+        avatar: (typeof c.patient === 'string' ? c.patient.charAt(0) : (c.patient?.name?.charAt(0) || 'P'))
+      }));
+      
+      const recentConsultations = formattedConsultations.length > 0 ? formattedConsultations : [
+        { id: 1, name: "Tamo Bernard", pathology: "Pneumonie bactérienne", percentage: 85, date: "Aujourd'hui", time: "14:30", status: "completed", avatar: "TB" },
+        { id: 2, name: "Fouda Marie", pathology: "BPCO stade 3", percentage: 72, date: "Aujourd'hui", time: "11:20", status: "in-progress", avatar: "FM" },
+        { id: 3, name: "Nguema Paul", pathology: "Asthme sévère", percentage: 91, date: "Hier", time: "09:15", status: "completed", avatar: "NP" },
+        { id: 4, name: "Mboma Éric", pathology: "Bronchite aiguë", percentage: 68, date: "Hier", time: "16:45", status: "pending", avatar: "MÉ" }
+      ];
+      
+      const formattedPatients = patients.slice(0, 4).map(p => ({
+        name: p.name,
+        age: p.age,
+        pathology: p.pathology,
+        status: p.status === 'actif' ? 'Stable' : p.status === 'critique' ? 'Urgent' : 'Suivi 7j',
+        lastVisit: new Date(p.lastVisit).toLocaleDateString('fr-FR')
+      }));
+      
+      const recentPatients = formattedPatients.length > 0 ? formattedPatients : [
+        { name: "Tamo Bernard", age: "47 ans", pathology: "Pneumonie", status: "Suivi 7j", lastVisit: "Aujourd'hui" },
+        { name: "Fouda Marie", age: "52 ans", pathology: "BPCO", status: "Stable", lastVisit: "Hier" },
+        { name: "Kamga Jean", age: "71 ans", pathology: "Tuberculose", status: "Urgent", lastVisit: "Il y a 2j" },
+        { name: "Nguema Paul", age: "63 ans", pathology: "Asthme", status: "Stable", lastVisit: "Il y a 3j" }
+      ];
+      
+      setDashboardData({
+        stats,
+        chartData,
+        recentConsultations,
+        recentMessages: mockMessages,
+        recentPatients,
+        notifications: mockNotifications,
+        diagnostics: [
+          { name: "Pneumonie", value: 97, patients: 42, color: "from-blue-500 to-blue-600" },
+          { name: "BPCO", value: 69, patients: 28, color: "from-blue-500 to-blue-600" },
+          { name: "Asthme", value: 57, patients: 23, color: "from-blue-500 to-blue-600" },
+          { name: "Tuberculose", value: 43, patients: 18, color: "from-blue-500 to-blue-600" },
+          { name: "Bronchite", value: 38, patients: 15, color: "from-blue-500 to-blue-600" }
+        ],
+        ranking: { position: 2, total: 20, score: 94.2, cases: 124 }
+      });
+      setStatsLoading(false);
+    }, 500);
+  };
 
   const getStatusBadge = (status) => {
     const badges = {
-      'completed': { label: 'Terminé', className: 'bg-emerald-50 text-emerald-700' },
-      'in-progress': { label: 'En cours', className: 'bg-blue-50 text-blue-700' },
-      'pending': { label: 'En attente', className: 'bg-amber-50 text-amber-700' }
+      'completed': { label: 'Terminé', className: 'bg-emerald-500 text-white' },
+      'in-progress': { label: 'En cours', className: 'bg-blue-500 text-white' },
+      'pending': { label: 'En attente', className: 'bg-amber-500 text-white' }
     };
     return badges[status] || badges.completed;
   };
 
-  // Messages récents améliorés
-  const recentMessages = [
-    { name: "Dr. Merlin", message: "Pouvez-vous m'envoyer le résultat de Tamo ?", time: "14:30", unread: true, avatar: "DM" },
-    { name: "Dr Kamto Jordan", message: "Merci pour le partage du cas #124", time: "11:20", unread: false, avatar: "KJ" },
-    { name: "Dr. Nkoa", message: "Questions sur la prise en charge BPCO", time: "Hier", unread: true, avatar: "DN" },
-    { name: "Dr. Fouda", message: "Cas clinique intéressant à partager", time: "25/03", unread: false, avatar: "DF" }
-  ];
-
-  // Patients récents améliorés
-  const recentPatients = [
-    { name: "Tamo Bernard", age: "47 ans", pathology: "Pneumonie", status: "Suivi 7j", lastVisit: "Aujourd'hui" },
-    { name: "Fouda Marie", age: "52 ans", pathology: "BPCO", status: "Stable", lastVisit: "Hier" },
-    { name: "Kamga Jean", age: "71 ans", pathology: "Tuberculose", status: "Urgent", lastVisit: "Il y a 2j" },
-    { name: "Nguema Paul", age: "63 ans", pathology: "Asthme", status: "Stable", lastVisit: "Il y a 3j" }
-  ];
-
   const getStatusColor = (status) => {
     const colors = {
-      "Suivi 7j": "bg-blue-50 text-blue-700 border-blue-200",
-      "Stable": "bg-emerald-50 text-emerald-700 border-emerald-200",
-      "Urgent": "bg-red-50 text-red-700 border-red-200"
+      "Suivi 7j": "bg-blue-500 text-white",
+      "Stable": "bg-emerald-500 text-white",
+      "Urgent": "bg-red-500 text-white"
     };
-    return colors[status] || "bg-gray-50 text-gray-600 border-gray-200";
+    return colors[status] || "bg-slate-100 text-slate-600";
   };
 
-  // Notifications améliorées
-  const notifications = [
-    { text: "Suivi dépassé — KAMGA Jean depuis 9 jours", time: "Il y a 2h", type: "warning", icon: ClockIcon },
-    { text: "Dr. Martin demande accès au dossier de TAMO Bernard", time: "Il y a 3h", type: "info", icon: Users },
-    { text: "Votre cas #124 a reçu 3 nouveaux commentaires", time: "Hier", type: "success", icon: MessageCircle }
-  ];
+  const getNotifColor = (type) => {
+    const colors = {
+      warning: 'bg-amber-500',
+      info: 'bg-blue-500',
+      success: 'bg-emerald-500'
+    };
+    return colors[type] || colors.info;
+  };
 
-  // Diagnostics du mois améliorés
-  const diagnostics = [
-    { name: "Pneumonie", value: 97, color: "blue", patients: 42 },
-    { name: "BPCO", value: 69, color: "indigo", patients: 28 },
-    { name: "Asthme", value: 57, color: "cyan", patients: 23 },
-    { name: "Tuberculose", value: 43, color: "purple", patients: 18 },
-    { name: "Bronchite", value: 38, color: "sky", patients: 15 },
-    { name: "Autres", value: 24, color: "gray", patients: 10 }
-  ];
-
-  const maxChartValue = Math.max(...chartData.map(d => d.value));
+  const CustomTooltip = ({ active, payload, label }) => {
+    if (active && payload && payload.length) {
+      return (
+        <div className="bg-white rounded-lg shadow-lg border border-slate-200 p-3">
+          <p className="text-xs font-semibold text-slate-800">{label}</p>
+          {payload.map((p, i) => (
+            <p key={i} className="text-xs text-slate-600 mt-1">
+              {p.name}: <span className="font-bold text-blue-600">{p.value}</span>
+            </p>
+          ))}
+        </div>
+      );
+    }
+    return null;
+  };
 
   return (
     <div className="space-y-8">
-      {/* En-tête du dashboard */}
-      <div className="flex items-center">
-        {/* <div>
-          <h1 className="text-2xl font-black tracking-tight text-slate-900">Dashboard Médecin</h1>
-          <p className="text-sm text-slate-500 mt-1">Bienvenue, Dr. Jean Dupont</p>
-        </div> */}
-        <div className="flex gap-3">
-          <button className="px-4 py-2 bg-white border border-slate-200 rounded-xl text-sm font-medium text-slate-600 hover:bg-slate-50 transition-all">
-            <Calendar className="w-4 h-4 inline mr-2" />
-            Cette semaine
-          </button>
-          <button className="px-4 py-2 bg-blue-600 text-white rounded-xl text-sm font-medium hover:bg-blue-700 transition-all shadow-sm shadow-blue-200">
-            <FileText className="w-4 h-4 inline mr-2" />
-            Nouvelle consultation
-          </button>
+      {/* En-tête - version bleue */}
+      <div className="relative overflow-hidden bg-gradient-to-br from-blue-600 to-blue-800 rounded-2xl p-8 shadow-2xl">
+        <div className="absolute top-0 right-0 w-96 h-96 bg-blue-400/30 rounded-full blur-3xl" />
+        <div className="absolute bottom-0 left-0 w-96 h-96 bg-blue-500/20 rounded-full blur-3xl" />
+        
+        <div className="relative">
+          <div className="flex flex-wrap items-center justify-between gap-4">
+            <div>
+              <div className="flex items-center gap-2 mb-3">
+                <div className="w-1 h-8 bg-blue-300 rounded-full"></div>
+                <span className="text-xs font-bold uppercase tracking-[0.2em] text-blue-200">Tableau de bord</span>
+              </div>
+              <h1 className="text-3xl md:text-4xl font-bold text-white">
+                Bienvenue, <span className="text-blue-200">Dr. Tagne</span>
+              </h1>
+              <div className="flex items-center gap-2 mt-3">
+                <div className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></div>
+                <p className="text-blue-100">Vous avez {new Date().toLocaleDateString('fr-FR', { weekday: 'long', day: 'numeric', month: 'long' })}</p>
+              </div>
+            </div>
+            
+            <div className="flex gap-3">
+              <button 
+                onClick={() => navigate('/medecin/historique')}
+                className="flex items-center gap-2 px-5 py-2.5 bg-white/10 backdrop-blur-sm border border-white/20 rounded-xl text-sm font-medium text-white hover:bg-white/20 transition-all"
+              >
+                <CalendarIcon className="w-4 h-4" />
+                Cette semaine
+              </button>
+              <button 
+                onClick={() => navigate('/medecin/consultation')}
+                className="flex items-center gap-2 px-5 py-2.5 bg-white text-blue-600 rounded-xl text-sm font-medium hover:bg-blue-50 transition-all shadow-lg"
+              >
+                <PlusCircle className="w-4 h-4" />
+                Nouvelle consultation
+              </button>
+            </div>
+          </div>
         </div>
       </div>
 
-      {/* LIGNE 1 : 4 CARDS PRINCIPALES - Style CORE.OS */}
+      {/* Cartes stats - toutes en bleu */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-        {statsCards.map((card, i) => (
-          <motion.div
-            key={i}
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: i * 0.1 }}
-            className="group bg-white rounded-2xl p-6 border border-slate-200 hover:border-slate-300 hover:shadow-lg transition-all duration-300 cursor-pointer"
-          >
-            <div className="flex justify-between items-start mb-4">
-              <div className={`w-12 h-12 rounded-xl bg-${card.color}-50 flex items-center justify-center group-hover:scale-110 transition-transform`}>
-                <card.icon className={`w-6 h-6 text-${card.color}-600`} />
-              </div>
-              <div className="flex items-center gap-1 bg-emerald-50 px-2 py-1 rounded-full">
-                <TrendingUp className="w-3 h-3 text-emerald-600" />
-                <span className="text-xs font-bold text-emerald-600">{card.increase}</span>
-              </div>
-            </div>
-            <div>
-              <p className="text-3xl font-black text-slate-900">{card.value}</p>
-              <p className="text-sm font-medium text-slate-500 mt-1">{card.title}</p>
-              <p className="text-xs text-slate-400 mt-2">{card.subtitle}</p>
-            </div>
-          </motion.div>
-        ))}
-      </div>
-
-      {/* LIGNE 2 : DEUX COLONNES */}
-      <div className="grid lg:grid-cols-3 gap-8">
-        
-        {/* COLONNE GAUCHE (2/3) */}
-        <div className="lg:col-span-2 space-y-8">
-          
-          {/* SECTION ACTIVITÉ - Graphique amélioré */}
-          <div className="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm hover:shadow-md transition-all">
-            <div className="flex justify-between items-center mb-6">
-              <div>
-                <h3 className="text-sm font-black uppercase tracking-wider text-slate-400">Activité médicale</h3>
-                <p className="text-lg font-bold text-slate-900 mt-1">Consultations — 7 derniers jours</p>
-              </div>
-              <div className="flex gap-2">
-                <button className="px-3 py-1.5 text-xs font-medium bg-blue-50 text-blue-600 rounded-lg">Hebdo</button>
-                <button className="px-3 py-1.5 text-xs font-medium text-slate-500 hover:bg-slate-50 rounded-lg">Mensuel</button>
-              </div>
-            </div>
-            
-            <div className="relative h-64">
-              <div className="flex items-end gap-3 h-full">
-                {chartData.map((item, i) => (
-                  <div key={i} className="flex-1 flex flex-col items-center gap-2 group">
-                    <div className="relative w-full">
-                      <div 
-                        className="w-full bg-gradient-to-t from-blue-500 to-blue-400 rounded-xl transition-all group-hover:from-blue-600 group-hover:to-blue-500 cursor-pointer"
-                        style={{ height: `${(item.value / maxChartValue) * 180}px`, minHeight: 4 }}
-                      />
-                      {/* Tooltip */}
-                      <div className="absolute -top-8 left-1/2 transform -translate-x-1/2 bg-slate-800 text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
-                        {item.value} consultations
-                      </div>
-                    </div>
-                    <span className="text-xs font-medium text-slate-500">{item.day}</span>
+        {dashboardData.stats.map((card, i) => {
+          const Icon = card.icon;
+          return (
+            <motion.div
+              key={i}
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ delay: i * 0.1 }}
+              onClick={() => navigate(card.link)}
+              className="group relative overflow-hidden bg-white rounded-2xl p-6 shadow-md hover:shadow-xl transition-all hover:-translate-y-1 cursor-pointer"
+            >
+              <div className="relative">
+                <div className="flex items-center justify-between mb-4">
+                  <div className={`w-14 h-14 rounded-2xl bg-gradient-to-br ${card.gradient} flex items-center justify-center shadow-md group-hover:scale-110 transition-transform`}>
+                    <Icon className="w-7 h-7 text-white" />
                   </div>
-                ))}
-              </div>
-            </div>
-            
-            <div className="flex justify-between items-center mt-6 pt-4 border-t border-slate-100">
-              <div className="flex items-center gap-4">
-                <div className="flex items-center gap-2">
-                  <div className="w-3 h-3 bg-blue-500 rounded-full"></div>
-                  <span className="text-xs text-slate-600">Consultations</span>
+                  <span className="flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium bg-emerald-100 text-emerald-700">
+                    <TrendingUp className="w-3 h-3" />
+                    {card.increase}
+                  </span>
+                </div>
+                <div>
+                  <p className="text-3xl font-bold text-slate-900">{card.value}</p>
+                  <p className="text-sm text-slate-500 mt-1">{card.title}</p>
+                  <p className="text-xs text-slate-400 mt-1">{card.subtitle}</p>
                 </div>
               </div>
-              <span className="text-xs text-slate-400">Moyenne: 18.3/jour</span>
+            </motion.div>
+          );
+        })}
+      </div>
+
+      {/* Graphique + Contenu principal */}
+      <div className="grid lg:grid-cols-3 gap-8">
+        
+        {/* Colonne gauche (2/3) */}
+        <div className="lg:col-span-2 space-y-8">
+          
+          {/* Graphique d'activité */}
+          <div className="bg-white rounded-2xl border border-slate-200 p-6 shadow-md">
+            <div className="flex flex-wrap justify-between items-center mb-6">
+              <div>
+                <div className="flex items-center gap-2 mb-1">
+                  <Activity className="w-4 h-4 text-blue-500" />
+                  <span className="text-xs font-bold uppercase tracking-wider text-slate-400">Statistiques</span>
+                </div>
+                <h3 className="text-lg font-bold text-slate-800">Consultations — 7 derniers jours</h3>
+              </div>
+              <div className="flex gap-2">
+                <button 
+                  onClick={() => setPeriod('weekly')}
+                  className={`px-3 py-1.5 text-xs font-medium rounded-lg transition-all ${period === 'weekly' ? 'bg-blue-600 text-white shadow-sm' : 'text-slate-500 hover:bg-slate-100'}`}
+                >
+                  Hebdo
+                </button>
+                <button 
+                  onClick={() => setPeriod('monthly')}
+                  className={`px-3 py-1.5 text-xs font-medium rounded-lg transition-all ${period === 'monthly' ? 'bg-blue-600 text-white shadow-sm' : 'text-slate-500 hover:bg-slate-100'}`}
+                >
+                  Mensuel
+                </button>
+                <button 
+                  onClick={() => setPeriod('yearly')}
+                  className={`px-3 py-1.5 text-xs font-medium rounded-lg transition-all ${period === 'yearly' ? 'bg-blue-600 text-white shadow-sm' : 'text-slate-500 hover:bg-slate-100'}`}
+                >
+                  Annuel
+                </button>
+                <button 
+                  onClick={loadDashboardData}
+                  className="p-1.5 text-slate-400 hover:text-blue-600 transition-all"
+                >
+                  <RefreshCw className={`w-4 h-4 ${statsLoading ? 'animate-spin' : ''}`} />
+                </button>
+              </div>
             </div>
+            
+            <ResponsiveContainer width="100%" height={280}>
+              <AreaChart data={dashboardData.chartData}>
+                <defs>
+                  <linearGradient id="colorConsultations" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="5%" stopColor="#3b82f6" stopOpacity={0.3}/>
+                    <stop offset="95%" stopColor="#3b82f6" stopOpacity={0}/>
+                  </linearGradient>
+                  <linearGradient id="colorPatients" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="5%" stopColor="#10b981" stopOpacity={0.3}/>
+                    <stop offset="95%" stopColor="#10b981" stopOpacity={0}/>
+                  </linearGradient>
+                </defs>
+                <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
+                <XAxis dataKey="day" stroke="#94a3b8" fontSize={12} />
+                <YAxis stroke="#94a3b8" fontSize={12} />
+                <Tooltip content={<CustomTooltip />} />
+                <Legend wrapperStyle={{ fontSize: '12px', paddingTop: '10px' }} />
+                <Area 
+                  type="monotone" 
+                  dataKey="consultations" 
+                  name="Consultations"
+                  stroke="#3b82f6" 
+                  fill="url(#colorConsultations)"
+                  strokeWidth={2}
+                />
+                <Area 
+                  type="monotone" 
+                  dataKey="patients" 
+                  name="Nouveaux patients"
+                  stroke="#10b981" 
+                  fill="url(#colorPatients)"
+                  strokeWidth={2}
+                />
+              </AreaChart>
+            </ResponsiveContainer>
           </div>
 
-          {/* SECTION CONSULTATIONS RÉCENTES - Style amélioré */}
-          <div className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
-            <div className="p-6 border-b border-slate-100 flex justify-between items-center">
-              <div>
-                <h3 className="text-sm font-black uppercase tracking-wider text-slate-400">Consultations</h3>
-                <p className="text-lg font-bold text-slate-900 mt-1">Dernières consultations</p>
+          {/* Consultations récentes */}
+          <div className="bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-md">
+            <div className="p-5 border-b border-slate-100">
+              <div className="flex justify-between items-center">
+                <div>
+                  <div className="flex items-center gap-2 mb-1">
+                    <Stethoscope className="w-4 h-4 text-blue-500" />
+                    <span className="text-xs font-bold uppercase tracking-wider text-slate-400">Activité récente</span>
+                  </div>
+                  <h3 className="text-lg font-bold text-slate-800">Dernières consultations</h3>
+                </div>
+                <button 
+                  onClick={() => navigate('/medecin/consultation')}
+                  className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded-xl hover:bg-blue-700 transition-all shadow-sm"
+                >
+                  <FileText className="w-4 h-4" />
+                  Nouvelle
+                </button>
               </div>
-              <button className="bg-blue-600 text-white text-sm px-4 py-2 rounded-xl hover:bg-blue-700 transition-all flex items-center gap-2 shadow-sm">
-                <FileText className="w-4 h-4" /> 
-                Nouvelle
-              </button>
             </div>
             <div className="divide-y divide-slate-100">
-              {recentConsultations.map((consult, i) => {
+              {dashboardData.recentConsultations.map((consult, i) => {
                 const statusBadge = getStatusBadge(consult.status);
                 return (
-                  <div key={i} className="p-5 hover:bg-slate-50 transition-colors cursor-pointer group">
+                  <div 
+                    key={consult.id || i} 
+                    onClick={() => navigate(`/medecin/consultation/${consult.id}`)}
+                    className="p-4 hover:bg-slate-50 transition-all cursor-pointer"
+                  >
                     <div className="flex justify-between items-center">
-                      <div className="flex items-center gap-4">
-                        <div className="w-10 h-10 rounded-full bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center text-white font-bold text-sm">
+                      <div className="flex items-center gap-3">
+                        <div className="w-10 h-10 rounded-full bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center text-white font-bold shadow-sm">
                           {consult.avatar}
                         </div>
                         <div>
-                          <p className="font-bold text-slate-900 group-hover:text-blue-600 transition-colors">
-                            {consult.name}
-                          </p>
-                          <p className="text-sm text-slate-500 mt-0.5">{consult.pathology}</p>
-                          <div className="flex items-center gap-3 mt-1">
-                            <span className={`text-xs px-2 py-0.5 rounded-full ${statusBadge.className}`}>
+                          <p className="font-semibold text-slate-900">{consult.name}</p>
+                          <p className="text-sm text-slate-500">{consult.pathology}</p>
+                          <div className="flex items-center gap-2 mt-1">
+                            <span className={`text-xs px-2 py-0.5 rounded-full font-medium ${statusBadge.className}`}>
                               {statusBadge.label}
                             </span>
                             <span className="text-xs text-slate-400">{consult.date} • {consult.time}</span>
@@ -258,63 +470,59 @@ export default function Dashboard() {
                       </div>
                       <div className="text-right">
                         <div className="flex items-center gap-2">
-                          <span className="text-xl font-black text-blue-600">{consult.percentage}%</span>
+                          <span className="text-xl font-bold text-blue-600">{consult.percentage}%</span>
                           <div className="w-16 h-1.5 bg-slate-100 rounded-full overflow-hidden">
                             <div className="h-full bg-blue-500 rounded-full" style={{ width: `${consult.percentage}%` }} />
                           </div>
                         </div>
-                        <button className="mt-2 text-xs text-blue-600 opacity-0 group-hover:opacity-100 transition-opacity">
-                          Voir détails →
-                        </button>
                       </div>
                     </div>
                   </div>
                 );
               })}
             </div>
-            <div className="p-4 bg-slate-50 border-t border-slate-100">
-              <Link to="/medecin/patients" className="block w-full text-center text-sm font-medium text-blue-600 hover:text-blue-700">
-                Voir toutes les consultations →
+            <div className="p-3 bg-slate-50 text-center border-t border-slate-100">
+              <Link to="/medecin/historique" className="text-sm font-medium text-blue-600 hover:text-blue-700 inline-flex items-center gap-1">
+                Voir toutes les consultations <ChevronRight className="w-4 h-4" />
               </Link>
             </div>
           </div>
 
-          {/* SECTION MESSAGERIE - Style amélioré */}
-          <div className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
-            <div className="p-6 border-b border-slate-100 flex justify-between items-center">
-              <div>
-                <h3 className="text-sm font-black uppercase tracking-wider text-slate-400">Messages</h3>
-                <p className="text-lg font-bold text-slate-900 mt-1">Messagerie récente</p>
+          {/* Messages récents */}
+          <div className="bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-md">
+            <div className="p-5 border-b border-slate-100">
+              <div className="flex justify-between items-center">
+                <div>
+                  <div className="flex items-center gap-2 mb-1">
+                    <MessageCircle className="w-4 h-4 text-blue-500" />
+                    <span className="text-xs font-bold uppercase tracking-wider text-slate-400">Communication</span>
+                  </div>
+                  <h3 className="text-lg font-bold text-slate-800">Messages récents</h3>
+                </div>
+                <Link to="/medecin/messagerie" className="text-sm font-medium text-blue-600 hover:text-blue-700">
+                  Nouveau message →
+                </Link>
               </div>
-              <Link to="/medecin/messagerie" className="text-sm font-medium text-blue-600 hover:text-blue-700 flex items-center gap-1">
-                <MessageCircle className="w-4 h-4" /> 
-                Nouveau message
-              </Link>
             </div>
             <div className="divide-y divide-slate-100">
-              {recentMessages.map((msg, i) => (
-                <Link key={i} to="/medecin/messagerie" className="block p-5 hover:bg-slate-50 transition-colors">
-                  <div className="flex justify-between items-start gap-3">
-                    <div className="flex items-center gap-3 flex-1">
-                      <div className="relative">
-                        <div className="w-10 h-10 rounded-full bg-gradient-to-br from-slate-400 to-slate-500 flex items-center justify-center text-white font-bold text-sm">
-                          {msg.avatar}
-                        </div>
-                        {msg.unread && (
-                          <div className="absolute -top-0.5 -right-0.5 w-3 h-3 bg-blue-500 rounded-full ring-2 ring-white"></div>
-                        )}
+              {dashboardData.recentMessages.map((msg, i) => (
+                <Link key={i} to="/medecin/messagerie" className="block p-4 hover:bg-slate-50 transition-all">
+                  <div className="flex items-start gap-3">
+                    <div className="relative">
+                      <div className="w-10 h-10 rounded-full bg-gradient-to-br from-slate-500 to-slate-600 flex items-center justify-center text-white font-bold">
+                        {msg.avatar}
                       </div>
-                      <div className="flex-1">
-                        <div className="flex items-center gap-2">
-                          <p className="font-bold text-slate-900">{msg.name}</p>
-                          {msg.unread && (
-                            <span className="text-xs bg-blue-50 text-blue-600 px-2 py-0.5 rounded-full">Nouveau</span>
-                          )}
-                        </div>
-                        <p className="text-sm text-slate-500 line-clamp-1">{msg.message}</p>
-                      </div>
+                      {msg.unread && (
+                        <div className="absolute -top-0.5 -right-0.5 w-2.5 h-2.5 bg-blue-500 rounded-full ring-2 ring-white"></div>
+                      )}
                     </div>
-                    <p className="text-xs text-slate-400 flex-shrink-0">{msg.time}</p>
+                    <div className="flex-1">
+                      <div className="flex justify-between items-center">
+                        <p className="font-semibold text-slate-900">{msg.sender}</p>
+                        <span className="text-xs text-slate-400">{msg.time}</span>
+                      </div>
+                      <p className="text-sm text-slate-500">{msg.message}</p>
+                    </div>
                   </div>
                 </Link>
               ))}
@@ -322,32 +530,58 @@ export default function Dashboard() {
           </div>
         </div>
 
-        {/* COLONNE DROITE (1/3) */}
+        {/* Colonne droite (1/3) */}
         <div className="space-y-8">
+
+          {/* Classement - tout en bleu */}
+          <div 
+            onClick={() => navigate('/medecin/classement')}
+            className="relative overflow-hidden bg-gradient-to-br from-blue-600 to-blue-700 rounded-2xl p-6 text-white shadow-md cursor-pointer hover:shadow-lg transition-all"
+          >
+            <div className="relative text-center">
+              <div className="w-16 h-16 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center mx-auto mb-4">
+                <Crown className="w-8 h-8 text-yellow-300" />
+              </div>
+              <h3 className="text-3xl font-bold">{dashboardData.ranking.position}e / {dashboardData.ranking.total}</h3>
+              <p className="text-sm text-blue-100 mt-1">Médecins</p>
+              <div className="flex justify-center gap-1 mt-3">
+                {[...Array(5)].map((_, i) => (
+                  <Star key={i} className={`w-4 h-4 ${i < 4 ? 'text-yellow-300 fill-yellow-300' : 'text-white/30'}`} />
+                ))}
+              </div>
+              <p className="text-xs text-blue-100 mt-3">
+                <Trophy className="w-3 h-3 inline mr-1" />
+                Top contributeur • {dashboardData.ranking.cases} cas partagés
+              </p>
+            </div>
+          </div>
           
-          {/* SECTION PATIENTS RÉCENTS */}
-          <div className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
-            <div className="p-6 border-b border-slate-100">
+          {/* Patients récents */}
+          <div className="bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-md">
+            <div className="p-5 border-b border-slate-100">
               <div className="flex justify-between items-center">
                 <div>
-                  <h3 className="text-sm font-black uppercase tracking-wider text-slate-400">Patients</h3>
-                  <p className="text-lg font-bold text-slate-900 mt-1">Derniers patients</p>
+                  <div className="flex items-center gap-2 mb-1">
+                    <Users className="w-4 h-4 text-blue-500" />
+                    <span className="text-xs font-bold uppercase tracking-wider text-slate-400">Annuaire</span>
+                  </div>
+                  <h3 className="text-lg font-bold text-slate-800">Nouveaux patients</h3>
                 </div>
                 <Link to="/medecin/patients" className="text-sm font-medium text-blue-600 hover:text-blue-700">
-                  Voir tout
+                  Voir tout →
                 </Link>
               </div>
             </div>
             <div className="divide-y divide-slate-100">
-              {recentPatients.map((patient, i) => (
-                <div key={i} className="p-5 hover:bg-slate-50 transition-colors cursor-pointer">
+              {dashboardData.recentPatients.map((patient, i) => (
+                <div key={i} className="p-4 hover:bg-slate-50 transition-all">
                   <div className="flex justify-between items-start">
                     <div>
-                      <p className="font-bold text-slate-900">{patient.name}</p>
-                      <p className="text-sm text-slate-500 mt-0.5">{patient.age} • {patient.pathology}</p>
+                      <p className="font-semibold text-slate-900">{patient.name}</p>
+                      <p className="text-sm text-slate-500">{patient.age} • {patient.pathology}</p>
                       <p className="text-xs text-slate-400 mt-1">Dernière visite: {patient.lastVisit}</p>
                     </div>
-                    <span className={`text-xs px-2 py-1 rounded-full border ${getStatusColor(patient.status)}`}>
+                    <span className={`text-xs px-2 py-1 rounded-full font-medium ${getStatusColor(patient.status)}`}>
                       {patient.status}
                     </span>
                   </div>
@@ -356,30 +590,32 @@ export default function Dashboard() {
             </div>
           </div>
 
-          {/* SECTION NOTIFICATIONS */}
-          <div className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
-            <div className="p-6 border-b border-slate-100">
-              <div className="flex justify-between items-center">
-                <div>
-                  <h3 className="text-sm font-black uppercase tracking-wider text-slate-400">Alertes</h3>
-                  <p className="text-lg font-bold text-slate-900 mt-1">Notifications</p>
+          {/* Notifications */}
+          <div className="bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-md">
+            <div className="p-5 border-b border-slate-100">
+              <div className="flex items-center gap-2">
+                <div className="w-8 h-8 rounded-lg bg-blue-600 flex items-center justify-center">
+                  <Bell className="w-4 h-4 text-white" />
                 </div>
-                <Bell className="w-5 h-5 text-slate-400" />
+                <div>
+                  <h3 className="text-lg font-bold text-slate-800">Alertes</h3>
+                  <p className="text-xs text-slate-400">Notifications importantes</p>
+                </div>
               </div>
             </div>
             <div className="divide-y divide-slate-100">
-              {notifications.map((notif, i) => {
+              {dashboardData.notifications.map((notif, i) => {
                 const IconComponent = notif.icon;
-                const colorClasses = {
-                  warning: 'bg-amber-50 text-amber-600',
-                  info: 'bg-blue-50 text-blue-600',
-                  success: 'bg-emerald-50 text-emerald-600'
+                const notifColors = {
+                  warning: 'bg-amber-500',
+                  info: 'bg-blue-500',
+                  success: 'bg-emerald-500'
                 };
                 return (
-                  <div key={i} className="p-5 hover:bg-slate-50 transition-colors">
+                  <div key={i} className="p-4 hover:bg-slate-50 transition-all">
                     <div className="flex gap-3">
-                      <div className={`flex-shrink-0 w-8 h-8 rounded-lg ${colorClasses[notif.type]} flex items-center justify-center`}>
-                        <IconComponent className="w-4 h-4" />
+                      <div className={`flex-shrink-0 w-8 h-8 rounded-lg ${notifColors[notif.type]} flex items-center justify-center`}>
+                        <IconComponent className="w-4 h-4 text-white" />
                       </div>
                       <div className="flex-1">
                         <p className="text-sm text-slate-700">{notif.text}</p>
@@ -390,58 +626,41 @@ export default function Dashboard() {
                 );
               })}
             </div>
-            <div className="p-4 bg-slate-50 border-t border-slate-100 text-center">
-              <Link to="/medecin/notifications" className="text-xs font-medium text-blue-600 hover:text-blue-700">
-                Voir toutes les notifications
+            <div className="p-3 bg-slate-50 text-center border-t border-slate-100">
+              <Link to="/medecin/notifications" className="text-sm font-medium text-blue-600 hover:text-blue-700">
+                Voir toutes →
               </Link>
             </div>
           </div>
 
-          {/* SECTION DIAGNOSTICS DU MOIS - Style amélioré */}
-          <div className="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm">
-            <div className="mb-5">
-              <h3 className="text-sm font-black uppercase tracking-wider text-slate-400">Statistiques</h3>
-              <p className="text-lg font-bold text-slate-900 mt-1">Top diagnostics — Mars 2026</p>
+          {/* Diagnostics - tout en bleu */}
+          <div className="bg-white rounded-2xl p-5 border border-slate-200 shadow-md">
+            <div className="flex items-center gap-2 mb-4">
+              <div className="w-8 h-8 rounded-lg bg-blue-600 flex items-center justify-center">
+                <Zap className="w-4 h-4 text-white" />
+              </div>
+              <span className="text-xs font-bold uppercase tracking-wider text-slate-400">Analyse</span>
             </div>
+            <h3 className="text-lg font-bold text-slate-800 mb-4">Top diagnostics — Mars 2026</h3>
             <div className="space-y-4">
-              {diagnostics.map((diag, i) => (
-                <div key={i} className="group cursor-pointer">
+              {dashboardData.diagnostics.map((diag, i) => (
+                <div key={i}>
                   <div className="flex justify-between text-sm mb-1.5">
-                    <div className="flex items-center gap-2">
-                      <span className="font-medium text-slate-700">{diag.name}</span>
-                      <span className="text-xs text-slate-400">{diag.patients} patients</span>
-                    </div>
-                    <span className="font-bold text-slate-900">{diag.value}%</span>
+                    <span className="font-medium text-slate-700">{diag.name}</span>
+                    <span className="font-bold text-slate-800">{diag.value}%</span>
                   </div>
                   <div className="h-2 bg-slate-100 rounded-full overflow-hidden">
                     <div 
-                      className={`h-full bg-${diag.color}-500 rounded-full transition-all duration-500 group-hover:bg-${diag.color}-600`} 
-                      style={{ width: `${diag.value}%` }} 
+                      className="h-full bg-blue-500 rounded-full"
+                      style={{ width: `${diag.value}%` }}
                     />
                   </div>
+                  <p className="text-xs text-slate-400 mt-1">{diag.patients} patients</p>
                 </div>
               ))}
             </div>
           </div>
-
-          {/* SECTION RANKING - Style amélioré */}
-          <div className="bg-gradient-to-br from-blue-500 to-indigo-600 rounded-2xl p-6 text-white shadow-lg">
-            <div className="text-center">
-              <div className="w-16 h-16 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center mx-auto mb-4">
-                <Award className="w-8 h-8 text-white" />
-              </div>
-              <h3 className="text-3xl font-black">2e / 20</h3>
-              <p className="text-sm text-white/80 mt-1">Médecins</p>
-              <div className="flex items-center justify-center gap-2 mt-3">
-                <Star className="w-4 h-4 text-yellow-300 fill-yellow-300" />
-                <span className="text-sm font-medium">Score: 94.2%</span>
-              </div>
-              <p className="text-xs text-white/70 mt-4">Basé sur les cas partagés et la concordance IA</p>
-              <Link to="/medecin/classement" className="inline-flex items-center gap-1 mt-5 text-sm font-medium text-white hover:text-white/90 bg-white/20 px-4 py-2 rounded-xl transition-all">
-                Voir le classement <ChevronRight className="w-4 h-4" />
-              </Link>
-            </div>
-          </div>
+          
         </div>
       </div>
     </div>

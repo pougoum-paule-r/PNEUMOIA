@@ -192,6 +192,22 @@
   display: none;  /* Chrome, Safari and Opera */
 }
 
+/* Dans index.css ou App.css */
+@keyframes fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-in {
+  animation: fade-in 0.2s ease-out;
+}
+
 /* Classes pour les marges dynamiques */
 /* .lg\:ml-\[100px\] {
   margin-left: 100px;

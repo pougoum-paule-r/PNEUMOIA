@@ -38,8 +38,8 @@ export default function Sidebar({ sidebarOpen, setSidebarOpen, onCollapsedChange
   // Sur desktop, la sidebar est toujours visible (fixed)
   // Sur mobile, elle est en overlay
   const sidebarWidth = isDesktop 
-    ? (isCollapsed ? 'w-[100px]' : 'w-[340px]')
-    : 'w-[280px]';
+    ? (isCollapsed ? 'w-[100px]' : 'w-[260px]')
+    : 'w-[230px]';
 
   const navItems = [
     { path: '/medecin/dashboard', icon: LayoutDashboard, label: 'Tableau de bord' },
@@ -54,11 +54,11 @@ export default function Sidebar({ sidebarOpen, setSidebarOpen, onCollapsedChange
   ];
 
   const accountItems = [
+    { path: '/medecin/historique', icon: History, label: 'Historique' },
     { path: '/medecin/notifications', icon: Bell, label: 'Notifications', badge: 5 },
     { path: '/medecin/recherche', icon: Search, label: 'Recherche' },
     { path: '/medecin/profil', icon: User, label: 'Mon profil' },
     { path: '/medecin/parametres', icon: Settings, label: 'Paramètres' },
-    { path: '/medecin/historique', icon: History, label: 'Historique' },
   ];
 
   const SidebarContent = () => (
@@ -86,7 +86,7 @@ export default function Sidebar({ sidebarOpen, setSidebarOpen, onCollapsedChange
       )}
 
       {/* Logo */}
-      <div className={`p-6 pb-2 ${!isDesktop && sidebarOpen ? 'pt-16' : ''}`}>
+      <div className={`p-8 pb-4 ${!isDesktop && sidebarOpen ? 'pt-16' : ''}`}>
         <div className="flex items-center gap-3 whitespace-nowrap">
           <div className="w-12 h-12 bg-linear-to-br from-blue-500 to-indigo-600 rounded-[18px] flex items-center justify-center shadow-2xl shrink-0">
             <img src={logo} alt="PneumoIA" className="w-10 h-10 object-contain filter brightness-0 invert" />
@@ -110,7 +110,7 @@ export default function Sidebar({ sidebarOpen, setSidebarOpen, onCollapsedChange
         {/* Section principale */}
         <div className="space-y-1">
           {(!isCollapsed || !isDesktop) && (
-            <p className="px-4 text-[10px] font-black text-slate-300 uppercase tracking-widest mb-2">
+            <p className="px-4 text-[10px] font-black text-slate-300 uppercase tracking-widest mb-2 mt-2">
               Menu principal
             </p>
           )}
@@ -153,7 +153,7 @@ export default function Sidebar({ sidebarOpen, setSidebarOpen, onCollapsedChange
         {/* Communauté */}
         <div className="space-y-1">
           {(!isCollapsed || !isDesktop) && (
-            <p className="px-4 text-[10px] font-black text-slate-300 uppercase tracking-widest mb-2">
+            <p className="px-4 text-[10px] font-black text-slate-300 uppercase tracking-widest mb-2 mt-2">
               Communauté
             </p>
           )}
@@ -196,7 +196,7 @@ export default function Sidebar({ sidebarOpen, setSidebarOpen, onCollapsedChange
         {/* Mon compte */}
         <div className="space-y-1">
           {(!isCollapsed || !isDesktop) && (
-            <p className="px-4 text-[10px] font-black text-slate-300 uppercase tracking-widest mb-2">
+            <p className="px-4 text-[10px] font-black text-slate-300 uppercase tracking-widest mb-2 mt-2">
               Mon compte
             </p>
           )}

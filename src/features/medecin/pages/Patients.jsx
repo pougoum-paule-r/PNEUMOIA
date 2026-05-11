@@ -11,6 +11,7 @@ import {
   ClipboardList, Microscope, ArrowUpRight, Zap,
   LogOut, Moon, Sun, Filter, SlidersHorizontal
 } from "lucide-react";
+import { motion } from 'framer-motion';
 
 // ─── DATA ──────────────────────────────────────────────────────────────
 const PATIENTS = {
@@ -49,7 +50,7 @@ const PATIENTS = {
       { label: "Durée 1–3j", ok: true }, { label: "Hémoptysie", ok: false }
     ],
     tl: [
-      { date: "09/03/2026 · Dr. Dupont", title: "Pneumonie bactérienne", note: "Amoxicilline 1g × 3/j. Suivi J+7.", ia: 85, color: "#1D6FEB", conc: "Concordant" },
+      { date: "09/03/2026 · Dr. Tagne", title: "Pneumonie bactérienne", note: "Amoxicilline 1g × 3/j. Suivi J+7.", ia: 85, color: "#1D6FEB", conc: "Concordant" },
       { date: "15/10/2025", title: "Bronchite aiguë", note: "Guérison J+10.", ia: 78, color: "#059669", conc: "Concordant" },
       { date: "02/05/2025", title: "Bilan normal", note: "Aucune pathologie.", ia: 62, color: "#94A3B8", conc: "Concordant" }
     ]
@@ -211,7 +212,6 @@ const PATIENTS = {
   }
 };
 
-
 const STATUS_CONFIG = {
   actif: { label: "Actif", color: "text-emerald-600", bg: "bg-emerald-50", dot: "bg-emerald-500", border: "border-emerald-200", ring: "bg-emerald-500" },
   urgent: { label: "Urgent", color: "text-red-600", bg: "bg-red-50", dot: "bg-red-500", border: "border-red-200", ring: "bg-red-500" },
@@ -220,9 +220,18 @@ const STATUS_CONFIG = {
 };
 
 // ─── HELPERS ───────────────────────────────────────────────────────────
+
 function Avatar({ initials, size = "md", color = "bg-blue-600" }) {
-  const sizes = { xs: "w-6 h-6 text-[10px]", sm: "w-7 h-7 text-xs", md: "w-8 h-8 text-sm", lg: "w-10 h-10 text-sm", xl: "w-12 h-12 text-base" };
-  return <div className={`${sizes[size]} ${color} text-white rounded-full flex items-center justify-center font-bold flex-shrink-0 tracking-tight`}>{initials}</div>;
+  const sizes = { xs: "w-6 h-6 text-[10px]", sm: "w-8 h-8 text-xs", md: "w-10 h-10 text-sm", lg: "w-12 h-12 text-base", xl: "w-14 h-14 text-lg" };
+  return (
+    <motion.div
+      initial={{ scale: 0.9 }}
+      animate={{ scale: 1 }}
+      className={`${sizes[size]} ${color} text-white rounded-xl flex items-center justify-center font-bold flex-shrink-0 tracking-tight shadow-sm`}
+    >
+      {initials}
+    </motion.div>
+  );
 }
 
 function Badge({ children, variant = "blue" }) {
@@ -233,7 +242,7 @@ function Badge({ children, variant = "blue" }) {
     red: "bg-red-50 text-red-700 border border-red-200",
     slate: "bg-slate-100 text-slate-600 border border-slate-200",
   };
-  return <span className={`inline-flex items-center px-2 py-0.5 rounded-md text-[11px] font-semibold ${variants[variant]}`}>{children}</span>;
+  return <span className={`inline-flex items-center px-2.5 py-1 rounded-lg text-[11px] font-semibold ${variants[variant]}`}>{children}</span>;
 }
 
 function PillTag({ label, variant = "slate", onRemove }) {
@@ -243,26 +252,31 @@ function PillTag({ label, variant = "slate", onRemove }) {
     red: "bg-red-50 text-red-700",
   };
   return (
-    <span className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[11.5px] font-medium ${variants[variant]}`}>
+    <span className={`inline-flex items-center gap-1 px-3 py-1.5 rounded-full text-[12px] font-medium ${variants[variant]}`}>
       {label}
-      {onRemove && <button onClick={onRemove} className="ml-0.5 opacity-50 hover:opacity-100"><X size={10} /></button>}
+      {onRemove && <button onClick={onRemove} className="ml-0.5 opacity-50 hover:opacity-100"><X size={12} /></button>}
     </span>
   );
 }
 
 function ProgressBar({ value, color = "bg-blue-600" }) {
   return (
-    <div className="h-1.5 bg-slate-100 rounded-full overflow-hidden">
-      <div className={`h-full rounded-full transition-all duration-700 ${color}`} style={{ width: `${value}%` }} />
+    <div className="h-2 bg-slate-100 rounded-full overflow-hidden">
+      <motion.div
+        initial={{ width: 0 }}
+        animate={{ width: `${value}%` }}
+        transition={{ duration: 1.2, ease: "easeOut" }}
+        className={`h-full rounded-full ${color}`}
+      />
     </div>
   );
 }
 
-function IARing({ pct, size = 72 }) {
+function IARing({ pct, size = 80 }) {
   const [displayed, setDisplayed] = useState(0);
   const circumference = 2 * Math.PI * 30;
   const offset = circumference - (circumference * pct) / 100;
-  const color = pct >= 80 ? "#059669" : pct >= 70 ? "#1D6FEB" : "#D97706";
+  const color = pct >= 80 ? "#10b981" : pct >= 70 ? "#3b82f6" : "#f59e0b";
 
   useEffect(() => {
     setDisplayed(0);
@@ -273,126 +287,130 @@ function IARing({ pct, size = 72 }) {
   }, [pct]);
 
   return (
-    <div className="relative flex-shrink-0" style={{ width: size, height: size }}>
+    <motion.div
+      initial={{ scale: 0.8, opacity: 0 }}
+      animate={{ scale: 1, opacity: 1 }}
+      className="relative flex-shrink-0"
+      style={{ width: size, height: size }}
+    >
       <svg viewBox="0 0 72 72" width={size} height={size} style={{ transform: "rotate(-90deg)" }}>
-        <circle cx="36" cy="36" r="30" fill="none" stroke="#F1F5F9" strokeWidth="6" />
+        <circle cx="36" cy="36" r="30" fill="none" stroke="#f1f5f9" strokeWidth="6" />
         <circle cx="36" cy="36" r="30" fill="none" stroke={color} strokeWidth="6"
           strokeLinecap="round" strokeDasharray={circumference}
           strokeDashoffset={circumference - (circumference * displayed) / 100}
           style={{ transition: "stroke-dashoffset 0.05s" }} />
       </svg>
       <div className="absolute inset-0 flex items-center justify-center">
-        <span className="text-sm font-black text-slate-800">{displayed}%</span>
+        <span className="text-lg font-black text-slate-900">{displayed}%</span>
       </div>
-    </div>
+    </motion.div>
   );
 }
 
-// ─── KPI CARD ──────────────────────────────────────────────────────────
-function KpiCard({ label, value, delta, deltaUp, accent }) {
-  const accents = {
-    blue: "from-blue-500/10 to-transparent border-blue-100",
-    green: "from-emerald-500/10 to-transparent border-emerald-100",
-    red: "from-red-500/10 to-transparent border-red-100",
-    slate: "from-slate-200/60 to-transparent border-slate-100",
-  };
-  const lineColor = {
-    blue: "bg-blue-500", green: "bg-emerald-500", red: "bg-red-500", slate: "bg-slate-300"
-  };
+function VitalCard({ label, value, unit, warn }) {
   return (
-    <div className={`bg-white border rounded-xl p-4 relative overflow-hidden bg-gradient-to-br ${accents[accent]}`}>
-      <div className={`absolute top-0 left-0 right-0 h-0.5 ${lineColor[accent]} rounded-t-xl`} />
-      <p className="text-[12px] font-semibold text-slate-400 mb-2 uppercase tracking-wide">{label}</p>
-      <p className="text-3xl font-black text-slate-900 tracking-tight leading-none mb-2">{value}</p>
-      {delta && <p className={`text-[11.5px] font-medium ${deltaUp ? "text-emerald-600" : "text-red-500"}`}>{delta}</p>}
+    <motion.div
+      initial={{ y: 10, opacity: 0 }}
+      animate={{ y: 0, opacity: 1 }}
+      whileHover={{ scale: 1.05 }}
+      className={`rounded-xl p-3 border transition-all ${warn ? "bg-red-50 border-red-200 shadow-sm shadow-red-100" : "bg-emerald-50 border-emerald-200 shadow-sm shadow-emerald-100"}`}
+    >
+      <div className="text-[10px] font-black uppercase tracking-widest text-slate-400 mb-1.5">{label}</div>
+      <div className={`text-base font-black leading-none tracking-tight ${warn ? "text-red-600" : "text-emerald-700"}`}>
+        {value}<span className="text-[11px] font-semibold ml-1 opacity-70">{unit}</span>
+      </div>
+    </motion.div>
+  );
+}
+
+function TreatmentRow({ name, dose }) {
+  return (
+    <motion.div
+      initial={{ x: -10, opacity: 0 }}
+      animate={{ x: 0, opacity: 1 }}
+      className="flex items-start gap-3 p-3 bg-gradient-to-r from-blue-50 to-transparent border border-blue-200 rounded-xl mb-2 hover:shadow-md transition-shadow"
+    >
+      <div className="w-2.5 h-2.5 rounded-full bg-blue-500 flex-shrink-0 mt-1.5" />
+      <div className="flex-1">
+        <div className="text-sm font-bold text-slate-900">{name}</div>
+        <div className="text-xs text-slate-600 mt-0.5">{dose}</div>
+      </div>
+    </motion.div>
+  );
+}
+
+function SectionHeader({ icon: Icon, label }) {
+  return (
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      className="flex items-center gap-2 text-xs font-black uppercase tracking-widest text-slate-400 mb-3 mt-4 first:mt-0"
+    >
+      <Icon size={13} strokeWidth={2.5} className="text-blue-500" />
+      {label}
+    </motion.div>
+  );
+}
+
+function InfoRow({ label, value, mono = false }) {
+  return (
+    <div className="flex items-center justify-between py-2.5 border-b border-slate-100 last:border-0 hover:bg-slate-50 px-1 rounded transition-colors">
+      <span className="text-sm font-medium text-slate-500">{label}</span>
+      <span className={`text-sm font-bold text-slate-900 text-right ${mono ? "font-mono text-xs text-slate-600" : ""}`}>{value}</span>
     </div>
   );
 }
 
-// ─── PATIENT TABLE ROW ─────────────────────────────────────────────────
 function PatientRow({ patient, selected, onClick }) {
   const st = STATUS_CONFIG[patient.status] || STATUS_CONFIG.actif;
   const avatarColors = { actif: "bg-blue-600", urgent: "bg-red-500", attente: "bg-amber-500", cloture: "bg-slate-400" };
   const iaBadge = patient.iaPct >= 80 ? "green" : patient.iaPct >= 70 ? "blue" : "amber";
 
   return (
-    <tr onClick={onClick}
-      className={`border-b border-slate-100 cursor-pointer transition-colors text-[13px]
-        ${selected ? "bg-blue-50 border-blue-100" : "hover:bg-slate-50/70"}`}>
+    <motion.tr
+      onClick={onClick}
+      initial={{ opacity: 0, y: 5 }}
+      animate={{ opacity: 1, y: 0 }}
+      whileHover={{ backgroundColor: "rgba(59, 130, 246, 0.05)" }}
+      className={`border-b border-slate-100 cursor-pointer transition-all
+        ${selected ? "bg-blue-50 border-blue-200" : ""}`}
+    >
       <td className="px-4 py-3">
         <div className="flex items-center gap-3">
           <Avatar initials={patient.init} size="sm" color={avatarColors[patient.status]} />
           <div>
-            <div className="font-semibold text-slate-900">{patient.name}</div>
-            <div className="text-[11px] text-slate-400 mt-0.5">{patient.age} · {patient.city}</div>
+            <div className="font-bold text-slate-900 text-sm">{patient.name}</div>
+            <div className="text-xs text-slate-400 mt-0.5">{patient.age} · {patient.city}</div>
           </div>
         </div>
       </td>
-      <td className="px-4 py-3 text-slate-600">{patient.diag}</td>
+      <td className="px-4 py-3 text-sm text-slate-600">{patient.diag}</td>
       <td className="px-4 py-3">
         <Badge variant={iaBadge}>IA {patient.iaPct}%</Badge>
       </td>
       <td className="px-4 py-3">
-        <span className={`inline-flex items-center gap-1.5 px-2 py-1 rounded-md text-[11.5px] font-semibold ${st.bg} ${st.color}`}>
-          <span className={`w-1.5 h-1.5 rounded-full ${st.dot}`} />
+        <motion.span
+          initial={{ scale: 0.9 }}
+          animate={{ scale: 1 }}
+          className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-bold ${st.bg} ${st.color}`}
+        >
+          <span className={`w-2 h-2 rounded-full ${st.dot}`} />
           {st.label}
-        </span>
+        </motion.span>
       </td>
-      <td className="px-4 py-3 text-slate-500 text-[12.5px]">
-        {patient.shared && <span className="inline-flex items-center gap-1 text-blue-600 text-[11px] font-medium"><Share2 size={11} />Partagé</span>}
+      <td className="px-4 py-3 text-xs text-slate-500">
+        {patient.shared && <span className="inline-flex items-center gap-1 text-blue-600 font-semibold"><Share2 size={12} />Partagé</span>}
       </td>
       <td className="px-4 py-3">
-        <ChevronRight size={15} className={`transition-colors ${selected ? "text-blue-500" : "text-slate-300"}`} />
+        <motion.div whileHover={{ x: 4 }}>
+          <ChevronRight size={16} className={`transition-colors ${selected ? "text-blue-500" : "text-slate-300"}`} />
+        </motion.div>
       </td>
-    </tr>
+    </motion.tr>
   );
 }
 
-// ─── VITAL CARD ────────────────────────────────────────────────────────
-function VitalCard({ label, value, unit, warn }) {
-  return (
-    <div className={`rounded-lg p-3 border ${warn ? "bg-red-50 border-red-200" : "bg-emerald-50 border-emerald-200"}`}>
-      <div className="text-[10px] font-bold uppercase tracking-widest text-slate-400 mb-1.5">{label}</div>
-      <div className={`text-[17px] font-black leading-none tracking-tight ${warn ? "text-red-600" : "text-emerald-700"}`}>
-        {value}<span className="text-[11px] font-medium ml-0.5 opacity-70">{unit}</span>
-      </div>
-    </div>
-  );
-}
-
-// ─── TREATMENT ROW ─────────────────────────────────────────────────────
-function TreatmentRow({ name, dose }) {
-  return (
-    <div className="flex items-start gap-2.5 p-2.5 bg-slate-50 border border-slate-200 rounded-lg mb-2">
-      <div className="w-2 h-2 rounded-full bg-blue-500 flex-shrink-0 mt-1.5" />
-      <div>
-        <div className="text-[13px] font-semibold text-slate-800">{name}</div>
-        <div className="text-[11.5px] text-slate-500 mt-0.5">{dose}</div>
-      </div>
-    </div>
-  );
-}
-
-// ─── SECTION HEADER ────────────────────────────────────────────────────
-function SectionHeader({ icon: Icon, label }) {
-  return (
-    <div className="flex items-center gap-1.5 text-[10.5px] font-bold uppercase tracking-[0.6px] text-slate-400 mb-2.5 mt-4 first:mt-0">
-      <Icon size={12} strokeWidth={2} />
-      {label}
-    </div>
-  );
-}
-
-function InfoRow({ label, value, mono = false }) {
-  return (
-    <div className="flex items-center justify-between py-2 border-b border-slate-100 last:border-0">
-      <span className="text-[12px] font-medium text-slate-400">{label}</span>
-      <span className={`text-[12.5px] font-semibold text-slate-800 text-right ${mono ? "font-mono text-[11.5px] text-slate-500" : ""}`}>{value}</span>
-    </div>
-  );
-}
-
-// ─── DETAIL PANEL TABS ─────────────────────────────────────────────────
+// ─── TABS ─────────────────────────────────────────────────────────────
 const TABS = [
   { id: "dossier", label: "Dossier", icon: FolderOpen },
   { id: "ia", label: "IA & Diag.", icon: Zap },
@@ -401,7 +419,8 @@ const TABS = [
   { id: "access", label: "Accès", icon: Lock },
 ];
 
-// ─── DOSSIER TAB ───────────────────────────────────────────────────────
+// ─── TAB COMPONENTS ───────────────────────────────────────────────────
+
 function DossierTab({ p }) {
   const vitals = [
     { label: "SpO₂", value: p.vitals.spo2, unit: "%", warn: p.vitals.spo2 < 93 },
@@ -413,175 +432,254 @@ function DossierTab({ p }) {
   ];
 
   return (
-    <div className="p-4 space-y-1">
+    <div className="p-5 space-y-1">
       {/* Identité */}
       <SectionHeader icon={UserRound} label="Identité" />
-      <div className="bg-white border border-slate-200 rounded-xl overflow-hidden mb-4">
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        className="bg-white border border-slate-200 rounded-2xl overflow-hidden mb-4 shadow-sm"
+      >
         <InfoRow label="ID dossier" value={p.id} mono />
         <InfoRow label="Date de naissance" value={p.dob} />
         <InfoRow label="Âge" value={p.age} />
         <InfoRow label="Sexe" value={p.sex} />
         <InfoRow label="Téléphone" value={p.tel} />
         <InfoRow label="Ville" value={p.city} />
-        <InfoRow label="Médecin référent" value="Dr. Dupont" />
+        <InfoRow label="Médecin référent" value="Dr. Tagne" />
         <InfoRow label="Créé le" value={p.created} />
-      </div>
+      </motion.div>
 
       {/* Pathologie */}
       <SectionHeader icon={Stethoscope} label="Pathologie principale" />
-      <div className="bg-blue-50 border border-blue-200 rounded-xl p-3.5 mb-4">
-        <div className="flex items-start justify-between gap-2">
+      <motion.div
+        initial={{ opacity: 0, y: 10 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="bg-gradient-to-br from-blue-50 to-blue-100/50 border border-blue-200 rounded-2xl p-4 mb-4 shadow-sm"
+      >
+        <div className="flex items-start justify-between gap-3">
           <div>
-            <div className="text-[14px] font-bold text-slate-900">{p.diag}</div>
-            <div className="text-[12px] text-slate-500 mt-1">{p.diagSince}</div>
+            <div className="text-base font-black text-slate-900">{p.diag}</div>
+            <div className="text-xs text-slate-600 mt-1.5">{p.diagSince}</div>
           </div>
           <Badge variant={p.iaPct >= 80 ? "green" : "blue"}>IA {p.iaPct}%</Badge>
         </div>
-      </div>
+      </motion.div>
 
       {/* Antécédents */}
       <SectionHeader icon={ClipboardList} label="Antécédents médicaux" />
-      <div className="flex flex-wrap gap-1.5 mb-4">
-        {p.antecedents.map((a, i) => <Pill key={i} label={a} variant="slate" />)}
-      </div>
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        className="flex flex-wrap gap-2 mb-4"
+      >
+        {p.antecedents.map((a, i) => (
+          <motion.div key={i} initial={{ scale: 0.9 }} animate={{ scale: 1 }}>
+            <PillTag label={a} variant="slate" />
+          </motion.div>
+        ))}
+      </motion.div>
 
       {/* Allergies */}
       <SectionHeader icon={AlertTriangle} label="Allergies connues" />
-      <div className="flex flex-wrap gap-1.5 mb-4">
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        className="flex flex-wrap gap-2 mb-4"
+      >
         {p.allergies.map((a, i) => (
-          <PillTag key={i} label={a} variant={a.toLowerCase().includes("aucune") ? "green" : "red"} />
+          <motion.div key={i} initial={{ scale: 0.9 }} animate={{ scale: 1 }}>
+            <PillTag label={a} variant={a.toLowerCase().includes("aucune") ? "green" : "red"} />
+          </motion.div>
         ))}
-      </div>
+      </motion.div>
 
       {/* Traitements */}
       <SectionHeader icon={Pill} label="Traitements en cours" />
-      <div className="mb-4">
-        {p.treatments.map((t, i) => <TreatmentRow key={i} {...t} />)}
-      </div>
+      <motion.div className="mb-4">
+        {p.treatments.map((t, i) => (
+          <motion.div key={i} initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: i * 0.05 }}>
+            <TreatmentRow {...t} />
+          </motion.div>
+        ))}
+      </motion.div>
 
       {/* Vitaux */}
-      <SectionHeader icon={Heart} label="Paramètres vitaux (dernière consultation)" />
-      <div className="grid grid-cols-2 gap-2 mb-4">
-        {vitals.map((v, i) => <VitalCard key={i} {...v} />)}
-      </div>
+      <SectionHeader icon={Heart} label="Paramètres vitaux" />
+      <motion.div className="grid grid-cols-2 gap-2 mb-4">
+        {vitals.map((v, i) => (
+          <motion.div key={i} initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: i * 0.05 }}>
+            <VitalCard {...v} />
+          </motion.div>
+        ))}
+      </motion.div>
 
       {/* Documents */}
       <SectionHeader icon={FileText} label="Documents & imagerie" />
-      <div className="space-y-2 mb-4">
+      <motion.div className="space-y-2 mb-4">
         {p.docs.map((d, i) => (
-          <div key={i} className="flex items-center gap-3 p-2.5 bg-slate-50 border border-slate-200 rounded-lg hover:bg-white transition-colors group">
-            <div className="w-7 h-7 rounded-md bg-white border border-slate-200 flex items-center justify-center flex-shrink-0">
-              <FileScan size={13} className="text-slate-500" />
+          <motion.div
+            key={i}
+            initial={{ opacity: 0, x: -10 }}
+            animate={{ opacity: 1, x: 0 }}
+            whileHover={{ x: 4 }}
+            className="flex items-center gap-3 p-3 bg-slate-50 border border-slate-200 rounded-xl hover:bg-white hover:shadow-md transition-all group"
+          >
+            <div className="w-8 h-8 rounded-lg bg-white border border-slate-200 flex items-center justify-center flex-shrink-0 group-hover:border-blue-300 group-hover:bg-blue-50 transition-colors">
+              <FileScan size={14} className="text-slate-500 group-hover:text-blue-600" />
             </div>
             <div className="flex-1 min-w-0">
-              <div className="text-[12.5px] font-semibold text-slate-800 truncate">{d.name}</div>
+              <div className="text-sm font-semibold text-slate-900 truncate">{d.name}</div>
             </div>
-            <span className="text-[11px] text-slate-400 flex-shrink-0">{d.date}</span>
-            <button className="w-6 h-6 rounded-md flex items-center justify-center text-slate-400 hover:text-blue-600 hover:bg-blue-50 transition-colors opacity-0 group-hover:opacity-100">
-              <Download size={12} />
-            </button>
-          </div>
+            <span className="text-xs text-slate-400 flex-shrink-0">{d.date}</span>
+            <motion.button
+              whileHover={{ scale: 1.1 }}
+              className="w-7 h-7 rounded-lg flex items-center justify-center text-slate-400 hover:text-blue-600 hover:bg-blue-50 transition-all opacity-0 group-hover:opacity-100"
+            >
+              <Download size={13} />
+            </motion.button>
+          </motion.div>
         ))}
-      </div>
+      </motion.div>
 
       {/* Notes */}
       <SectionHeader icon={MessageSquare} label="Notes cliniques" />
-      <div className="bg-amber-50 border border-amber-200 rounded-xl p-3 text-[12.5px] text-slate-700 leading-relaxed">
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        className="bg-amber-50 border border-amber-200 rounded-xl p-4 text-sm text-slate-700 leading-relaxed shadow-sm"
+      >
         {p.notes}
-      </div>
+      </motion.div>
     </div>
   );
 }
 
-// ─── IA TAB ────────────────────────────────────────────────────────────
 function IATab({ p }) {
   const confLabel = p.iaPct >= 85 ? "Haute confiance" : p.iaPct >= 75 ? "Confiance moyenne" : "Confiance faible";
   const confVariant = p.iaPct >= 85 ? "green" : p.iaPct >= 75 ? "blue" : "amber";
 
   return (
-    <div className="p-4">
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      className="p-4"
+    >
       {/* Global score */}
-      <div className="bg-blue-50 border border-blue-200 rounded-xl p-4 flex items-center gap-4 mb-5">
-        <IARing pct={p.iaPct} size={72} />
-        <div>
-          <div className="text-[10px] font-bold uppercase tracking-widest text-blue-400 mb-1">Concordance IA globale</div>
-          <div className="text-[17px] font-black text-slate-900 leading-tight">{p.diag}</div>
-          <div className="text-[11.5px] text-slate-500 mb-2">{p.iaDiags.length} analyses · {p.tl.length} consultations</div>
+      <motion.div
+        initial={{ scale: 0.9, opacity: 0 }}
+        animate={{ scale: 1, opacity: 1 }}
+        className="bg-gradient-to-br from-blue-50 to-blue-100/50 border border-blue-200 rounded-2xl p-5 flex items-center gap-5 mb-6 shadow-sm"
+      >
+        <IARing pct={p.iaPct} size={80} />
+        <div className="flex-1">
+          <div className="text-xs font-black uppercase tracking-widest text-blue-500 mb-1">Concordance IA globale</div>
+          <div className="text-lg font-black text-slate-900 leading-tight">{p.diag}</div>
+          <div className="text-xs text-slate-600 mb-2.5 mt-1">{p.iaDiags.length} analyses · {p.tl.length} consultations</div>
           <Badge variant={confVariant}>{confLabel}</Badge>
         </div>
-      </div>
+      </motion.div>
 
       {/* Diag history */}
-      <p className="text-[10px] font-bold uppercase tracking-widest text-slate-400 mb-2.5">Tous les diagnostics IA</p>
-      <div className="space-y-2 mb-5">
+      <p className="text-xs font-black uppercase tracking-widest text-slate-400 mb-3">Tous les diagnostics IA</p>
+      <motion.div className="space-y-2 mb-6">
         {p.iaDiags.map((d, i) => (
-          <div key={i} className={`p-3 rounded-xl border ${i === 0 ? "bg-blue-50 border-blue-200" : "bg-white border-slate-200"}`}>
-            <div className="flex items-center justify-between mb-1.5">
-              <span className="text-[13px] font-bold text-slate-900">{d.diag}</span>
+          <motion.div
+            key={i}
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: i * 0.05 }}
+            className={`p-3.5 rounded-xl border ${i === 0 ? "bg-blue-50 border-blue-200 shadow-sm" : "bg-white border-slate-200 hover:shadow-md transition-shadow"}`}
+          >
+            <div className="flex items-center justify-between mb-2">
+              <span className="text-sm font-bold text-slate-900">{d.diag}</span>
               <Badge variant={d.pct >= 80 ? "green" : d.pct >= 70 ? "blue" : "amber"}>{d.pct}%</Badge>
             </div>
             <div className="flex items-center justify-between">
-              <span className="text-[11px] text-slate-400">{d.date}</span>
+              <span className="text-xs text-slate-400">{d.date}</span>
               <Badge variant="slate">{d.conc}</Badge>
             </div>
-          </div>
+          </motion.div>
         ))}
-      </div>
+      </motion.div>
 
       {/* Differentials */}
-      <p className="text-[10px] font-bold uppercase tracking-widest text-slate-400 mb-2.5">Différentiels (dernière analyse)</p>
-      <div className="bg-white border border-slate-200 rounded-xl overflow-hidden mb-5">
+      <p className="text-xs font-black uppercase tracking-widest text-slate-400 mb-3">Différentiels (dernière analyse)</p>
+      <motion.div className="bg-white border border-slate-200 rounded-2xl overflow-hidden mb-6 shadow-sm">
         {p.iaDiffs.map((d, i) => (
-          <div key={i} className="flex items-center gap-3 px-3 py-2.5 border-b border-slate-100 last:border-0">
-            <span className="text-[13px] font-medium text-slate-700 flex-1">{d.diag}</span>
+          <motion.div
+            key={i}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: i * 0.05 }}
+            className="flex items-center gap-3 px-4 py-3 border-b border-slate-100 last:border-0 hover:bg-slate-50 transition-colors"
+          >
+            <span className="text-sm font-medium text-slate-800 flex-1">{d.diag}</span>
             <ProgressBar value={d.pct} color={d.pct > 25 ? "bg-amber-400" : "bg-slate-300"} />
-            <span className="text-[12px] font-bold text-slate-600 w-8 text-right">{d.pct}%</span>
-          </div>
+            <span className="text-sm font-bold text-slate-700 w-8 text-right">{d.pct}%</span>
+          </motion.div>
         ))}
-      </div>
+      </motion.div>
 
       {/* Criteria */}
-      <p className="text-[10px] font-bold uppercase tracking-widest text-slate-400 mb-2.5">Critères retenus</p>
-      <div className="bg-white border border-slate-200 rounded-xl overflow-hidden">
+      <p className="text-xs font-black uppercase tracking-widest text-slate-400 mb-3">Critères retenus</p>
+      <motion.div className="bg-white border border-slate-200 rounded-2xl overflow-hidden shadow-sm">
         {p.iaCriteria.map((c, i) => (
-          <div key={i} className="flex items-center justify-between px-3 py-2.5 border-b border-slate-100 last:border-0">
-            <span className="text-[12.5px] text-slate-700">{c.label}</span>
-            {c.ok
-              ? <span className="flex items-center gap-1 text-[11px] font-semibold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-md"><CheckCircle2 size={11} />Présent</span>
-              : <span className="flex items-center gap-1 text-[11px] font-semibold text-slate-400 bg-slate-100 px-2 py-0.5 rounded-md"><XCircle size={11} />Absent</span>}
-          </div>
+          <motion.div
+            key={i}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: i * 0.03 }}
+            className="flex items-center justify-between px-4 py-3 border-b border-slate-100 last:border-0 hover:bg-slate-50 transition-colors"
+          >
+            <span className="text-sm text-slate-800">{c.label}</span>
+            <motion.div whileHover={{ scale: 1.05 }}>
+              {c.ok
+                ? <span className="flex items-center gap-1 text-xs font-bold text-emerald-700 bg-emerald-50 px-2.5 py-1 rounded-lg border border-emerald-200"><CheckCircle2 size={13} />Présent</span>
+                : <span className="flex items-center gap-1 text-xs font-bold text-slate-500 bg-slate-100 px-2.5 py-1 rounded-lg border border-slate-200"><XCircle size={13} />Absent</span>}
+            </motion.div>
+          </motion.div>
         ))}
-      </div>
-    </div>
+      </motion.div>
+    </motion.div>
   );
 }
 
-// ─── HISTORY TAB ───────────────────────────────────────────────────────
 function HistoryTab({ p }) {
   return (
-    <div className="p-4">
+    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="p-4">
       {p.tl.map((t, i) => (
-        <div key={i} className="flex gap-3 pb-5 last:pb-0">
-          <div className="flex flex-col items-center w-5 flex-shrink-0 pt-0.5">
-            <div className="w-2.5 h-2.5 rounded-full flex-shrink-0" style={{ background: t.color }} />
-            {i < p.tl.length - 1 && <div className="w-px flex-1 bg-slate-200 mt-1" />}
+        <motion.div
+          key={i}
+          initial={{ opacity: 0, x: -20 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ delay: i * 0.1 }}
+          className="flex gap-4 pb-6 last:pb-0"
+        >
+          <div className="flex flex-col items-center w-6 flex-shrink-0 pt-1">
+            <motion.div
+              initial={{ scale: 0 }}
+              animate={{ scale: 1 }}
+              className="w-3 h-3 rounded-full flex-shrink-0 shadow-md"
+              style={{ background: t.color }}
+            />
+            {i < p.tl.length - 1 && <div className="w-px h-16 bg-gradient-to-b from-slate-300 to-slate-100 mt-1" />}
           </div>
-          <div className="flex-1 pb-1">
-            <div className="text-[11px] text-slate-400 mb-1">{t.date}</div>
-            <div className="text-[13px] font-bold text-slate-900 mb-0.5">{t.title}</div>
-            <div className="text-[12px] text-slate-500 leading-relaxed mb-2">{t.note}</div>
-            <div className="flex gap-1.5">
+          <motion.div whileHover={{ x: 4 }} className="flex-1 pb-1 cursor-pointer">
+            <div className="text-xs text-slate-400 mb-1.5">{t.date}</div>
+            <div className="text-sm font-bold text-slate-900 mb-1">{t.title}</div>
+            <div className="text-xs text-slate-600 leading-relaxed mb-2.5">{t.note}</div>
+            <div className="flex gap-2">
               <Badge variant={t.ia >= 80 ? "green" : t.ia >= 70 ? "blue" : "amber"}>IA {t.ia}%</Badge>
               <Badge variant="slate">{t.conc}</Badge>
             </div>
-          </div>
-        </div>
+          </motion.div>
+        </motion.div>
       ))}
-    </div>
+    </motion.div>
   );
 }
 
-// ─── STATUS TAB ────────────────────────────────────────────────────────
 function StatusTab({ p, onStatusChange }) {
   const st = STATUS_CONFIG[p.status];
   const allStatuses = ["actif", "urgent", "attente", "cloture"];
@@ -594,189 +692,254 @@ function StatusTab({ p, onStatusChange }) {
   };
 
   return (
-    <div className="p-4">
+    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="p-4">
       {/* Current status */}
-      <div className={`${st.bg} ${st.border} border rounded-xl p-4 mb-5`}>
-        <div className="flex items-center gap-2 mb-1.5">
-          <span className={`w-2.5 h-2.5 rounded-full ${st.dot}`} />
-          <span className={`text-[14px] font-bold ${st.color}`}>{st.label}</span>
+      <motion.div
+        initial={{ scale: 0.95 }}
+        animate={{ scale: 1 }}
+        className={`${st.bg} ${st.border} border rounded-2xl p-4 mb-5 shadow-sm`}
+      >
+        <div className="flex items-center gap-2 mb-2">
+          <motion.span className={`w-3 h-3 rounded-full ${st.dot}`} animate={{ scale: [1, 1.2, 1] }} transition={{ duration: 2, repeat: Infinity }} />
+          <span className={`text-base font-bold ${st.color}`}>{st.label}</span>
         </div>
-        <p className="text-[12.5px] text-slate-600">{statusDesc[p.status]}</p>
-      </div>
+        <p className="text-sm text-slate-700">{statusDesc[p.status]}</p>
+      </motion.div>
 
       {/* Change status */}
-      <p className="text-[10px] font-bold uppercase tracking-widest text-slate-400 mb-3">Changer le statut</p>
-      <div className="space-y-2 mb-6">
-        {allStatuses.map(s => {
+      <p className="text-xs font-black uppercase tracking-widest text-slate-400 mb-3">Changer le statut</p>
+      <motion.div className="space-y-2 mb-6">
+        {allStatuses.map((s, i) => {
           const cfg = STATUS_CONFIG[s];
           const active = s === p.status;
           return (
-            <button key={s} onClick={() => onStatusChange(s)}
-              className={`w-full flex items-center gap-3 p-3 rounded-xl border text-left transition-all
-                ${active ? `${cfg.bg} ${cfg.border} ${cfg.color}` : "bg-white border-slate-200 text-slate-700 hover:border-slate-300 hover:bg-slate-50"}`}>
-              <span className={`w-2 h-2 rounded-full ${cfg.dot}`} />
-              <div>
-                <div className="text-[13px] font-semibold">{statusLabels[s]}</div>
-                <div className={`text-[11.5px] mt-0.5 ${active ? "opacity-70" : "text-slate-400"}`}>{statusDesc[s]}</div>
+            <motion.button
+              key={s}
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: i * 0.05 }}
+              whileHover={{ scale: 1.02 }}
+              onClick={() => onStatusChange(s)}
+              className={`w-full flex items-center gap-3 p-3.5 rounded-xl border transition-all
+                ${active ? `${cfg.bg} ${cfg.border} ${cfg.color} shadow-md` : "bg-white border-slate-200 text-slate-700 hover:border-slate-300 hover:bg-slate-50"}`}
+            >
+              <span className={`w-2.5 h-2.5 rounded-full ${cfg.dot}`} />
+              <div className="text-left flex-1">
+                <div className="text-sm font-bold">{statusLabels[s]}</div>
+                <div className={`text-xs mt-0.5 ${active ? "opacity-70" : "text-slate-400"}`}>{statusDesc[s]}</div>
               </div>
-              {active && <CheckCircle2 size={16} className="ml-auto" />}
-            </button>
+              {active && <motion.div animate={{ scale: [1, 1.2, 1] }} transition={{ duration: 1.5, repeat: Infinity }}><CheckCircle2 size={18} /></motion.div>}
+            </motion.button>
           );
         })}
-      </div>
+      </motion.div>
 
       {/* Next visit */}
-      <div className="border-t border-slate-100 pt-4">
-        <p className="text-[10px] font-bold uppercase tracking-widest text-slate-400 mb-3">Prochain suivi</p>
+      <div className="border-t border-slate-200 pt-4">
+        <p className="text-xs font-black uppercase tracking-widest text-slate-400 mb-3">Prochain suivi</p>
         <div className="flex gap-2">
           <input type="date" defaultValue="2026-03-26"
-            className="flex-1 px-3 py-2 text-[13px] bg-white border border-slate-200 rounded-lg text-slate-800 focus:outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-100" />
-          <button className="px-4 py-2 bg-blue-600 text-white text-[13px] font-semibold rounded-lg hover:bg-blue-700 transition-colors">
+            className="flex-1 px-3 py-2.5 text-sm bg-white border border-slate-200 rounded-xl text-slate-900 font-medium focus:outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-100 transition-all" />
+          <motion.button whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} className="px-4 py-2.5 bg-blue-600 text-white text-sm font-bold rounded-xl hover:bg-blue-700 transition-colors shadow-sm">
             Confirmer
-          </button>
+          </motion.button>
         </div>
       </div>
-    </div>
+    </motion.div>
   );
 }
 
-// ─── ACCESS TAB ────────────────────────────────────────────────────────
 function AccessTab() {
   const [martinVisible, setMartinVisible] = useState(true);
   return (
-    <div className="p-4">
-      <p className="text-[10px] font-bold uppercase tracking-widest text-slate-400 mb-3">Médecins ayant accès</p>
+    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="p-4">
+      <p className="text-xs font-black uppercase tracking-widest text-slate-400 mb-3">Médecins ayant accès</p>
       {/* Owner */}
-      <div className="flex items-center gap-3 p-3 bg-blue-50 border border-blue-200 rounded-xl mb-2">
+      <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="flex items-center gap-3 p-3.5 bg-blue-50 border border-blue-200 rounded-xl mb-2 shadow-sm">
         <Avatar initials="JD" size="sm" color="bg-blue-600" />
         <div className="flex-1 min-w-0">
-          <div className="text-[13px] font-semibold text-slate-900">Dr. Jean Dupont (vous)</div>
-          <div className="text-[11px] text-slate-500">Propriétaire · Pneumologue, Douala</div>
+          <div className="text-sm font-bold text-slate-900">Dr. Jean Tagne (vous)</div>
+          <div className="text-xs text-slate-500">Propriétaire · Pneumologue, Douala</div>
         </div>
         <Badge variant="blue">Propriétaire</Badge>
-      </div>
+      </motion.div>
       {/* Martin */}
       {martinVisible && (
-        <div className="flex items-center gap-3 p-3 bg-slate-50 border border-slate-200 rounded-xl mb-2">
+        <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.95 }} className="flex items-center gap-3 p-3.5 bg-slate-50 border border-slate-200 rounded-xl mb-2">
           <Avatar initials="DM" size="sm" color="bg-slate-400" />
           <div className="flex-1 min-w-0">
-            <div className="text-[13px] font-semibold text-slate-900">Dr. Martin</div>
-            <div className="text-[11px] text-slate-500">Accès depuis le 07/03/2026</div>
+            <div className="text-sm font-bold text-slate-900">Dr. Martin</div>
+            <div className="text-xs text-slate-500">Accès depuis le 07/03/2026</div>
           </div>
-          <button onClick={() => setMartinVisible(false)}
-            className="text-[11.5px] font-semibold text-red-600 bg-red-50 border border-red-200 px-2.5 py-1 rounded-lg hover:bg-red-100 transition-colors">
+          <motion.button
+            whileHover={{ scale: 1.05 }}
+            onClick={() => setMartinVisible(false)}
+            className="text-xs font-bold text-red-600 bg-red-50 border border-red-200 px-3 py-1.5 rounded-lg hover:bg-red-100 transition-all"
+          >
             Révoquer
-          </button>
-        </div>
+          </motion.button>
+        </motion.div>
       )}
       {/* Add */}
-      <div className="border-t border-slate-100 mt-4 pt-4">
-        <p className="text-[10px] font-bold uppercase tracking-widest text-slate-400 mb-3">Ajouter un accès</p>
-        <button className="w-full flex items-center justify-center gap-2 py-2.5 bg-white border border-dashed border-slate-300 rounded-xl text-[13px] font-semibold text-slate-500 hover:border-blue-400 hover:text-blue-600 hover:bg-blue-50 transition-all">
-          <Plus size={14} />Envoyer une demande de partage
-        </button>
+      <div className="border-t border-slate-200 mt-4 pt-4">
+        <p className="text-xs font-black uppercase tracking-widest text-slate-400 mb-3">Ajouter un accès</p>
+        <motion.button
+          whileHover={{ scale: 1.02 }}
+          className="w-full flex items-center justify-center gap-2 py-3 bg-white border-2 border-dashed border-slate-300 rounded-xl text-sm font-bold text-slate-500 hover:border-blue-400 hover:text-blue-600 hover:bg-blue-50 transition-all"
+        >
+          <Plus size={16} />Envoyer une demande de partage
+        </motion.button>
       </div>
-    </div>
+    </motion.div>
   );
 }
 
 // ─── DETAIL PANEL ──────────────────────────────────────────────────────
+
 function DetailPanel({ patient, onClose, onStatusChange }) {
   const [tab, setTab] = useState("dossier");
-  const [editMode, setEditMode] = useState(false);
 
-  useEffect(() => { setTab("dossier"); setEditMode(false); }, [patient?.id]);
+  useEffect(() => { setTab("dossier"); }, [patient?.id]);
 
   if (!patient) return null;
 
   const st = STATUS_CONFIG[patient.status];
 
   return (
-    <div className="w-[450px] flex-shrink-0 bg-white border-l border-slate-200 flex flex-col h-full overflow-hidden">
+    <motion.div
+      initial={{ x: 450, opacity: 0 }}
+      animate={{ x: 0, opacity: 1 }}
+      exit={{ x: 450, opacity: 0 }}
+      transition={{ type: "spring", stiffness: 300, damping: 30 }}
+      className="w-[480px] flex-shrink-0 bg-white border-l border-slate-200 flex flex-col h-full overflow-hidden shadow-2xl"
+    >
       {/* Header */}
-      <div className="px-4 py-3.5 border-b border-slate-200 flex items-center gap-3 flex-shrink-0">
+      <motion.div
+        initial={{ opacity: 0, y: -10 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="px-5 py-4 border-b border-slate-200 flex items-center gap-3.5 flex-shrink-0 bg-gradient-to-r from-slate-50 to-slate-50/50"
+      >
         <div className="relative flex-shrink-0">
           <Avatar initials={patient.init} size="lg" color={patient.status === "urgent" ? "bg-red-500" : patient.status === "attente" ? "bg-amber-500" : "bg-blue-600"} />
-          <span className={`absolute bottom-0 right-0 w-3 h-3 rounded-full border-2 border-white ${st.ring}`} />
+          <motion.span
+            animate={{ scale: [1, 1.15, 1] }}
+            transition={{ duration: 2, repeat: Infinity }}
+            className={`absolute bottom-0 right-0 w-3.5 h-3.5 rounded-full border-2 border-white ${st.ring}`}
+          />
         </div>
         <div className="flex-1 min-w-0">
-          <div className="text-[15px] font-bold text-slate-900 leading-tight">{patient.name}</div>
-          <div className="text-[12px] text-slate-400 mt-0.5">{patient.age} · {patient.sex} · {patient.city}</div>
+          <div className="text-base font-bold text-slate-900 leading-tight">{patient.name}</div>
+          <div className="text-xs text-slate-500 mt-0.5">{patient.age} · {patient.sex} · {patient.city}</div>
         </div>
-        <button onClick={onClose} className="w-7 h-7 rounded-lg flex items-center justify-center text-slate-400 hover:text-slate-700 hover:bg-slate-100 transition-colors">
-          <X size={14} />
-        </button>
-      </div>
+        <motion.button
+          whileHover={{ scale: 1.1, rotate: 90 }}
+          onClick={onClose}
+          className="w-8 h-8 rounded-lg flex items-center justify-center text-slate-400 hover:text-slate-700 hover:bg-slate-200 transition-colors"
+        >
+          <X size={16} />
+        </motion.button>
+      </motion.div>
 
       {/* Actions */}
-      <div className="px-4 py-2.5 border-b border-slate-100 flex items-center gap-2 flex-shrink-0">
-        <a href="#" className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-blue-600 text-white text-[12.5px] font-semibold rounded-lg hover:bg-blue-700 transition-colors">
-          <Stethoscope size={12} />Consulter
-        </a>
-        <button onClick={() => setEditMode(!editMode)}
-          className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-white border border-slate-200 text-slate-700 text-[12.5px] font-semibold rounded-lg hover:bg-slate-50 transition-colors">
-          <Edit3 size={12} />Modifier
-        </button>
-        <button className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-white border border-slate-200 text-slate-700 text-[12.5px] font-semibold rounded-lg hover:bg-slate-50 transition-colors">
-          <Download size={12} />Télécharger
-        </button>
-        <button className="ml-auto w-7 h-7 rounded-lg flex items-center justify-center text-red-400 hover:text-red-600 hover:bg-red-50 border border-slate-200 hover:border-red-200 transition-colors">
-          <Trash2 size={13} />
-        </button>
-      </div>
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 0.1 }}
+        className="px-5 py-3 border-b border-slate-100 flex items-center gap-2 flex-shrink-0 bg-blue-50/50"
+      >
+        <motion.a whileHover={{ scale: 1.05 }} href="#" className="inline-flex items-center gap-1.5 px-3 py-2 bg-blue-600 text-white text-xs font-bold rounded-lg hover:bg-blue-700 transition-colors shadow-sm">
+          <Stethoscope size={13} />Consulter
+        </motion.a>
+        <motion.button whileHover={{ scale: 1.05 }} className="inline-flex items-center gap-1.5 px-3 py-2 bg-white border border-slate-200 text-slate-700 text-xs font-bold rounded-lg hover:bg-slate-50 transition-colors">
+          <Edit3 size={13} />Modifier
+        </motion.button>
+        <motion.button whileHover={{ scale: 1.05 }} className="inline-flex items-center gap-1.5 px-3 py-2 bg-white border border-slate-200 text-slate-700 text-xs font-bold rounded-lg hover:bg-slate-50 transition-colors">
+          <Download size={13} />Télécharger
+        </motion.button>
+        <motion.button whileHover={{ scale: 1.1 }} className="ml-auto w-8 h-8 rounded-lg flex items-center justify-center text-red-400 hover:text-red-600 hover:bg-red-50 border border-slate-200 hover:border-red-200 transition-colors">
+          <Trash2 size={14} />
+        </motion.button>
+      </motion.div>
 
       {/* Tabs */}
-      <div className="flex border-b border-slate-200 px-2 flex-shrink-0 overflow-x-auto">
-        {TABS.map(t => {
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 0.15 }}
+        className="flex border-b border-slate-200 px-2 flex-shrink-0 overflow-x-auto bg-slate-50/50"
+      >
+        {TABS.map((t, i) => {
           const Icon = t.icon;
           return (
-            <button key={t.id} onClick={() => setTab(t.id)}
-              className={`flex items-center gap-1.5 px-3 py-2.5 text-[12px] font-medium border-b-2 whitespace-nowrap transition-all
-                ${tab === t.id ? "border-blue-600 text-blue-700" : "border-transparent text-slate-400 hover:text-slate-700"}`}>
-              <Icon size={13} strokeWidth={1.8} />
+            <motion.button
+              key={t.id}
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.15 + i * 0.05 }}
+              onClick={() => setTab(t.id)}
+              className={`flex items-center gap-1.5 px-3 py-3 text-xs font-bold border-b-2 whitespace-nowrap transition-all
+                ${tab === t.id ? "border-blue-600 text-blue-700 bg-white/50" : "border-transparent text-slate-500 hover:text-slate-700"}`}
+            >
+              <Icon size={14} strokeWidth={2} />
               {t.label}
-            </button>
+            </motion.button>
           );
         })}
-      </div>
+      </motion.div>
 
       {/* Tab body */}
-      <div className="flex-1 overflow-y-auto">
+      <motion.div
+        key={tab}
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.2 }}
+        className="flex-1 overflow-y-auto"
+      >
         {tab === "dossier" && <DossierTab p={patient} />}
         {tab === "ia" && <IATab p={patient} />}
         {tab === "history" && <HistoryTab p={patient} />}
         {tab === "status" && <StatusTab p={patient} onStatusChange={onStatusChange} />}
         {tab === "access" && <AccessTab />}
-      </div>
-    </div>
+      </motion.div>
+    </motion.div>
   );
 }
 
 // ─── TOAST ─────────────────────────────────────────────────────────────
+
 function Toast({ toasts, remove }) {
   return (
     <div className="fixed top-4 right-4 z-50 flex flex-col gap-2 pointer-events-none">
       {toasts.map(t => (
-        <div key={t.id} className="pointer-events-auto bg-white border border-slate-200 rounded-xl shadow-lg px-4 py-3 flex items-start gap-3 min-w-[240px] max-w-[300px] animate-in slide-in-from-right-4 duration-200">
-          <div className={`w-2 h-2 rounded-full mt-1.5 flex-shrink-0 ${t.type === "success" ? "bg-emerald-500" : t.type === "error" ? "bg-red-500" : "bg-blue-500"}`} />
+        <motion.div
+          key={t.id}
+          initial={{ opacity: 0, x: 400 }}
+          animate={{ opacity: 1, x: 0 }}
+          exit={{ opacity: 0, x: 400 }}
+          className="pointer-events-auto bg-white border border-slate-200 rounded-xl shadow-xl px-4 py-3 flex items-start gap-3 min-w-[240px] max-w-[300px]"
+        >
+          <motion.div
+            animate={{ scale: [1, 1.2, 1] }}
+            className={`w-2.5 h-2.5 rounded-full mt-1.5 flex-shrink-0 ${t.type === "success" ? "bg-emerald-500" : t.type === "error" ? "bg-red-500" : "bg-blue-500"}`}
+          />
           <div className="flex-1">
-            <div className="text-[13px] font-semibold text-slate-800">{t.title}</div>
-            {t.msg && <div className="text-[12px] text-slate-500 mt-0.5">{t.msg}</div>}
+            <div className="text-sm font-bold text-slate-900">{t.title}</div>
+            {t.msg && <div className="text-xs text-slate-600 mt-0.5">{t.msg}</div>}
           </div>
-          <button onClick={() => remove(t.id)} className="text-slate-400 hover:text-slate-600 mt-0.5"><X size={13} /></button>
-        </div>
+          <motion.button whileHover={{ scale: 1.2 }} onClick={() => remove(t.id)} className="text-slate-400 hover:text-slate-600 mt-0.5"><X size={14} /></motion.button>
+        </motion.div>
       ))}
     </div>
   );
 }
 
 // ─── MAIN APP ──────────────────────────────────────────────────────────
+
 export default function PatientsPage() {
   const [patients, setPatients] = useState(PATIENTS);
   const [selected, setSelected] = useState(null);
   const [filter, setFilter] = useState("all");
   const [search, setSearch] = useState("");
-  const [dark, setDark] = useState(false);
   const [toasts, setToasts] = useState([]);
   let toastId = useRef(0);
 
@@ -801,75 +964,99 @@ export default function PatientsPage() {
   const currentPatient = selected ? patients[selected] : null;
 
   return (
-    <div className={`flex h-screen overflow-hidden font-sans antialiased ${dark ? "dark bg-slate-950" : "bg-slate-50"}`}
-      style={{ fontFamily: "'Plus Jakarta Sans', system-ui, sans-serif" }}>
-
+    <div className="flex h-screen overflow-hidden font-sans antialiased bg-slate-50" style={{ fontFamily: "'Plus Jakarta Sans', system-ui, sans-serif" }}>
       <Toast toasts={toasts} remove={id => setToasts(prev => prev.filter(t => t.id !== id))} />
 
       <div className="flex-1 flex flex-col min-w-0 overflow-hidden">
-        {/* Content */}
         <div className="flex flex-1 overflow-hidden">
           {/* List pane */}
-          <div className="flex-1 min-w-0 overflow-y-auto p-5">
-            {/* KPIs */}
-            <div className="grid grid-cols-4 gap-3 mb-5">
-              <KpiCard label="Total patients" value="134" delta="↑ +12 ce trimestre" deltaUp accent="blue" />
-              <KpiCard label="Consultés ce mois" value="28" delta="↑ +5 vs février" deltaUp accent="green" />
-              <KpiCard label="Suivis urgents" value="3" delta="Action requise" deltaUp={false} accent="red" />
-              <KpiCard label="Dossiers partagés" value="7" delta="Actifs" deltaUp accent="slate" />
-            </div>
-
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            className="flex-1 min-w-0 overflow-y-auto p-6"
+          >
             {/* Filters + actions */}
-            <div className="flex items-center justify-between mb-3 flex-wrap gap-2">
-              <div className="flex items-center gap-1 bg-white border border-slate-200 rounded-lg p-1">
+            <motion.div
+              initial={{ opacity: 0, y: -10 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="flex items-center justify-between mb-6 flex-wrap gap-3"
+            >
+              <div className="flex items-center gap-1.5 bg-white border border-slate-200 rounded-xl p-1.5 shadow-sm">
                 {[
                   { id: "all", label: "Tous", count: 134 },
                   { id: "urgent", label: "Urgents", count: 3 },
                   { id: "shared", label: "Partagés" },
                 ].map(f => (
-                  <button key={f.id} onClick={() => setFilter(f.id)}
-                    className={`px-3 py-1.5 rounded-md text-[12.5px] font-semibold transition-all
-                      ${filter === f.id ? "bg-blue-600 text-white shadow-sm" : "text-slate-500 hover:text-slate-800 hover:bg-slate-50"}`}>
+                  <motion.button
+                    key={f.id}
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                    onClick={() => setFilter(f.id)}
+                    className={`px-4 py-2 rounded-lg text-xs font-bold transition-all
+                      ${filter === f.id ? "bg-blue-600 text-white shadow-md" : "text-slate-600 hover:text-slate-900 hover:bg-slate-100"}`}
+                  >
                     {f.label}
-                    {f.count && <span className={`ml-1.5 text-[11px] font-normal ${filter === f.id ? "text-blue-200" : "text-slate-400"}`}>{f.count}</span>}
-                  </button>
+                    {f.count && <span className={`ml-1.5 text-xs font-semibold ${filter === f.id ? "text-blue-200" : "text-slate-400"}`}>{f.count}</span>}
+                  </motion.button>
                 ))}
               </div>
               <div className="flex gap-2">
-                <button className="flex items-center gap-1.5 px-3 py-1.5 text-[12.5px] font-semibold text-slate-600 bg-white border border-slate-200 rounded-lg hover:bg-slate-50 transition-colors">
-                  <Download size={13} />Exporter CSV
-                </button>
-                <a href="#" className="flex items-center gap-1.5 px-3 py-1.5 text-[12.5px] font-semibold text-white bg-blue-600 border border-blue-700 rounded-lg hover:bg-blue-700 transition-colors">
-                  <Plus size={13} />Nouveau patient
-                </a>
+                <motion.button whileHover={{ scale: 1.05 }} className="flex items-center gap-1.5 px-3.5 py-2 text-xs font-bold text-slate-700 bg-white border border-slate-200 rounded-lg hover:bg-slate-50 transition-all shadow-sm">
+                  <Download size={14} />Exporter CSV
+                </motion.button>
+                <motion.a whileHover={{ scale: 1.05 }} href="#" className="flex items-center gap-1.5 px-3.5 py-2 text-xs font-bold text-white bg-blue-600 border border-blue-700 rounded-lg hover:bg-blue-700 transition-all shadow-md">
+                  <Plus size={14} />Nouveau patient
+                </motion.a>
               </div>
-            </div>
+            </motion.div>
+
+            {/* Searchbar */}
+            <motion.div
+              initial={{ opacity: 0, y: -10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.05 }}
+              className="relative mb-6"
+            >
+              <Search size={16} className="absolute left-4 top-1/2 transform -translate-y-1/2 text-slate-400" />
+              <input
+                type="text"
+                placeholder="Rechercher par nom, pathologie..."
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                className="w-full pl-11 pr-4 py-2.5 bg-white border border-slate-200 rounded-xl text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-400 transition-all shadow-sm"
+              />
+            </motion.div>
 
             {/* Table */}
-            <div className="bg-white border border-slate-200 rounded-xl overflow-hidden shadow-sm">
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.1 }}
+              className="bg-white border border-slate-200 rounded-2xl overflow-hidden shadow-sm"
+            >
               <table className="w-full">
                 <thead>
-                  <tr className="bg-slate-50 border-b border-slate-200">
-                    <th className="text-left px-4 py-2.5 text-[11px] font-bold uppercase tracking-widest text-slate-400">Patient</th>
-                    <th className="text-left px-4 py-2.5 text-[11px] font-bold uppercase tracking-widest text-slate-400">Pathologie</th>
-                    <th className="text-left px-4 py-2.5 text-[11px] font-bold uppercase tracking-widest text-slate-400">Concordance</th>
-                    <th className="text-left px-4 py-2.5 text-[11px] font-bold uppercase tracking-widest text-slate-400">Statut</th>
-                    <th className="text-left px-4 py-2.5 text-[11px] font-bold uppercase tracking-widest text-slate-400">Partage</th>
-                    <th className="px-4 py-2.5" />
+                  <tr className="bg-gradient-to-r from-slate-50 to-slate-50/50 border-b border-slate-200">
+                    <th className="text-left px-5 py-3 text-xs font-black uppercase tracking-widest text-slate-400">Patient</th>
+                    <th className="text-left px-5 py-3 text-xs font-black uppercase tracking-widest text-slate-400">Pathologie</th>
+                    <th className="text-left px-5 py-3 text-xs font-black uppercase tracking-widest text-slate-400">Concordance</th>
+                    <th className="text-left px-5 py-3 text-xs font-black uppercase tracking-widest text-slate-400">Statut</th>
+                    <th className="text-left px-5 py-3 text-xs font-black uppercase tracking-widest text-slate-400">Partage</th>
+                    <th className="px-5 py-3" />
                   </tr>
                 </thead>
                 <tbody>
-                  {filteredPatients.map(([id, p]) => (
+                  {filteredPatients.map(([id, p], i) => (
                     <PatientRow key={id} patient={p} selected={selected === id}
                       onClick={() => setSelected(selected === id ? null : id)} />
                   ))}
                   {filteredPatients.length === 0 && (
-                    <tr><td colSpan={6} className="px-4 py-12 text-center text-slate-400 text-[13.5px]">Aucun patient trouvé</td></tr>
+                    <tr><td colSpan={6} className="px-5 py-12 text-center text-slate-400 text-sm">Aucun patient trouvé</td></tr>
                   )}
                 </tbody>
               </table>
-            </div>
-          </div>
+            </motion.div>
+          </motion.div>
 
           {/* Detail panel */}
           {currentPatient && (
