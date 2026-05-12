@@ -56,7 +56,7 @@ export default function Topbar({ sidebarOpen, setSidebarOpen, pageTitle }) {
                 {pageTitle}
               </h2>
               <h1 className="text-sm font-bold text-slate-700 mt-1">
-                {pageTitle === "Tableau de bord" ? "Bienvenue, Dr. Dupont" : pageTitle}
+                {pageTitle === "Tableau de bord" ? "Bienvenue, Dr. Tagne" : pageTitle}
               </h1>
             </div>
           </div>
@@ -104,7 +104,7 @@ export default function Topbar({ sidebarOpen, setSidebarOpen, pageTitle }) {
               <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-red-500 rounded-full ring-2 ring-white"></span>
             </Link>
 
-            {/* Menu utilisateur - remplace l'avatar simple */}
+            {/* Menu utilisateur */}
             <div className="relative" ref={userMenuRef}>
               <button
                 onClick={() => setUserMenuOpen(!userMenuOpen)}
@@ -114,7 +114,7 @@ export default function Topbar({ sidebarOpen, setSidebarOpen, pageTitle }) {
                   JD
                 </div>
                 <div className="hidden md:block text-left">
-                  <p className="text-xs font-semibold text-slate-900">Dr. Jean Dupont</p>
+                  <p className="text-xs font-semibold text-slate-900">Dr. Jean Tagne</p>
                   <p className="text-[10px] font-medium text-slate-500">Pneumologue</p>
                 </div>
                 <ChevronDown className={`hidden md:block w-4 h-4 text-slate-400 transition-transform duration-300 ${userMenuOpen ? 'rotate-180' : ''}`} />
@@ -122,7 +122,7 @@ export default function Topbar({ sidebarOpen, setSidebarOpen, pageTitle }) {
 
               {/* Menu déroulant utilisateur */}
               {userMenuOpen && (
-                <div className="absolute right-0 mt-3 w-72 bg-white rounded-2xl border border-slate-200 shadow-xl overflow-hidden z-50 animate-in fade-in slide-in-from-top-2 duration-200">
+                <div className="absolute right-0 mt-3 w-72 bg-white rounded-2xl border border-slate-200 shadow-xl overflow-hidden z-50">
                   {/* En-tête du menu */}
                   <div className="p-4 bg-gradient-to-r from-blue-50 to-indigo-50 border-b border-slate-100">
                     <div className="flex items-center gap-3">
@@ -130,8 +130,8 @@ export default function Topbar({ sidebarOpen, setSidebarOpen, pageTitle }) {
                         JD
                       </div>
                       <div>
-                        <p className="text-sm font-bold text-slate-900">Dr. Jean Dupont</p>
-                        <p className="text-xs text-slate-500">jean.dupont@pneumoia.com</p>
+                        <p className="text-sm font-bold text-slate-900">Dr. Jean Tagne</p>
+                        <p className="text-xs text-slate-500">jean.Tagne@pneumoia.com</p>
                         <span className="inline-flex items-center gap-1 mt-1 px-2 py-0.5 bg-emerald-100 text-emerald-700 rounded-full text-[10px] font-black">
                           <span className="w-1.5 h-1.5 bg-emerald-500 rounded-full"></span>
                           En ligne
@@ -198,8 +198,8 @@ export default function Topbar({ sidebarOpen, setSidebarOpen, pageTitle }) {
         </div>
       </header>
 
-      {/* Styles d'animation */}
-      <style jsx>{`
+      {/* Styles d'animation - version corrigée sans jsx */}
+      <style>{`
         @keyframes fade-in {
           from {
             opacity: 0;

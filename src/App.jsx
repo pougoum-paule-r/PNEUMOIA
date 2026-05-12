@@ -17,6 +17,11 @@ import Patients from './features/medecin/pages/Patients';
 import Notification from './features/medecin/pages/Notifications';
 import Profil from './features/medecin/pages/Profil';
 import Historique from './features/medecin/pages/Historique';
+import Partage from './features/medecin/pages/Partage';
+import Parametre from './features/medecin/pages/Parametres';
+import CasClinique from './features/medecin/pages/CasCliniques';
+import Recherche from './features/medecin/pages/Recherche';
+import Messagerie from './features/medecin/pages/Messagerie';
 
 
 //SECTION ADMINISTRATEUR
@@ -50,13 +55,13 @@ function App() {
           <Route path="dashboard" element={<Dashboard />} />
           <Route path="consultation" element={<Consultation />} />
           <Route path="patients" element={<Patients />} />
-          <Route path="partage" element={<div>Partage</div>} />
-          <Route path="cas-cliniques" element={<div>Cas cliniques</div>} />
-          <Route path="messagerie" element={<div>Messagerie</div>} />
+          <Route path="partage" element={<Partage />} />
+          <Route path="cas-cliniques" element={<CasClinique />} />
+          <Route path="messagerie" element={<Messagerie />} />
           <Route path="notifications" element={<Notification/>} />
-          <Route path="recherche" element={<div>Ma RECHERCHE</div>} />
+          <Route path="recherche" element={<Recherche />} />
           <Route path="profil" element={ <Profil/>} />
-          <Route path="parametres" element={<div>Paramètres</div>} />
+          <Route path="parametres" element={<Parametre/>} />
           <Route path="historique" element={<Historique/>} />
         </Route>
 
