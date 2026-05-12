@@ -774,7 +774,7 @@ export default function Consultation() {
         </div>
       </FormCard>
       
-      <div className="flex justify-between">
+      <div key="settings-content" className="flex justify-between">
         <button onClick={handlePrev} className="px-5 py-2.5 border rounded-lg text-sm">← Retour</button>
         <button onClick={runAIAnalysis} disabled={isAnalyzing} className="px-6 py-2.5 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-lg text-sm font-medium flex items-center gap-2">
           {isAnalyzing ? <Loader2 className="w-4 h-4 animate-spin" /> : <Brain className="w-4 h-4" />}

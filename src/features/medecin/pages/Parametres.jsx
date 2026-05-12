@@ -466,7 +466,7 @@ export default function Settings() {
                     {passwordErrors.confirmPassword && <p className="text-xs text-red-500 mt-1">{passwordErrors.confirmPassword}</p>}
                   </div>
 
-                  <div className="flex gap-3 pt-2">
+                  <div key="settings-content" className="flex gap-3 pt-2" key="loading-state">
                     <button
                       onClick={handleUpdatePassword}
                       disabled={passwordLoading}

@@ -328,7 +328,7 @@ export default function SearchPage() {
 
           {/* Contenu */}
           {loading ? (
-            <div className="flex items-center justify-center py-12">
+            <div key="settings-content" className="flex items-center justify-center py-12">
               <Loader2 className="w-8 h-8 text-blue-600 animate-spin" />
             </div>
           ) : (

@@ -506,7 +506,7 @@ export default function Messagerie() {
 
           <div className="flex-1 overflow-y-auto">
             {loading ? (
-              <div className="flex items-center justify-center h-32">
+              <div key="settings-content" className="flex items-center justify-center h-32">
                 <Loader2 className="w-6 h-6 text-blue-600 animate-spin" />
               </div>
             ) : (

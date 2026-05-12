@@ -1,5 +1,6 @@
 // src/App.jsx
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import{ ThemeProvider } from './features/medecin/contexts/ThemeContext';
 import HomePage from './features/home/HomePage';
 import AboutPage from './features/about/AboutPage';
 import CasCliniquePage from './features/casClinique/CascliniquePage';
@@ -24,33 +25,36 @@ import Messagerie from './features/medecin/pages/Messagerie';
 
 function App() {
   return (
-    <BrowserRouter>  {/* Un seul Router ici */}
-      <Routes>
-        <Route path="/" element={<MainLayout />}>
-          <Route index element={<HomePage />} />
-          <Route path="/apropos" element={<AboutPage />} />
-          <Route path="/cas-cliniques" element={<CasCliniquePage />} />
-          <Route path="/fonctionnalites" element={<Fonctionnalité />} />
-        </Route>
+    <ThemeProvider>
+      <BrowserRouter>  {/* Un seul Router ici */}
+        <Routes>
+          <Route path="/" element={<MainLayout />}>
+            <Route index element={<HomePage />} />
+            <Route path="/apropos" element={<AboutPage />} />
+            <Route path="/cas-cliniques" element={<CasCliniquePage />} />
+            <Route path="/fonctionnalites" element={<Fonctionnalité />} />
+          </Route>
 
-        {/* ROUTE CONCERNANT LA SECTION MEDECIN */}
-        <Route path="/medecin" element={<MedecinLayout />}>
-          <Route index element={<Dashboard />} />
-          <Route path="dashboard" element={<Dashboard />} />
-          <Route path="consultation" element={<Consultation />} />
-          <Route path="patients" element={<Patients />} />
-          <Route path="partage" element={<Partage />} />
-          <Route path="cas-cliniques" element={<CasClinique />} />
-          <Route path="messagerie" element={<Messagerie />} />
-          <Route path="notifications" element={<Notification/>} />
-          <Route path="recherche" element={<Recherche />} />
-          <Route path="profil" element={ <Profil/>} />
-          <Route path="parametres" element={<Parametre/>} />
-          <Route path="historique" element={<Historique/>} />
-        </Route>
-      </Routes>
-       
-    </BrowserRouter>
+          {/* ROUTE CONCERNANT LA SECTION MEDECIN */}
+          <Route path="/medecin" element={<MedecinLayout />}>
+            <Route index element={<Dashboard />} />
+            <Route path="dashboard" element={<Dashboard />} />
+            <Route path="consultation" element={<Consultation />} />
+            <Route path="patients" element={<Patients />} />
+            <Route path="partage" element={<Partage />} />
+            <Route path="cas-cliniques" element={<CasClinique />} />
+            <Route path="messagerie" element={<Messagerie />} />
+            <Route path="notifications" element={<Notification/>} />
+            <Route path="recherche" element={<Recherche />} />
+            <Route path="profil" element={ <Profil/>} />
+            <Route path="parametres" element={<Parametre/>} />
+            <Route path="historique" element={<Historique/>} />
+          </Route>
+        </Routes>
+        
+      </BrowserRouter>
+    </ThemeProvider>
+
   );
   
 }
