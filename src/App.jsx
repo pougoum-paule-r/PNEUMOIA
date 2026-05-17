@@ -64,6 +64,25 @@ function App() {
           <Route path="parametres" element={<Parametre/>} />
           <Route path="historique" element={<Historique/>} />
         </Route>
+
+        {/* ROUTE CONCERNANT LA SECTION ADMINISTRATEUR */}
+        <Route path="/administrateur">
+          <Route index element={<Navigate to="login" replace />} />
+          <Route path="login" element={<AdminLogin />} />
+          <Route path="dashboard" element={<AdminDashboard />} />
+          <Route path="inscriptions">
+            <Route path="nouvelles" element={<NouvellesDemandes />} />
+            <Route path="validees" element={<ValideesCemois />} />
+            <Route path="refusees" element={<Refusees />} />
+          </Route>
+          <Route path="medecins">
+            <Route path="actifs" element={<MedecinsActifs />} />
+            <Route path="suspendus" element={<MedecinsSuspendus />} />
+          </Route>
+          <Route path="monitoring-ia" element={<MonitoringIA />} />
+          <Route path="journal-audit" element={<JournalAudit />} />
+          <Route path="parametres" element={<ParametresPlateforme />} />
+        </Route>
       </Routes>
        
     </BrowserRouter>

@@ -280,8 +280,8 @@ export default function MedecinsActifs() {
     <main className={`p-4 md:p-6 min-h-screen transition-colors duration-200 ${page}`}>
    <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4 mb-6">
     <div>
-     <h1 className="text-2xl font-bold tracking-tight">Medecins actifs</h1>
-     <p className={`text-sm mt-0.5 ${muted}`}>{medecins.length} medecins sur la plateforme PneumoIA CEMAC</p>
+     <h1 className="text-2xl font-bold tracking-tight">Médecins actifs</h1>
+     <p className={`text-sm mt-0.5 ${muted}`}>{medecins.length} médecins sur la plateforme PneumoIA CEMAC</p>
     </div>
     <button onClick={handleExportCSV} className={`inline-flex items-center gap-2 px-4 py-2 rounded-xl border text-sm font-medium transition-all shrink-0 ${darkMode?"border-gray-700 text-gray-300 hover:bg-teal-600 hover:border-teal-600 hover:text-white":"border-gray-300 text-gray-700 hover:bg-teal-600 hover:border-teal-600 hover:text-white"}`}>
      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>

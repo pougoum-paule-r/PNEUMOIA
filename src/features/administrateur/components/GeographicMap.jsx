@@ -42,10 +42,10 @@ export default function GeographicMap({ darkMode, compact = false }) {
       >
         <div>
           <h2 className={`font-semibold text-sm ${darkMode ?"text-white" : "text-gray-900"}`}>
-            Repartition geographique - CEMAC
+            Répartition géographique - CEMAC
           </h2>
           <p className={`text-xs mt-0.5 ${darkMode ?"text-gray-500" : "text-gray-400"}`}>
-            Medecins actifs par ville
+            Médecins actifs par ville
           </p>
         </div>
         <button
@@ -109,7 +109,7 @@ export default function GeographicMap({ darkMode, compact = false }) {
                       </span>
                     </div>
                     <span className={`text-xs font-semibold ${darkMode ?"text-white" : "text-gray-900"}`}>
-                      {v.count} medecins
+                      {v.count} médecins
                     </span>
                   </div>
                   <div className={`h-2 rounded-full overflow-hidden ${darkMode ?"bg-gray-700" : "bg-gray-100"}`}>

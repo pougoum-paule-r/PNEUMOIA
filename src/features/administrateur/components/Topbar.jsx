@@ -5,13 +5,13 @@ import useAdminNotificationCount from "../hooks/useAdminNotificationCount";
 const PAGE_TITLES = {
   "/administrateur/dashboard": "Tableau de bord",
   "/administrateur/inscriptions/nouvelles": "Nouvelles demandes",
-  "/administrateur/inscriptions/validees": "Validees ce mois",
-  "/administrateur/inscriptions/refusees": "Refusees",
-  "/administrateur/medecins/actifs": "Medecins actifs",
-  "/administrateur/medecins/suspendus": "Medecins suspendus",
+  "/administrateur/inscriptions/validees": "Validées ce mois",
+  "/administrateur/inscriptions/refusees": "Refusées",
+  "/administrateur/medecins/actifs": "Médecins actifs",
+  "/administrateur/medecins/suspendus": "Médecins suspendus",
   "/administrateur/monitoring-ia": "Monitoring IA",
   "/administrateur/journal-audit": "Journal d'audit",
-  "/administrateur/parametres": "Parametres plateforme",
+  "/administrateur/parametres": "Paramètres plateforme",
 };
 
 export default function Topbar({ darkMode, setDarkMode, setMobileOpen, notificationCount }) {
@@ -31,7 +31,8 @@ export default function Topbar({ darkMode, setDarkMode, setMobileOpen, notificat
   );
 
   return (
-    <header className={`sticky top-0 z-40 flex items-center justify-between gap-4 px-4 sm:px-6 py-3 border-b shadow-sm ${darkMode ? "bg-gray-900 border-gray-800 text-white" : "bg-white border-gray-100 text-gray-900"}`}>
+    <>
+    <header className={`fixed top-0 left-0 right-0 lg:left-64 z-40 flex items-center justify-between gap-4 px-4 sm:px-6 py-3 border-b shadow-sm ${darkMode ? "bg-gray-900 border-gray-800 text-white" : "bg-white border-gray-100 text-gray-900"}`}>
       <div className="flex items-center gap-3">
         <button onClick={() => setMobileOpen(true)} className={`lg:hidden p-2 rounded-lg transition-colors ${darkMode ? "hover:bg-gray-800 text-gray-400" : "hover:bg-gray-100 text-gray-500"}`}>
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
@@ -79,5 +80,7 @@ export default function Topbar({ darkMode, setDarkMode, setMobileOpen, notificat
         </div>
       </div>
     </header>
+    <div className="h-[73px] shrink-0" aria-hidden="true" />
+    </>
   );
 }

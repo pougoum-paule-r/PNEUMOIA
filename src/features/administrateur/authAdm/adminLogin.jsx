@@ -2,13 +2,13 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from 'react-router-dom';
 import logo from '../../../assets/images/logo.png';
 
-// â”€â”€ Phrases adaptÃ©es au rÃ´le administrateur â”€â”€
+// --- Phrases adaptées au rôle administrateur ---
 const PHRASES = [
-  "Bienvenue sur votre plateforme de gestion mÃ©dicale intelligente",
-  "GÃ©rez les comptes mÃ©decins et le personnel soignant",
-  "Supervisez l'activitÃ© globale de la plateforme",
-  "ContrÃ´lez les accÃ¨s et la sÃ©curitÃ© des donnÃ©es",
-  "Pilotez les statistiques et les rapports d'activitÃ©",
+  "Bienvenue sur votre plateforme de gestion médicale intelligente",
+  "Gérez les comptes médecins et le personnel soignant",
+  "Supervisez l'activité globale de la plateforme",
+  "Contrôlez les accès et la sécurité des données",
+  "Pilotez les statistiques et les rapports d'activité",
 ];
 
 function SlidingTagline() {
@@ -91,8 +91,8 @@ export default function AdminLogin() {
     setError("");
 
     try {
-      // â”€â”€ Mode frontend-only : redirection directe â”€â”€
-      // DÃ©commentez le bloc fetch ci-dessous quand le backend sera prÃªt :
+      // --- Mode frontend-only : redirection directe ---
+      // Décommentez le bloc fetch ci-dessous quand le backend sera prêt :
       /*
       const response = await fetch("http://localhost:8000/api/auth/login", {
         method: "POST",
@@ -108,7 +108,7 @@ export default function AdminLogin() {
       localStorage.setItem("token_type", data.token_type ?"bearer");
       */
 
-      // Simulation dÃ©lai rÃ©seau puis redirection
+      // Simulation délai réseau puis redirection
       await new Promise((res) => setTimeout(res, 900));
       localStorage.setItem("token", "demo-admin-token");
       localStorage.setItem("token_type", "bearer");
@@ -117,7 +117,7 @@ export default function AdminLogin() {
       navigate('/administrateur/dashboard');
 
     } catch (err) {
-      setError(err.message || "Erreur de connexion. VÃ©rifiez vos identifiants.");
+      setError(err.message || "Erreur de connexion. Vérifiez vos identifiants.");
     } finally {
       setLoading(false);
     }
@@ -126,7 +126,7 @@ export default function AdminLogin() {
   return (
     <div className="min-h-screen flex flex-col lg:flex-row font-sans">
 
-      {/* â•â• Panneau gauche â•â• */}
+      {/* Panneau gauche */}
       <div className="relative lg:w-[42%] xl:w-[38%] bg-gradient-to-br from-teal-500 via-teal-600 to-teal-800 flex flex-col items-center justify-center px-8 py-14 lg:py-0 overflow-hidden">
         <div className="absolute -top-24 -left-24 w-80 h-80 rounded-full bg-white/5 pointer-events-none" />
         <div className="absolute -bottom-20 -right-20 w-72 h-72 rounded-full bg-white/5 pointer-events-none" />
@@ -151,7 +151,7 @@ export default function AdminLogin() {
 
           <div className="hidden sm:flex flex-col gap-2.5 w-full">
             <FeatureBadge
-              label="Gestion des utilisateurs et accÃ¨s"
+              label="Gestion des utilisateurs et accès"
               icon={
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
                   <path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/>
@@ -161,7 +161,7 @@ export default function AdminLogin() {
               }
             />
             <FeatureBadge
-              label="Supervision et rapports d'activitÃ©"
+              label="Supervision et rapports d'activité"
               icon={
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
                   <line x1="18" y1="20" x2="18" y2="10"/>
@@ -171,7 +171,7 @@ export default function AdminLogin() {
               }
             />
             <FeatureBadge
-              label="SÃ©curitÃ© et contrÃ´le des donnÃ©es"
+              label="Sécurité et contrôle des données"
               icon={
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
                   <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
@@ -182,7 +182,7 @@ export default function AdminLogin() {
         </div>
       </div>
 
-      {/* â•â• Panneau droit â•â• */}
+      {/* Panneau droit */}
       <div className="flex-1 bg-gray-50 flex items-center justify-center px-4 py-12 sm:px-8">
         <div className="w-full max-w-sm">
           <div className="bg-white rounded-2xl border border-gray-100 shadow-sm px-7 py-8">
@@ -285,14 +285,14 @@ export default function AdminLogin() {
 
             <div className="mt-5 bg-teal-50 border border-teal-100 rounded-xl px-4 py-3">
               <p className="text-xs text-teal-700 leading-relaxed">
-                <span className="font-semibold">DÃ©mo :</span> remplissez les champs et cliquez sur{" "}
-                <span className="font-semibold italic">Se connecter</span> pour accÃ©der au tableau de bord.
+                <span className="font-semibold">Démo :</span> remplissez les champs et cliquez sur{" "}
+                <span className="font-semibold italic">Se connecter</span> pour accéder au tableau de bord.
               </p>
             </div>
           </div>
 
           <p className="text-center text-xs text-gray-400 mt-6">
-            Â© {new Date().getFullYear()} PneumoIA Â· Tous droits rÃ©servÃ©s
+            © {new Date().getFullYear()} PneumoIA · Tous droits réservés
           </p>
         </div>
       </div>

@@ -9,7 +9,7 @@ export default function Top5Doctors({
       darkMode ?"bg-gray-800 border-gray-700" : "bg-white border-gray-100"
     }`}>
       <h3 className={`font-semibold text-lg mb-5 ${darkMode ?"text-white" : "text-gray-900"}`}>
-        Top 5 â€” Concordance
+        Top 5 — Concordance
       </h3>
 
       <div className="space-y-4">

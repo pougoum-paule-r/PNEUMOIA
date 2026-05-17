@@ -8,19 +8,19 @@ const inscriptions = [
     id: 1, initials: "AS", name: "Dr. Aminata Sow", specialite: "Pneumologue",
     hopital: "H. Laquintinie, Douala", ville: "Douala", email: "a.sow@laquintinie.cm",
     telephone: "+237 677 111 222", cnom: "CM-2024-1122", soumisLe: "Auj. 08:00",
-    docs: true, docsStatus: "âœ“", time: "Auj, 08:00", timeColor: "text-teal-500", status: "pending",
+    docs: true, docsStatus: "✓", time: "Auj. 08:00", timeColor: "text-teal-500", status: "pending",
     avatarIndex: 0,
     documents: [
-      { label: "DiplÃ´me de pneumologie 2019", status: "verified" },
+      { label: "Diplôme de pneumologie 2019", status: "verified" },
       { label: "Carte CNOM 2024", status: "verified" },
       { label: "Attestation d'exercice", status: "verified" },
     ],
   },
   {
     id: 2, initials: "PE", name: "Dr. Paul Essomba", specialite: "Pneumologue",
-    hopital: "CHU de YaoundÃ©", ville: "YaoundÃ©", email: "p.essomba@chuy.cm",
+    hopital: "CHU de Yaoundé", ville: "Yaoundé", email: "p.essomba@chuy.cm",
     telephone: "+237 699 234 567", cnom: "CM-2023-0874", soumisLe: "Hier 14:22",
-    docs: true, docsStatus: "âš ", time: "Hier 14:22", timeColor: "text-orange-400", status: "pending",
+    docs: true, docsStatus: "⚠", time: "Hier 14:22", timeColor: "text-orange-400", status: "pending",
     avatarIndex: 1,
     documents: [
       { label: "DiplÃ´me de pneumologie 2018", status: "verified" },
@@ -29,7 +29,7 @@ const inscriptions = [
     ],
   },
   {
-    id: 3, initials: "FK", name: "Dr. Fatou KonatÃ©", specialite: "Pneumologue",
+    id: 3, initials: "FK", name: "Dr. Fatou Konaté", specialite: "Pneumologue",
     hopital: "H. Central, Bafoussam", ville: "Bafoussam", email: "f.konate@hcb.cm",
     telephone: "+237 655 789 012", cnom: "CM-2024-0311", soumisLe: "Il y a 2j",
     docs: true, docsStatus: "âœ“", time: "Il y a 2j", timeColor: "text-gray-400", status: "pending",
@@ -44,10 +44,10 @@ const inscriptions = [
     id: 4, initials: "MB", name: "Dr. Michel Biya", specialite: "Radiologue",
     hopital: "Clinique de l'Estuaire, Libreville", ville: "Libreville", email: "m.biya@estuaire.ga",
     telephone: "+241 077 456 789", cnom: "GA-2024-0099", soumisLe: "Il y a 3j",
-    docs: false, docsStatus: "âœ—", time: "Il y a 3j", timeColor: "text-gray-400", status: "pending",
+    docs: false, docsStatus: "✗", time: "Il y a 3j", timeColor: "text-gray-400", status: "pending",
     avatarIndex: 3,
     documents: [
-      { label: "DiplÃ´me de radiologie 2021", status: "missing" },
+      { label: "Diplôme de radiologie 2021", status: "missing" },
       { label: "Carte CNOM 2024", status: "missing" },
     ],
   },
@@ -73,7 +73,7 @@ export default function InscriptionsUrgentes({ darkMode }) {
   const handleConfirmRefus = ({ motif, message }) => {
     handleAction(refusDoc.id, "refused");
     setRefusDoc(null);
-    console.log("Refus confirmÃ©:", { doctorId: refusDoc.id, motif, message });
+    console.log("Refus confirmé:", { doctorId: refusDoc.id, motif, message });
   };
 
   const pending = items.filter((i) => i.status === "pending");
@@ -87,7 +87,7 @@ export default function InscriptionsUrgentes({ darkMode }) {
         <div className={`px-5 py-4 border-b flex items-center justify-between ${darkMode ?"border-gray-700" : "border-gray-100"}`}>
           <div>
             <h2 className={`font-semibold text-sm ${darkMode ?"text-white" : "text-gray-900"}`}>Inscriptions urgentes</h2>
-            <p className={`text-xs mt-0.5 ${darkMode ?"text-gray-500" : "text-gray-400"}`}>En attente de dÃ©cision</p>
+            <p className={`text-xs mt-0.5 ${darkMode ?"text-gray-500" : "text-gray-400"}`}>En attente de décision</p>
           </div>
           <button 
           onClick={() => navigate("/administrateur/inscriptions/nouvelles")}
@@ -122,13 +122,13 @@ export default function InscriptionsUrgentes({ darkMode }) {
                   </div>
                   <div className="min-w-0">
                     <p className={`text-sm font-semibold truncate ${darkMode ?"text-white" : "text-gray-900"}`}>{doc.name}</p>
-                    <p className={`text-xs truncate ${darkMode ?"text-gray-400" : "text-gray-400"}`}>{doc.specialite} Â· {doc.hopital}</p>
+                    <p className={`text-xs truncate ${darkMode ?"text-gray-400" : "text-gray-400"}`}>{doc.specialite} · {doc.hopital}</p>
                   </div>
                 </div>
 
                 {/* Docs + heure */}
                 <div className="flex items-center gap-3 ml-12 sm:ml-0 sm:mr-4">
-                  <span className={`text-xs ${doc.docsStatus === "âœ“" ?"text-teal-500" : doc.docsStatus === "âš " ?"text-orange-400" : "text-red-400"}`}>
+                  <span className={`text-xs ${doc.docsStatus === "✓" ?"text-teal-500" : doc.docsStatus === "⚠" ?"text-orange-400" : "text-red-400"}`}>
                     Docs {doc.docsStatus}
                   </span>
                   <span className={`text-xs ${doc.timeColor}`}>{doc.time}</span>
@@ -169,7 +169,7 @@ export default function InscriptionsUrgentes({ darkMode }) {
         </div>
       </div>
 
-      {/* DossierModal â€” contient dÃ©jÃ  DocumentViewerModal en interne */}
+      {/* DossierModal — contient déjà DocumentViewerModal en interne */}
       {selectedDossier && (
         <DossierModal
           doc={selectedDossier}

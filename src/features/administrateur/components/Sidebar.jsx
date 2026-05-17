@@ -39,7 +39,7 @@ const navSections = [
         path: "/administrateur/inscriptions/nouvelles",
       },
       {
-        label: "Validees ce mois",
+        label: "Validées ce mois",
         icon: (
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
             <path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/>
@@ -51,7 +51,7 @@ const navSections = [
         path: "/administrateur/inscriptions/validees",
       },
       {
-        label: "Refusees",
+        label: "Refusées",
         icon: (
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
             <circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/>
@@ -65,10 +65,10 @@ const navSections = [
     ],
   },
   {
-    title: "MEDECINS",
+    title: "MÉDECINS",
     items: [
       {
-        label: "Medecins actifs",
+        label: "Médecins actifs",
         icon: (
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
             <path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/>
@@ -95,7 +95,7 @@ const navSections = [
     ],
   },
   {
-    title: "SYSTEME",
+    title: "SYSTÈME",
     items: [
      
       {
@@ -123,7 +123,7 @@ const navSections = [
         path: "/administrateur/journal-audit",
       },
       {
-        label: "Parametres plateforme",
+        label: "Paramètres plateforme",
         icon: (
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
             <circle cx="12" cy="12" r="3"/>
@@ -163,7 +163,7 @@ export default function Sidebar({ activeKey, setActiveKey, darkMode, isMobileOpe
 
   const adminInitials = useMemo(() => {
     const parts = adminName.trim().split(/\s+/).filter(Boolean);
-    if (!parts.length) return "SA";
+    if (!parts.length) return "ADMIN";
     if (parts.length === 1) return parts[0].slice(0, 2).toUpperCase();
     return (parts[0][0] + parts[1][0]).toUpperCase();
   }, [adminName]);
@@ -183,21 +183,25 @@ export default function Sidebar({ activeKey, setActiveKey, darkMode, isMobileOpe
         transition-transform duration-300
         ${isMobileOpen ?"translate-x-0" : "-translate-x-full"}
         lg:translate-x-0 lg:sticky lg:top-0 lg:z-10 lg:h-screen lg:w-64
-        ${darkMode ?"bg-gray-900 border-gray-800" : "bg-teal-900"}
+        ${darkMode ?"bg-gray-900 border-gray-800" : "bg-[#08978E] border-[#07877F]"}
         border-r
       `}>
 
         {/* Logo */}
-       <div className={`shrink-0 flex items-center justify-between px-3 py-2 border-b ${darkMode ?"bg-gray-900 border-white/10" : "bg-white border-gray-200"}`}>
-             <img src={logo} alt="PneumoIA" className="w-25 h-25 object-contain" />
-            <span className="text-[10px] font-bold bg-orange-500 text-white px-2 py-1 rounded-full">Administrateur</span>
-       </div>  
+         <div className={`shrink-0 flex justify-center items-center px-3 py-2 border-b ${darkMode ? "bg-gray-900 border-white/10" : "bg-[#08978E] border-[#07877F]"}`}>
+                  <img
+                    src={logo}
+                    alt="PneumoIA"
+                    className={`w-25 h-25 object-contain ${darkMode ? "" : "brightness-0 invert contrast-125 drop-shadow-[0_1px_1px_rgba(255,255,255,0.35)]"}`}
+                  />
+         </div>
+
 
         {/* Navigation */}
-        <nav className="flex-1 overflow-y-auto py-4 px-3 space-y-5">
+        <nav className="flex-1 overflow-hidden py-3 px-3 space-y-3">
           {navSections.map((section) => (
             <div key={section.title}>
-              <p className="text-[10px] font-semibold uppercase tracking-widest text-white/35 px-2 mb-2">
+              <p className={`text-[10px] font-semibold uppercase tracking-widest px-2 mb-1.5 ${darkMode ? "text-white/35" : "text-white/75"}`}>
                 {section.title}
               </p>
               <ul className="space-y-0.5">
@@ -205,13 +209,13 @@ export default function Sidebar({ activeKey, setActiveKey, darkMode, isMobileOpe
                   <li key={item.key}>
                     <Link to={item.path}
                       onClick={() => { setActiveKey(item.key); setMobileOpen(false); }}
-                      className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm transition-all duration-150 ${
+                      className={`w-full flex items-center gap-3 px-3 py-2 rounded-xl text-sm transition-all duration-150 ${
                         activeKey === item.key
                           ?"bg-teal-600 text-white font-semibold shadow-sm"
-                          : "text-white/60 hover:bg-white/10 hover:text-white"
+                          : `${darkMode ? "text-white/60 hover:bg-white/10 hover:text-white" : "text-white hover:bg-white/15 hover:text-white"}`
                       }`}
                     >
-                      <span className={`w-4 h-4 flex items-center justify-center flex-shrink-0 ${activeKey === item.key ?"text-white" : "text-white/50"}`}>
+                      <span className={`w-4 h-4 flex items-center justify-center flex-shrink-0 ${activeKey === item.key ? "text-white" : darkMode ? "text-white/50" : "text-white/85"}`}>
                         {item.icon}
                       </span>
                       <span className="flex-1 text-left truncate">{item.label}</span>
@@ -229,19 +233,19 @@ export default function Sidebar({ activeKey, setActiveKey, darkMode, isMobileOpe
         </nav>
 
         {/* Admin info bas */}
-        <div className="shrink-0 px-4 py-4 border-t border-white/10">
+        <div className={`shrink-0 px-4 py-3 border-t ${darkMode ? "border-white/10" : "border-[#07877F]"}`}>
           <div className="flex items-center gap-3">
             <div className="w-8 h-8 rounded-full bg-teal-600 flex items-center justify-center text-white text-xs font-bold flex-shrink-0">
               {adminInitials}
             </div>
             <div className="flex-1 min-w-0">
-              <p className="text-white text-xs font-semibold truncate leading-tight">{adminName}</p>
-              <p className="text-white/45 text-[10px] truncate mt-0.5">{adminEmail}</p>
-              <p className={`text-[10px] mt-0.5 ${isAdminOnline ?"text-teal-300" : "text-white/45"}`}>
+              <p className={`text-xs font-semibold truncate leading-tight ${darkMode ? "text-white" : "text-white"}`}>{adminName}</p>
+              <p className={`text-[10px] truncate mt-0.5 ${darkMode ? "text-white/45" : "text-white/85"}`}>{adminEmail}</p>
+              <p className={`text-[10px] mt-0.5 ${isAdminOnline ? "text-teal-100" : darkMode ? "text-white/45" : "text-white/80"}`}>
                 {isAdminOnline ?"Actif" : "Hors ligne"}
               </p>
             </div>
-            <div className={`w-2 h-2 rounded-full flex-shrink-0 ${isAdminOnline ?"bg-teal-400" : "bg-white/35"}`} />
+            <div className={`w-2 h-2 rounded-full flex-shrink-0 ${isAdminOnline ? "bg-teal-200" : darkMode ? "bg-white/35" : "bg-white/40"}`} />
           </div>
         </div>
       </aside>

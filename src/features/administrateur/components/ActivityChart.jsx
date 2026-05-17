@@ -1,6 +1,6 @@
 import React from "react";
 
-// DonnÃ©es statiques â€” 7 derniers jours
+// Données statiques — 7 derniers jours
 const data = [
   { day: "L", value: 580 },
   { day: "M", value: 720 },
@@ -23,7 +23,7 @@ export default function ActivityChart({ darkMode }) {
       <div className="flex items-center justify-between mb-5">
         <div>
           <h2 className={`font-semibold text-sm ${darkMode ?"text-white" : "text-gray-900"}`}>
-            ActivitÃ© consultations
+            Activité consultations
           </h2>
           <p className={`text-xs mt-0.5 ${darkMode ?"text-gray-500" : "text-gray-400"}`}>
             7 derniers jours
@@ -68,7 +68,7 @@ export default function ActivityChart({ darkMode }) {
         })}
       </div>
 
-      {/* LÃ©gende */}
+      {/* Légende */}
       <div className={`mt-4 pt-4 border-t flex items-center gap-4 ${
         darkMode ?"border-gray-700" : "border-gray-100"
       }`}>

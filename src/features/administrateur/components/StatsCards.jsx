@@ -2,7 +2,7 @@ import React from "react";
 
 const stats = [
   {
-    label: "MÃ©decins actifs",
+    label: "Médecins actifs",
     value: "38",
     trend: "+3 ce mois",
     trendUp: true,

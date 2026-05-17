@@ -17,9 +17,9 @@ export default function AlerteBanner({ darkMode }) {
           <line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/>
         </svg>
         <span>
-          <strong>4 demandes d'inscription</strong> en attente de validation â€”{" "}
+          <strong>4 demandes d'inscription</strong> en attente de validation —{" "}
           <button className="underline underline-offset-2 hover:no-underline font-semibold">
-            Traiter maintenant â†’
+            Traiter maintenant →
           </button>
         </span>
       </div>
