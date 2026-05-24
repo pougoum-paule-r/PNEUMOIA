@@ -6,7 +6,6 @@ import Topbar from "../components/Topbar";
 import StatsCards from "../components/StatsCards";
 import InscriptionsUrgentes from "../components/InscriptionsUrgentes";
 import ActivityChart from "../components/ActivityChart";
-import ConcordanceIA from "../components/ConcordancesIA";
 import GeographicMap from "../components/GeographicMap";
 
 export default function AdminDashboard() {
@@ -38,10 +37,6 @@ export default function AdminDashboard() {
             <div className="flex-1 min-w-0 flex flex-col gap-3">
               <InscriptionsUrgentes darkMode={darkMode} />
               <ActivityChart darkMode={darkMode} />
-            </div>
-
-            <div className="w-full xl:w-72 2xl:w-80 flex-shrink-0">
-              <ConcordanceIA darkMode={darkMode} />
             </div>
           </div>
 

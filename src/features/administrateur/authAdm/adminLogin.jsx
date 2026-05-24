@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import logo from '../../../assets/images/logo.png';
 
-// --- Phrases adaptées au rôle administrateur ---
 const PHRASES = [
   "Bienvenue sur votre plateforme de gestion médicale intelligente",
   "Gérez les comptes médecins et le personnel soignant",
@@ -30,8 +29,8 @@ function SlidingTagline() {
     <p
       style={{
         transition: "opacity 0.5s ease, transform 0.5s ease",
-        opacity: visible ?1 : 0,
-        transform: visible ?"translateY(0)" : "translateY(12px)",
+        opacity: visible ? 1 : 0,
+        transform: visible ? "translateY(0)" : "translateY(12px)",
       }}
       className="text-white/90 text-base font-medium leading-relaxed text-center min-h-[56px]"
     >
@@ -68,16 +67,13 @@ function FeatureBadge({ icon, label }) {
   );
 }
 
-
-// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
-// Login Admin
-// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
 export default function AdminLogin() {
-  const [form, setForm] = useState({ email: "", password: "" });
+  const [form, setForm] = useState({ email: "", phone: "", password: "" });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [showPwd, setShowPwd] = useState(false);
   const [emailFocus, setEmailFocus] = useState(false);
+  const [phoneFocus, setPhoneFocus] = useState(false);
   const [pwdFocus, setPwdFocus] = useState(false);
   const navigate = useNavigate();
 
@@ -91,31 +87,13 @@ export default function AdminLogin() {
     setError("");
 
     try {
-      // --- Mode frontend-only : redirection directe ---
-      // Décommentez le bloc fetch ci-dessous quand le backend sera prêt :
-      /*
-      const response = await fetch("http://localhost:8000/api/auth/login", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email: form.email, password: form.password }),
-      });
-      if (!response.ok) {
-        const data = await response.json();
-        throw new Error(data.detail || "Identifiants incorrects");
-      }
-      const data = await response.json();
-      localStorage.setItem("token", data.access_token);
-      localStorage.setItem("token_type", data.token_type ?"bearer");
-      */
-
-      // Simulation délai réseau puis redirection
       await new Promise((res) => setTimeout(res, 900));
       localStorage.setItem("token", "demo-admin-token");
       localStorage.setItem("token_type", "bearer");
       localStorage.setItem("admin_name", "Super Admin");
       localStorage.setItem("admin_email", form.email || "admin@pneumoia.cm");
+      localStorage.setItem("admin_phone", form.phone || "656616801");
       navigate('/administrateur/dashboard');
-
     } catch (err) {
       setError(err.message || "Erreur de connexion. Vérifiez vos identifiants.");
     } finally {
@@ -128,12 +106,9 @@ export default function AdminLogin() {
 
       {/* Panneau gauche */}
       <div className="relative lg:w-[42%] xl:w-[38%] bg-gradient-to-br from-teal-500 via-teal-600 to-teal-800 flex flex-col items-center justify-center px-8 py-14 lg:py-0 overflow-hidden">
-        <div className="absolute -top-24 -left-24 w-80 h-80 rounded-full bg-white/5 pointer-events-none" />
-        <div className="absolute -bottom-20 -right-20 w-72 h-72 rounded-full bg-white/5 pointer-events-none" />
-        <div className="absolute top-1/3 right-6 w-28 h-28 rounded-full bg-teal-400/15 pointer-events-none" />
+    
 
         <div className="relative z-10 flex flex-col items-center text-center max-w-xs gap-6">
-         {/* Logo dans un rond blanc */}
           <div className="w-50 h-50 rounded-full bg-white shadow-xl flex items-center justify-center">
             <img src={logo} alt="PneumoIA" className="w-40 h-40 object-contain" />
           </div>
@@ -204,12 +179,14 @@ export default function AdminLogin() {
             )}
 
             <form onSubmit={handleSubmit} className="space-y-5">
+
+              {/* Email */}
               <div>
                 <label className="block text-[11px] font-semibold uppercase tracking-widest text-gray-400 mb-2">
                   Identifiant email
                 </label>
                 <div className={`flex items-center gap-2.5 border rounded-xl px-3.5 py-3 transition-all duration-150 bg-white ${
-                  emailFocus ?"border-teal-500 ring-2 ring-teal-500/10" : "border-gray-200"
+                  emailFocus ? "border-teal-500 ring-2 ring-teal-500/10" : "border-gray-200"
                 }`}>
                   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" className="flex-shrink-0">
                     <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
@@ -230,12 +207,51 @@ export default function AdminLogin() {
                 </div>
               </div>
 
+              {/* Téléphone */}
               <div>
                 <label className="block text-[11px] font-semibold uppercase tracking-widest text-gray-400 mb-2">
-                  Mot de passe
+                  Numéro de téléphone
                 </label>
                 <div className={`flex items-center gap-2.5 border rounded-xl px-3.5 py-3 transition-all duration-150 bg-white ${
-                  pwdFocus ?"border-teal-500 ring-2 ring-teal-500/10" : "border-gray-200"
+                  phoneFocus ? "border-teal-500 ring-2 ring-teal-500/10" : "border-gray-200"
+                }`}>
+                  {/* Indicatif Cameroun */}
+                  <span className="text-sm text-gray-400 font-medium flex-shrink-0 border-r border-gray-200 pr-2.5">+237</span>
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" className="flex-shrink-0">
+                    <path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 10.8 19.79 19.79 0 01.02 2.18 2 2 0 012 0h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.09 7.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 14.92z"/>
+                  </svg>
+                  <input
+                    type="tel"
+                    name="phone"
+                    value={form.phone}
+                    onChange={handleChange}
+                    onFocus={() => setPhoneFocus(true)}
+                    onBlur={() => setPhoneFocus(false)}
+                    required
+                    autoComplete="tel"
+                    className="flex-1 text-sm text-gray-800 bg-transparent outline-none placeholder-gray-300"
+                    placeholder="6XX XXX XXX"
+                    pattern="[0-9]{9}"
+                    maxLength={9}
+                  />
+                </div>
+              </div>
+
+              {/* Mot de passe */}
+              <div>
+                <div className="flex items-center justify-between mb-2">
+                  <label className="block text-[11px] font-semibold uppercase tracking-widest text-gray-400">
+                    Mot de passe
+                  </label>
+                  <Link
+                    to="/administrateur/reset-password"
+                    className="text-[11px] font-semibold text-teal-600 hover:text-teal-700 transition-colors"
+                  >
+                    Mot de passe oublié ?
+                  </Link>
+                </div>
+                <div className={`flex items-center gap-2.5 border rounded-xl px-3.5 py-3 transition-all duration-150 bg-white ${
+                  pwdFocus ? "border-teal-500 ring-2 ring-teal-500/10" : "border-gray-200"
                 }`}>
                   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" className="flex-shrink-0">
                     <rect x="3" y="11" width="18" height="11" rx="2"/>
@@ -243,7 +259,7 @@ export default function AdminLogin() {
                     <circle cx="12" cy="16" r="1" fill="#9ca3af"/>
                   </svg>
                   <input
-                    type={showPwd ?"text" : "password"}
+                    type={showPwd ? "text" : "password"}
                     name="password"
                     value={form.password}
                     onChange={handleChange}
@@ -255,7 +271,7 @@ export default function AdminLogin() {
                     placeholder="Votre mot de passe"
                   />
                   <button type="button" onClick={() => setShowPwd(!showPwd)} className="text-gray-300 hover:text-gray-500 transition-colors flex-shrink-0">
-                    {showPwd ?<EyeOff /> : <EyeOpen />}
+                    {showPwd ? <EyeOff /> : <EyeOpen />}
                   </button>
                 </div>
               </div>
@@ -265,7 +281,7 @@ export default function AdminLogin() {
                 disabled={loading}
                 className="w-full bg-teal-600 hover:bg-teal-700 active:scale-[0.99] disabled:opacity-70 disabled:cursor-not-allowed text-white font-semibold text-sm rounded-xl py-3.5 flex items-center justify-center gap-2 transition-all duration-150 shadow-sm shadow-teal-200"
               >
-                {loading ?(
+                {loading ? (
                   <>
                     <svg className="animate-spin" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                       <path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83" strokeLinecap="round"/>

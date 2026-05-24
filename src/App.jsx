@@ -6,7 +6,7 @@ import AboutPage from './features/about/AboutPage';
 import CasCliniquePage from './features/casClinique/CascliniquePage';
 import Fonctionnalité from './features/fonctionnaliés/FeaturesPage';
 import MainLayout from './layouts/MainLayout';
-import MonitoringIA from './features/administrateur/pages/MonitoringIA';
+// MonitoringIA page removed from admin section
 
 
 //SECTION MEDECIN 
@@ -27,6 +27,7 @@ import Messagerie from './features/medecin/pages/Messagerie';
 
 //SECTION ADMINISTRATEUR
 import AdminLogin from './features/administrateur/authAdm/adminLogin';
+import AdminResetPassword from './features/administrateur/authAdm/resetPassword';
 import AdminDashboard from './features/administrateur/pages/AdminDashBoard';
 import JournalAudit from './features/administrateur/pages/JournalAudit';
 import ParametresPlateforme from './features/administrateur/pages/ParametrePLateforme';
@@ -69,6 +70,7 @@ function App() {
         <Route path="/administrateur">
           <Route index element={<Navigate to="login" replace />} />
           <Route path="login" element={<AdminLogin />} />
+          <Route path="reset-password" element={<AdminResetPassword />} />
           <Route path="dashboard" element={<AdminDashboard />} />
           <Route path="inscriptions">
             <Route path="nouvelles" element={<NouvellesDemandes />} />
@@ -79,7 +81,6 @@ function App() {
             <Route path="actifs" element={<MedecinsActifs />} />
             <Route path="suspendus" element={<MedecinsSuspendus />} />
           </Route>
-          <Route path="monitoring-ia" element={<MonitoringIA />} />
           <Route path="journal-audit" element={<JournalAudit />} />
           <Route path="parametres" element={<ParametresPlateforme />} />
         </Route>

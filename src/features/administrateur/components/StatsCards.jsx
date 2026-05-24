@@ -1,130 +1,178 @@
-import React from "react";
+import React, { useState } from "react";
 
-const stats = [
+const CARD_DEFS = [
   {
+    key: "actifs",
     label: "Médecins actifs",
-    value: "38",
-    trend: "+3 ce mois",
+    trend: (v) => v !== null ? `${v} sur la plateforme` : "Chargement...",
     trendUp: true,
     icon: (
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
         <path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/>
         <circle cx="9" cy="7" r="4"/>
         <path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/>
       </svg>
     ),
-    iconBg: "bg-teal-100 dark:bg-teal-900/40",
-    iconColor: "text-teal-600 dark:text-teal-400",
+    accent: "#0d9488",
+    iconBg: "rgba(13,148,136,0.15)",
     urgent: false,
   },
   {
+    key: "nouvelles",
     label: "Inscriptions en attente",
-    value: "4",
-    trend: "Action requise",
+    trend: () => "Action requise",
     trendUp: false,
     trendAlert: true,
     icon: (
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
         <path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/>
         <line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/>
       </svg>
     ),
-    iconBg: "bg-orange-100 dark:bg-orange-900/30",
-    iconColor: "text-orange-500",
+    accent: "#f97316",
+    iconBg: "rgba(249,115,22,0.15)",
     urgent: true,
   },
   {
+    key: "consultations",
     label: "Consultations totales",
-    value: "4 821",
-    trend: "+247 ce mois",
+    trend: () => "Ce mois",
     trendUp: true,
     icon: (
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
         <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>
       </svg>
     ),
-    iconBg: "bg-blue-100 dark:bg-blue-900/30",
-    iconColor: "text-blue-600 dark:text-blue-400",
-    urgent: false,
-  },
-  {
-    label: "Concordance IA globale",
-    value: "87%",
-    trend: "+1.2 pts",
-    trendUp: true,
-    icon: (
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-        <circle cx="12" cy="12" r="10"/>
-        <path d="M9.09 9a3 3 0 015.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/>
-      </svg>
-    ),
-    iconBg: "bg-purple-100 dark:bg-purple-900/30",
-    iconColor: "text-purple-600 dark:text-purple-400",
+    accent: "#3b82f6",
+    iconBg: "rgba(59,130,246,0.15)",
     urgent: false,
   },
 ];
 
-export default function StatsCards({ darkMode }) {
+function StatCard({ def, value, loading, darkMode }) {
+  const cardBg = darkMode
+    ? def.urgent ? "rgba(249,115,22,0.08)" : "#1e293b"
+    : def.urgent ? "#fff7ed" : "#ffffff";
+
+  const borderColor = darkMode
+    ? def.urgent ? "rgba(249,115,22,0.3)" : "rgba(255,255,255,0.08)"
+    : def.urgent ? "#fed7aa" : "#e5e7eb";
+
+  const displayValue = loading
+    ? "—"
+    : value !== null && value !== undefined
+    ? Number(value).toLocaleString("fr-FR")
+    : "—";
+
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4">
-      {stats.map((s) => (
-        <div
-          key={s.label}
-          className={`
-            rounded-2xl border p-5 flex flex-col gap-4
-            transition-all duration-200 hover:shadow-md cursor-pointer
-            ${s.urgent
-              ?darkMode
-                ?"bg-orange-900/20 border-orange-700/40"
-                : "bg-orange-50 border-orange-200"
-              : darkMode
-                ?"bg-gray-800 border-gray-700"
-                : "bg-white border-gray-100"
-            }
-          `}
-        >
-          <div className="flex items-center justify-between">
-            <div className={`w-10 h-10 rounded-xl flex items-center justify-center ${s.iconBg} ${s.iconColor}`}>
-              {s.icon}
-            </div>
-            {s.urgent && (
-              <span className="text-[10px] font-bold bg-orange-500 text-white px-2 py-0.5 rounded-full uppercase tracking-wide">
-                Urgent
-              </span>
-            )}
-          </div>
+    <div style={{
+      borderRadius: 16,
+      border: `1px solid ${borderColor}`,
+      borderTop: `3px solid ${def.accent}`,
+      padding: "16px 18px 14px",
+      background: cardBg,
+      display: "flex",
+      flexDirection: "column",
+      gap: 12,
+      cursor: "pointer",
+      transition: "box-shadow 0.2s ease, transform 0.15s ease",
+      position: "relative",
+      overflow: "hidden",
+    }}
+    onMouseEnter={e => { e.currentTarget.style.transform = "translateY(-2px)"; e.currentTarget.style.boxShadow = `0 8px 24px ${def.accent}22`; }}
+    onMouseLeave={e => { e.currentTarget.style.transform = "translateY(0)"; e.currentTarget.style.boxShadow = "none"; }}
+    >
+      {/* Subtle background glow */}
+      <div style={{
+        position: "absolute", top: -40, right: -40,
+        width: 120, height: 120, borderRadius: "50%",
+        background: `${def.accent}0d`,
+        pointerEvents: "none",
+      }} />
 
-          <div>
-            <p className={`text-3xl font-bold tracking-tight ${
-              s.urgent
-                ?"text-orange-500"
-                : darkMode ?"text-white" : "text-gray-900"
-            }`}>
-              {s.value}
-            </p>
-            <p className={`text-xs mt-0.5 ${darkMode ?"text-gray-400" : "text-gray-500"}`}>
-              {s.label}
-            </p>
-          </div>
-
-          <div className={`flex items-center gap-1.5 text-xs font-medium ${
-            s.trendAlert
-              ?"text-orange-500"
-              : s.trendUp
-                ?"text-teal-600 dark:text-teal-400"
-                : "text-red-500"
-          }`}>
-            {!s.trendAlert && (
-              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                {s.trendUp
-                  ?<polyline points="18 15 12 9 6 15"/>
-                  : <polyline points="6 9 12 15 18 9"/>
-                }
-              </svg>
-            )}
-            {s.trend}
-          </div>
+      {/* Top row: icon + badge */}
+      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+        <div style={{
+          width: 38, height: 38, borderRadius: 10,
+          background: def.iconBg,
+          display: "flex", alignItems: "center", justifyContent: "center",
+          color: def.accent,
+          flexShrink: 0,
+        }}>
+          {def.icon}
         </div>
+        {def.urgent && (
+          <span style={{
+            fontSize: 10, fontWeight: 800,
+            background: def.accent, color: "#fff",
+            padding: "3px 10px", borderRadius: 99,
+            textTransform: "uppercase", letterSpacing: "0.08em",
+          }}>
+            Urgent
+          </span>
+        )}
+      </div>
+
+      {/* Value + label */}
+      <div>
+        <p style={{
+          fontSize: 32,
+          fontWeight: 800,
+          letterSpacing: "-0.02em",
+          margin: 0,
+          lineHeight: 1,
+          color: def.urgent ? def.accent : darkMode ? "#ffffff" : "#0f172a",
+          opacity: loading ? 0.4 : 1,
+          transition: "opacity 0.3s",
+        }}>
+          {displayValue}
+        </p>
+        <p style={{
+          fontSize: 13,
+          fontWeight: 600,
+          margin: "6px 0 0",
+          color: darkMode ? "rgba(255,255,255,0.85)" : "#374151",
+          letterSpacing: "0.01em",
+        }}>
+          {def.label}
+        </p>
+        <p style={{
+          fontSize: 12,
+          margin: "4px 0 0",
+          color: def.trendAlert
+            ? def.accent
+            : darkMode ? "rgba(255,255,255,0.45)" : "#9ca3af",
+          fontWeight: def.trendAlert ? 600 : 400,
+        }}>
+          {def.trend(value)}
+        </p>
+      </div>
+    </div>
+  );
+}
+
+// TODO: remplacer par des vrais appels API quand le back est prêt
+const MOCK_STATS = { actifs: 38, nouvelles: 4, consultations: 4821 };
+
+export default function StatsCards({ darkMode }) {
+  const [stats] = useState(MOCK_STATS);
+  const loading = false;
+
+  return (
+    <div style={{
+      display: "grid",
+      gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))",
+      gap: 16,
+      maxWidth: "100%",
+    }}>
+      {CARD_DEFS.map((def) => (
+        <StatCard
+          key={def.key}
+          def={def}
+          value={stats[def.key]}
+          loading={loading}
+          darkMode={darkMode}
+        />
       ))}
     </div>
   );
